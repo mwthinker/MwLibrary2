@@ -83,20 +83,26 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="mw\font.cpp" />
     <ClCompile Include="mw\initsdl.cpp" />
+    <ClCompile Include="mw\initttf.cpp" />
     <ClCompile Include="mw\joystick.cpp" />
     <ClCompile Include="mw\sound.cpp" />
     <ClCompile Include="mw\soundbuffer.cpp" />
     <ClCompile Include="mw\sprite.cpp" />
+    <ClCompile Include="mw\text.cpp" />
     <ClCompile Include="mw\texture.cpp" />
     <ClCompile Include="mw\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="mw\font.h" />
     <ClInclude Include="mw\initsdl.h" />
+    <ClInclude Include="mw\initttf.h" />
     <ClInclude Include="mw\joystick.h" />
     <ClInclude Include="mw\sound.h" />
     <ClInclude Include="mw\soundbuffer.h" />
     <ClInclude Include="mw\sprite.h" />
+    <ClInclude Include="mw\text.h" />
     <ClInclude Include="mw\texture.h" />
     <ClInclude Include="mw\window.h" />
   </ItemGroup>

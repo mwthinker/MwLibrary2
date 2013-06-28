@@ -2,12 +2,11 @@
 #define MW_WINDOW_H
 
 #include "initsdl.h"
-#include "joystick.h"
 
 #include <string>
-#include <SDL_opengl.h>
-#include <SDL_image.h>
 #include <vector>
+#include <SDL.h>
+#include <SDL_opengl.h>
 
 namespace mw {
 
@@ -21,7 +20,7 @@ namespace mw {
 	class Window : public InitSdl {
 	public:
 		// Creates a window with size determined by width and height in pixels.
-		Window(int width, int height);
+		Window(int width, int height, bool resizeable, std::string title="", std::string icon="");
 
 		virtual ~Window();
 

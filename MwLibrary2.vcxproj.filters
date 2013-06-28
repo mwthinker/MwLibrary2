@@ -39,6 +39,15 @@
     <ClCompile Include="mw\joystick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mw\initttf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mw\text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mw\font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mw\sound.h">
@@ -60,6 +69,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mw\joystick.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mw\initttf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mw\text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mw\font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

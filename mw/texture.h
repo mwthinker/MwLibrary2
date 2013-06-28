@@ -12,6 +12,8 @@ namespace mw {
 
 	class Texture {
 	public:
+		friend class Text;
+
 		// Loads a image from a file. It stores the image in memory and no opengl
 		// code are of use in the constructor (safe to call constructor in other threads).
 		Texture(std::string filename);
@@ -44,6 +46,10 @@ namespace mw {
 			// Not to be used. Is not copyable.
 			return *this;
 		}
+
+		// class Texture takes over ownership of surface and is responsable of deallocation.
+		// Not safe to use surface outside this class after calling the constuctor.
+		Texture(SDL_Surface* surface);
 
 		// Is called when the opengl context need to be loaded.
 		// I.e.

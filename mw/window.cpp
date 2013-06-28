@@ -1,27 +1,35 @@
 #include "window.h"
-#include "joystick.h"
+#include "texture.h"
 
 #include <SDL_opengl.h>
-#include <iostream>
 
 namespace mw {
 
 	int Window::videoId_ = 0;
 
-	Window::Window(int width, int height) {
+	Window::Window(int width, int height, bool resizeable, std::string title, std::string icon) {
 		// Create an application window with the following settings:
-		window_ = SDL_CreateWindow( 
-			"An SDL2 window",                  //    window title
-			SDL_WINDOWPOS_UNDEFINED,           //    initial x position
-			SDL_WINDOWPOS_UNDEFINED,           //    initial y position
-			640,                               //    width, in pixels
-			480,                               //    height, in pixels
-			SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL //    flags - see below
+		Uint32 flags = SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL;
+		if (resizeable) {
+			flags |= SDL_WINDOW_RESIZABLE;
+		}
+
+		window_ = SDL_CreateWindow(
+			title.c_str(),
+			SDL_WINDOWPOS_UNDEFINED,
+			SDL_WINDOWPOS_UNDEFINED,
+			width,
+			height,
+			flags
 			);
 
 		if (window_ == 0) {
 			throw Exception(SDL_GetError());
 		}
+
+		SDL_Surface* surface = IMG_Load(icon.c_str());
+		SDL_SetWindowIcon(window_, surface); 
+		SDL_FreeSurface(surface);
 		
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		mainGLContext_ = SDL_GL_CreateContext(window_);
