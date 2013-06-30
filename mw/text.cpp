@@ -25,11 +25,17 @@ namespace mw {
         characterSize_ = characterSize;
     }
 
+	Text::Text(std::string text, std::string fontFile, unsigned int characterSize) : font_(new mw::Font(fontFile,characterSize)) {
+        text_ = text;
+        loadText(text_);
+        characterSize_ = characterSize;
+    }
+
     Text::~Text() {
     }
 
     void Text::setText(std::string text) {
-		// Text changed? => load new textImage.
+		// Text changed? => load new text image.
         if (text_ != text) {
             loadText(text);
             text_ = text;
@@ -47,8 +53,7 @@ namespace mw {
     unsigned int Text::getCharacterSize() const {
         return characterSize_;
     }
-
-	// Returns the width of the text to be drawn. (size in openGl
+	
     double Text::getWidth() const {
 		if (font_ && text_.size() > 0) {
 			double scale = characterSize_*1.0/font_->getCharacterSize();
@@ -57,8 +62,7 @@ namespace mw {
 		}
 		return 0.0;
     }
-
-	// Returns the height of the text to be drawn.
+	
     double Text::getHeight() const {
 		if (font_ && text_.size() > 0) {
 			TexturePtr texture = sprite_.getTexture();
@@ -86,8 +90,9 @@ namespace mw {
 		if (font_) {
 			if (str.size() > 0) {
 				SDL_Color color = {255,255,255};
-				SDL_Surface* surface = TTF_RenderText_Blended(font_->font_, str.c_str(), color);
-				// texture_ takes ownership of surface
+				//SDL_Surface* surface = TTF_RenderText_Blended(font_->font_, str.c_str(), color); 
+				SDL_Surface* surface = TTF_RenderUTF8_Blended(font_->font_, str.c_str(), color); 
+				// The texture takes ownership of the surface.
 				TexturePtr texture = TexturePtr(new Texture(surface));
 				sprite_.setTexture(texture);
 			}

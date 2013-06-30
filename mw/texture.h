@@ -1,12 +1,12 @@
 #ifndef MW_TEXTURE_H
 #define MW_TEXTURE_H
 
-#include <string>
-
 #include <SDL_opengl.h>
 #include <SDL_image.h>
 
+#include <string>
 #include <memory>
+#include <functional>
 
 namespace mw {
 
@@ -26,7 +26,11 @@ namespace mw {
 
 		// Binds the texture to the target GL_TEXTURE_2D. First call, copies 
 		// the image data to graphic memory.
-		void bind();		
+		void bind();
+
+		// Binds the texture to the target GL_TEXTURE_2D. First call, copies 
+		// the image data to graphic memory and call the filter function.
+		void bind(std::function<void()> filter);
 
 		// Returns the width of the image in pixels.
 		int getWidth() const;
@@ -34,7 +38,7 @@ namespace mw {
 		// Returns the height of the image in pixels. 
 		int getHeight() const;
 
-		// Unsafe to use. Gets a copy of the underlaying surface.
+		// Use with care. Gets a copy of the underlaying surface.
 		SDL_Surface* getSdlSurface() const;
 
 	private:
@@ -52,13 +56,12 @@ namespace mw {
 		Texture(SDL_Surface* surface);
 
 		// Is called when the opengl context need to be loaded.
-		// I.e.
 		void loadToVideo();
 
 		GLuint texture_;
 
 		SDL_Surface* preLoadSurface_;
-		int loadedToVideoId_;
+		bool loadedToVideo_;
 	};
 
 	typedef std::shared_ptr<Texture> TexturePtr;

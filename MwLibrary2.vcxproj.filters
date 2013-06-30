@@ -80,5 +80,8 @@
     <ClInclude Include="mw\font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="mw\exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

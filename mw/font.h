@@ -2,14 +2,15 @@
 #define MW_FONT_H
 
 #include "initttf.h"
-#include <SDL_ttf.h>
-#include <string>
-#include <iostream>
 
+#include <SDL_ttf.h>
+
+#include <string>
 #include <memory>
 
 namespace mw {
 
+	// Simple wrapper around TTF_Font.
 	class Font : public InitTtf {
 	public:
 
@@ -20,6 +21,11 @@ namespace mw {
 
 		inline unsigned int getCharacterSize() const {
 			return characterSize_;
+		}
+
+		// Use with care. Gets the pointer to the underlying sdl font.
+		inline TTF_Font* getSdlFont() const {
+			return font_;
 		}
 	private:
 		Font(const Font&) {

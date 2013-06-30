@@ -16,6 +16,7 @@ namespace mw {
 		Text();
 		Text(std::string text, FontPtr font);
 		Text(std::string text, FontPtr font, unsigned int characterSize);
+		Text(std::string text, std::string font, unsigned int characterSize);
 		~Text();
 
 		void setText(std::string text);

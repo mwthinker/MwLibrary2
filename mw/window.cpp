@@ -1,11 +1,10 @@
 #include "window.h"
-#include "texture.h"
+#include "exception.h"
 
 #include <SDL_opengl.h>
+#include <SDL_image.h>
 
 namespace mw {
-
-	int Window::videoId_ = 0;
 
 	Window::Window(int width, int height, bool resizeable, std::string title, std::string icon) {
 		// Create an application window with the following settings:
@@ -29,10 +28,11 @@ namespace mw {
 
 		SDL_Surface* surface = IMG_Load(icon.c_str());
 		SDL_SetWindowIcon(window_, surface); 
-		SDL_FreeSurface(surface);
+		SDL_FreeSurface(surface);		
 		
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		mainGLContext_ = SDL_GL_CreateContext(window_);
+		SDL_GL_SetSwapInterval(1);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 		quit_ = false;
 		time_ = 0;
@@ -45,6 +45,7 @@ namespace mw {
 		glViewport(0, 0, width_, height_);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+		glOrtho(0, width_, 0, height_, -1, 1);
 	}
 
 	Window::~Window() {
@@ -71,12 +72,8 @@ namespace mw {
 			
 			SDL_GL_SwapWindow(window_);
 		}
-	}
 
-	// Returns an integer. If the openGl context is lost, the video id will be changed (i.e. old+1).
-	// Change indicates that all openGl context need to be reloaded.
-	int Window::getVideoId() {
-		return videoId_;
+		onQuiting();
 	}
 
 	SDL_Window* Window::getSdlWindow() const {
@@ -109,21 +106,17 @@ namespace mw {
 		return h;
 	}
 
-	Uint32 Window::timeTick() {
-		return SDL_GetTicks();
-	}
-
 	void Window::quit() {
 		quit_ = true;
-	}	
+	}
 
 	void Window::update(Uint32 deltaTime) {
 	}
 
-	void Window::eventUpdate(const SDL_Event& windowEvent) {		
+	void Window::eventUpdate(const SDL_Event& windowEvent) {
 	}
 
-	void Window::onQuiting() const {		
+	void Window::onQuiting() const {
 	}
 
 } // Namespace mw.

@@ -31,7 +31,11 @@ namespace mw {
 
 		// Returns all joysticks. A window must beeing active.
 		static const std::vector<JoystickPtr>& getJoystics();
-	
+
+		// Use with care. Gets the pointer to the underlying sdl joystick.
+		inline SDL_Joystick* getSdlJoyStick() const {
+			return joystick_;
+		}
 	private:
 		Joystick(const Joystick&) {
 			// Not to be used. Is not copyable.

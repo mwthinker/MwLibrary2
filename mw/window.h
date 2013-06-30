@@ -3,20 +3,18 @@
 
 #include "initsdl.h"
 
-#include <string>
-#include <vector>
 #include <SDL.h>
 #include <SDL_opengl.h>
 
+#include <string>
+#include <vector>
+
 namespace mw {
 
-	struct Exception {
-		Exception(std::string error_) : error(error_) {
-		}
-
-		const std::string error;
-	};
-
+	// Creates a window and handles input, etc. The graphic is rendered using opengl.
+	// The opengl viewport is whole window size and the modelview is the same size as 
+	// the window and origo is on the left down side.
+	// May only use one instance of Window at a time else (undetermined behavior).
 	class Window : public InitSdl {
 	public:
 		// Creates a window with size determined by width and height in pixels.
@@ -28,16 +26,9 @@ namespace mw {
 		// Is closed when the windows is closed, i.e. a call to the protected function setQuiting(true).
 		void startLoop();
 
-		// Returns an integer. If the openGl context is lost, the video id will change.
-		// Therefore, change indicates that all openGl context need to be reloaded.
-		static int getVideoId();
-
 	protected:
 		// Gets the window pointer.
 		SDL_Window* getSdlWindow() const;
-
-		// Gets the renderer pointer.
-		SDL_Renderer* getSdlRenderer() const;
 
 		// Sets the program in fullscreeen mode if true else in windows mode.
 		// If mode is not changed from current mode, isFullScreen(), nothing happens.
@@ -51,9 +42,6 @@ namespace mw {
 		
 		// Returns the current windows height in pixels.
 		int getHeight() const;
-
-		// The returned value represents the number of milliseconds since SDL library initialization. 
-		Uint32 timeTick();
 
 		// Makes the program to quit as soon as current frame is finnished.
 		// i.e. the loop in startLoop() will be made to stop and startloop() will return.
@@ -82,8 +70,6 @@ namespace mw {
 		
 		SDL_Window* window_;
 		SDL_GLContext mainGLContext_;
-		
-		static int videoId_;
 	};
 
 } // Namespace mw.

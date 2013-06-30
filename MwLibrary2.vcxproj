@@ -95,6 +95,7 @@
     <ClCompile Include="mw\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="mw\exception.h" />
     <ClInclude Include="mw\font.h" />
     <ClInclude Include="mw\initsdl.h" />
     <ClInclude Include="mw\initttf.h" />

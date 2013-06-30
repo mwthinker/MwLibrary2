@@ -30,8 +30,12 @@ namespace mw {
     }
 
     void Sprite::draw() {
+		draw([](){});
+    }
+
+	void Sprite::draw(std::function<void()> filter) {
         if (texture_ != 0) {
-            texture_->bind();
+            texture_->bind(filter);
 
             glEnable(GL_BLEND);
             glEnable(GL_TEXTURE_2D);
