@@ -1,5 +1,7 @@
 #include "initsdl.h"
 
+#include <iostream>
+
 #include <SDL.h>
 
 namespace mw {
@@ -7,7 +9,7 @@ namespace mw {
 	InitSdl::InitSdl() {
 		if (nbrOfInstances_ < 1) {
 			if ( SDL_Init(SDL_INIT_EVERYTHING) ) {
-				//printf( "Unable to init SDL: %s\n", SDL_GetError() );
+				std::cout << "Unable to init SDL: " << SDL_GetError() << "\n";
 			}
 		}
 		++nbrOfInstances_;

@@ -30,9 +30,9 @@ namespace mw {
 		SDL_SetWindowIcon(window_, surface); 
 		SDL_FreeSurface(surface);		
 		
-		mainGLContext_ = SDL_GL_CreateContext(window_);
 		SDL_GL_SetSwapInterval(1);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		mainGLContext_ = SDL_GL_CreateContext(window_);
 
 		quit_ = false;
 		time_ = 0;

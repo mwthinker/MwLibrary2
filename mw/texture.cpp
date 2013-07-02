@@ -19,8 +19,10 @@ namespace mw {
 				if (surface->format->BytesPerPixel == 4) {
 					mode = GL_RGBA;
 				}
+				
 				glBindTexture(GL_TEXTURE_2D, textureId);
 				glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
+				
 				return true;
 			}
 
@@ -28,14 +30,14 @@ namespace mw {
 		}
 	}
 
-	Texture::Texture(std::string filename) : loadedToVideo_(false) {
+	Texture::Texture(std::string filename) : texture_(0), loadedToVideo_(false) {
 		preLoadSurface_ = IMG_Load(filename.c_str());
 		if (preLoadSurface_ == 0) {
 			std::cout << "\nImage " << filename << " failed to load: " << IMG_GetError();			
 		}
 	}
 
-	Texture::Texture(int width, int height, int pixelSize, void* data) {
+	Texture::Texture(int width, int height, int pixelSize, void* data) : texture_(0) {
 		preLoadSurface_ = SDL_CreateRGBSurfaceFrom(data,
 			width, height,
 			pixelSize * 8,
@@ -74,6 +76,7 @@ namespace mw {
 		bind([](){
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			int a = 0;
 		});
 	}
 

@@ -40,12 +40,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Programmering\SDK\SDL2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Programmering\SDK\SDL2\x86\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\SDK\SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\SDK\SDL2\x86\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Programmering\SDK\SDL2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Programmering\SDK\SDL2\x86\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\SDK\SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\SDK\SDL2\x86\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

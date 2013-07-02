@@ -1,5 +1,8 @@
 #include "soundbuffer.h"
 
+#include <SDL_mixer.h>
+#include <iostream>
+
 namespace mw {
 
 	int SoundBuffer::nbrOfInstances_ = 0;
@@ -9,13 +12,13 @@ namespace mw {
 	SoundBuffer::SoundBuffer(std::string filename) {
 		mixChunk_ = 0;
 		if (nbrOfInstances_ < 1) {
+			//Mix_Init(MIX_INIT_MP3);
+
 			int success = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
-			//channelList_[-1] = -2;
 			if (success == -1) {
-				//throw SdlGameException(Mix_GetError());
-				std::cout << "\n" << "Sound failed to initiate!";
+				std::cout << "\n" << "Sound failed to initiate, error: " << Mix_GetError() << "\n";
 			} else {
-				std::cout << "\n" << "Sound succeeded to initiate!";
+				std::cout << "\n" << "Sound succeeded to initiate!" << "\n";
 			}
 		}
 		++nbrOfInstances_;
@@ -23,11 +26,9 @@ namespace mw {
 		mixChunk_ = Mix_LoadWAV(filename.c_str());
 
 		if (mixChunk_ == 0) {
-			//printf("\nFailed to load, code: %s\n", Mix_GetError());
-			// handle error
-			std::cout << "\n" << filename << " failed to load!";
+			std::cout << "\n" << filename << " failed to load!\n";
 		} else {
-			std::cout << "\n" << filename << " Loaded successfully!";
+			std::cout << "\n" << filename << " loaded successfully!\n";
 		}
 	}
 
@@ -39,6 +40,7 @@ namespace mw {
 		--nbrOfInstances_;
 		if (nbrOfInstances_ < 1) {
 			Mix_CloseAudio();
+			//Mix_Quit();
 		}
 	}
 

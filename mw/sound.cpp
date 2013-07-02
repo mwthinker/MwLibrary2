@@ -1,10 +1,12 @@
 #include "sound.h"
 
+#include <iostream>
+
 namespace mw {
 
 	int Sound::lastId_ = 0;
 
-	Sound::Sound() {        
+	Sound::Sound() : soundBuffer_(nullptr) {        
 		channel_ = -1;
 		id_ = ++lastId_;
 	}

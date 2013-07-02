@@ -2,19 +2,22 @@
 #define MW_SOUNDBUFFER_H
 
 #include "initsdl.h"
+
 #include <SDL_mixer.h>
-#include <iostream>
+
 #include <string>
 #include <map>
-
 #include <memory>
 
 namespace mw {
 
 	class SoundBuffer : public InitSdl {
 	public:
+		friend class Sound;
+
 		SoundBuffer(std::string filename);
 		~SoundBuffer();
+
 	private:
 		SoundBuffer(const SoundBuffer&) {
 			// Not to be used. Is not copyable.
@@ -27,8 +30,7 @@ namespace mw {
 
 		Mix_Chunk* mixChunk_;
 
-		static int nbrOfInstances_;
-		friend class Sound;
+		static int nbrOfInstances_;		
 		static std::map<int,int> channelList_;// <channel, sound id>
 	};
 

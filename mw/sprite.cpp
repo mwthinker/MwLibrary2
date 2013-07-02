@@ -30,7 +30,10 @@ namespace mw {
     }
 
     void Sprite::draw() {
-		draw([](){});
+		draw([](){
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		});
     }
 
 	void Sprite::draw(std::function<void()> filter) {
