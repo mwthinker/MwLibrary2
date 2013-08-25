@@ -4,6 +4,7 @@
 #include "soundbuffer.h"
 
 #include <string>
+#include <map>
 
 namespace mw {
 
@@ -33,6 +34,6 @@ namespace mw {
 		static int lastId_;
 	};
 
-} // namespace mw
+} // Namespace mw.
 
 #endif // MW_SOUND_H

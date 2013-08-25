@@ -86,7 +86,6 @@
     <ClCompile Include="mw\font.cpp" />
     <ClCompile Include="mw\initsdl.cpp" />
     <ClCompile Include="mw\initttf.cpp" />
-    <ClCompile Include="mw\joystick.cpp" />
     <ClCompile Include="mw\sound.cpp" />
     <ClCompile Include="mw\soundbuffer.cpp" />
     <ClCompile Include="mw\sprite.cpp" />
@@ -99,7 +98,6 @@
     <ClInclude Include="mw\font.h" />
     <ClInclude Include="mw\initsdl.h" />
     <ClInclude Include="mw\initttf.h" />
-    <ClInclude Include="mw\joystick.h" />
     <ClInclude Include="mw\sound.h" />
     <ClInclude Include="mw\soundbuffer.h" />
     <ClInclude Include="mw\sprite.h" />

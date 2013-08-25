@@ -30,14 +30,14 @@ namespace mw {
 		}
 	}
 
-	Texture::Texture(std::string filename) : texture_(0), loadedToVideo_(false) {
+	Texture::Texture(std::string filename,  std::function<void()> filter) : preLoadSurface_(0), filter_(filter), texture_(0) {
 		preLoadSurface_ = IMG_Load(filename.c_str());
 		if (preLoadSurface_ == 0) {
 			std::cout << "\nImage " << filename << " failed to load: " << IMG_GetError();			
 		}
 	}
 
-	Texture::Texture(int width, int height, int pixelSize, void* data) : texture_(0) {
+	Texture::Texture(int width, int height, int pixelSize, void* data, std::function<void()> filter) : filter_(filter), texture_(0) {
 		preLoadSurface_ = SDL_CreateRGBSurfaceFrom(data,
 			width, height,
 			pixelSize * 8,
@@ -54,8 +54,9 @@ namespace mw {
 			0xff000000
 #endif
 			);
+	}
 
-		loadedToVideo_ = false;
+	Texture::Texture(SDL_Surface* surface, std::function<void()> filter) : preLoadSurface_(surface), filter_(filter), texture_(0) {
 	}
 
 	SDL_Surface* Texture::getSdlSurface() const {
@@ -63,7 +64,7 @@ namespace mw {
 	}
 
 	Texture::~Texture() {
-		if (loadedToVideo_) {
+		if (texture_ != 0) {
 			// Is called if the opengl texture is valid and therefore need to be cleaned up.
 			glDeleteTextures(1,&texture_);
 		}
@@ -73,22 +74,18 @@ namespace mw {
 	}
 
 	void Texture::bind() {
-		bind([](){
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			int a = 0;
-		});
-	}
-
-	void Texture::bind(std::function<void()> filter) {
-		if (!loadedToVideo_ && preLoadSurface_ != nullptr) {
-			// Loads to video memory if current texture not valid.
-			loadToVideo();
-			if (loadedToVideo_) {
-				filter();
+		if (texture_ == 0) {
+			// Current surface is valid?
+			if (preLoadSurface_ != 0) {
+				loadToVideo();
+			}
+			// Texture valid?
+			if (texture_ != 0) {
+				filter_();
 			}
 		} else {
-			if (loadedToVideo_) {
+			// Texture valid?
+			if (texture_ != 0) {
 				glBindTexture(GL_TEXTURE_2D, texture_);
 			}
 		}
@@ -102,15 +99,13 @@ namespace mw {
 		return preLoadSurface_->h;
 	}
 
-	// class Texture takes over ownership of surface and is responsable of deallocation.
-	// Not safe to use surface outside this class after calling the constuctor.
-	Texture::Texture(SDL_Surface* surface) : preLoadSurface_(surface), loadedToVideo_(false) {
+	bool Texture::isValid() const {
+		return preLoadSurface_ != 0;
 	}
 
-	// Is called when the opengl context need to be loaded.
 	void Texture::loadToVideo() {
-		if (SdlGlLoadTexture(preLoadSurface_,texture_)) {
-			loadedToVideo_ = true;
+		if (preLoadSurface_ != 0) {
+			SdlGlLoadTexture(preLoadSurface_, texture_);
 		}
 	}
 

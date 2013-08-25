@@ -36,9 +36,6 @@
     <ClCompile Include="mw\initsdl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mw\joystick.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="mw\initttf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -66,9 +63,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mw\initsdl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mw\joystick.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mw\initttf.h">

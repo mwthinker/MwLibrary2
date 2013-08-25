@@ -1,7 +1,6 @@
 #include "font.h"
 
 #include <string>
-#include <iostream>
 
 namespace mw {
 
@@ -9,8 +8,8 @@ namespace mw {
 		characterSize_ = characterSize;
 		font_ = TTF_OpenFont(filename.c_str(),characterSize);
 
-		if (font_ == 0) { // 0 = null
-			std::cerr  << "Error font" << std::endl;
+		if (font_ == 0) {
+			std::cout << "Error font" << std::endl;
 		}
 	}
 
@@ -20,4 +19,4 @@ namespace mw {
 		}
 	}
 	
-} // namespace mw
+} // namespace mw.

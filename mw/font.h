@@ -6,11 +6,14 @@
 #include <SDL_ttf.h>
 
 #include <string>
+#include <iostream>
 #include <memory>
 
 namespace mw {
 
-	// Simple wrapper around TTF_Font.
+	class Font;
+	typedef std::shared_ptr<Font> FontPtr;
+
 	class Font : public InitTtf {
 	public:
 
@@ -23,10 +26,6 @@ namespace mw {
 			return characterSize_;
 		}
 
-		// Use with care. Gets the pointer to the underlying sdl font.
-		inline TTF_Font* getSdlFont() const {
-			return font_;
-		}
 	private:
 		Font(const Font&) {
 			// Not to be used. Is not copyable.
@@ -43,8 +42,6 @@ namespace mw {
 		friend class Text;
 	};
 
-	typedef std::shared_ptr<Font> FontPtr;
-
-} // namespace mw
+} // Namespace mw.
 
 #endif // MW_FONT_H

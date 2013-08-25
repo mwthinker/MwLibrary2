@@ -11,8 +11,8 @@ namespace mw {
 		drawPixelSize_ = false;
     }
 
-	Sprite::Sprite(std::string image) {
-		texture_ = TexturePtr(new mw::Texture(image));
+	Sprite::Sprite(std::string image, std::function<void()> filter) {
+		texture_ = TexturePtr(new mw::Texture(image, filter));
 		drawPixelSize_ = false;
     }
 
@@ -21,7 +21,7 @@ namespace mw {
 		drawPixelSize_ = false;
     }
 
-    void Sprite::setTexture(TexturePtr& texture) {
+    void Sprite::setTexture(const TexturePtr& texture) {
         texture_ = texture;
     }
 
@@ -30,15 +30,8 @@ namespace mw {
     }
 
     void Sprite::draw() {
-		draw([](){
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		});
-    }
-
-	void Sprite::draw(std::function<void()> filter) {
-        if (texture_ != 0) {
-            texture_->bind(filter);
+		if (texture_ != 0 && texture_->isValid()) {
+            texture_->bind();
 
             glEnable(GL_BLEND);
             glEnable(GL_TEXTURE_2D);

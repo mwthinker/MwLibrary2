@@ -34,6 +34,6 @@ namespace mw {
 		bool loop_;
 	};
 
-} // namespace mw
+} // Namespace mw.
 
 #endif // MW_MUSIC_H

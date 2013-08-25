@@ -1,8 +1,8 @@
 #include "window.h"
 #include "exception.h"
 
-#include <SDL_opengl.h>
 #include <SDL_image.h>
+#include <SDL_opengl.h>
 
 namespace mw {
 
@@ -28,7 +28,7 @@ namespace mw {
 
 		SDL_Surface* surface = IMG_Load(icon.c_str());
 		SDL_SetWindowIcon(window_, surface); 
-		SDL_FreeSurface(surface);		
+		SDL_FreeSurface(surface);
 		
 		SDL_GL_SetSwapInterval(1);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -54,7 +54,7 @@ namespace mw {
 	}
 
 	void Window::startLoop() {
-		quit_ = false;		
+		quit_ = false;
 
 		while (!quit_) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -72,8 +72,6 @@ namespace mw {
 			
 			SDL_GL_SwapWindow(window_);
 		}
-
-		onQuiting();
 	}
 
 	SDL_Window* Window::getSdlWindow() const {
@@ -106,6 +104,10 @@ namespace mw {
 		return h;
 	}
 
+	void Window::getSize(int& width, int& height) {
+		SDL_GetWindowSize(window_, &width, &height);
+	}
+
 	void Window::quit() {
 		quit_ = true;
 	}
@@ -114,9 +116,6 @@ namespace mw {
 	}
 
 	void Window::eventUpdate(const SDL_Event& windowEvent) {
-	}
-
-	void Window::onQuiting() const {
 	}
 
 } // Namespace mw.

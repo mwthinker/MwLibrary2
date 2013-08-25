@@ -1,15 +1,13 @@
 #include "initsdl.h"
 
-#include <iostream>
-
 #include <SDL.h>
 
 namespace mw {
 
 	InitSdl::InitSdl() {
 		if (nbrOfInstances_ < 1) {
-			if ( SDL_Init(SDL_INIT_EVERYTHING) ) {
-				std::cout << "Unable to init SDL: " << SDL_GetError() << "\n";
+			if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) ) {
+				//printf( "Unable to init SDL: %s\n", SDL_GetError() );
 			}
 		}
 		++nbrOfInstances_;
@@ -29,7 +27,7 @@ namespace mw {
 	InitSdl& InitSdl::operator=(const InitSdl&) {
 		++nbrOfInstances_;
 		return *this;
-	}
+	}	
 
 	int InitSdl::nbrOfInstances_ = 0;
 

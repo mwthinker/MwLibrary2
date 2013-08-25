@@ -6,7 +6,7 @@ namespace mw {
 
 	int Sound::lastId_ = 0;
 
-	Sound::Sound() : soundBuffer_(nullptr) {        
+	Sound::Sound() {
 		channel_ = -1;
 		id_ = ++lastId_;
 	}
@@ -38,16 +38,17 @@ namespace mw {
 
 	void Sound::play(int loops) {
 		if (soundBuffer_ != 0) {
-			bool ownChannel = (SoundBuffer::channelList_[channel_] == id_);
-			bool isPlaying = (ownChannel && channel_ != -1 && Mix_Playing(channel_) != 1);
-
-			if (!ownChannel || isPlaying) {
+			bool ownChannel = (channel_ != -1 && SoundBuffer::channelList_[channel_] == id_);
+			bool isPlaying = !(channel_ != -1 && Mix_Playing(channel_) != 1);
+			
+			// Have no chanel? Or has stopped played the sound?
+			if (!ownChannel || !isPlaying) {
 				channel_ = Mix_PlayChannel(-1, soundBuffer_->mixChunk_, loops);
 				if (channel_ != -1) {
 					SoundBuffer::channelList_[channel_] = id_;
 				} else {
 					// All channels is being used.
-					std::cout << "\nFailed to play sound, id " << id_ << ",all channels is being used!\n";
+					std::cout << "\nFailed to play sound, id " << id_ << ", all channels is being used!\n";
 					std::cout << Mix_GetError() << std::endl;
 				}
 			} else {

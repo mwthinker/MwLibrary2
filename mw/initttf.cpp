@@ -7,7 +7,7 @@ namespace mw {
 	InitTtf::InitTtf() {
 		if (nbrOfInstances_ < 1) {
 			if (!TTF_WasInit() && TTF_Init() == -1) {
-				// Error
+				// Error.
 			}
 		}
 		++nbrOfInstances_;
@@ -32,5 +32,4 @@ namespace mw {
 
 	int InitTtf::nbrOfInstances_ = 0;
 
-} // namespace mw
-
+} // Namespace mw.
