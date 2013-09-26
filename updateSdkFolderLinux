@@ -1,9 +1,0 @@
-#!/bin/bash
-
-rm -r ../SDK/MwLibrary2
-
-mkdir ../SDK/MwLibrary2
-mkdir ../SDK/MwLibrary2/mw
-
-cp libMwLibrary2.a ../SDK/MwLibrary2
-cp mw/*.h ../SDK/MwLibrary2/mw
