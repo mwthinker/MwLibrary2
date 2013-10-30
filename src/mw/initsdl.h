@@ -4,14 +4,12 @@
 namespace mw {
 
 	class InitSdl {
-	public:
-		InitSdl();
-		
-		InitSdl(const InitSdl&);
-		InitSdl& operator=(const InitSdl&);
-	
 	protected:
+		InitSdl();
 		~InitSdl();
+		
+		InitSdl(const InitSdl&) = delete;
+		InitSdl& operator=(const InitSdl&) = delete;
 
 	private:
 		static int nbrOfInstances_;

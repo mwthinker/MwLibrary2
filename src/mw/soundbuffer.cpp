@@ -19,16 +19,7 @@ namespace mw {
 		if (nbrOfInstances_ < 1) {
 			Mix_CloseAudio();
 		}
-	}
-
-	InitSoundBuffer::InitSoundBuffer(const InitSoundBuffer&) {
-		++nbrOfInstances_;
-	}
-
-	InitSoundBuffer& InitSoundBuffer::operator=(const InitSoundBuffer&) {
-		++nbrOfInstances_;
-		return *this;
-	}
+	}	
 
 	int InitSoundBuffer::nbrOfInstances_ = 0;
 

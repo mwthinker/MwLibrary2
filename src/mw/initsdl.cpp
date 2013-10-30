@@ -20,15 +20,6 @@ namespace mw {
 		}
 	}
 
-	InitSdl::InitSdl(const InitSdl&) {
-		++nbrOfInstances_;
-	}
-
-	InitSdl& InitSdl::operator=(const InitSdl&) {
-		++nbrOfInstances_;
-		return *this;
-	}	
-
 	int InitSdl::nbrOfInstances_ = 0;
 
 } // Namespace mw.

@@ -27,15 +27,6 @@ namespace mw {
 		}
 
 	private:
-		Font(const Font&) {
-			// Not to be used. Is not copyable.
-		}
-
-		Font& operator=(const Font&) {
-			// Not to be used. Is not copyable.
-			return *this;
-		}
-
 		TTF_Font* font_;
 		unsigned int characterSize_;
 
