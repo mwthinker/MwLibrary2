@@ -71,7 +71,7 @@ namespace mw {
 		drawPixelSize_ = drawPixelSize;
 	}
 
-	bool Sprite::isDrawingPixelSize() {
+	bool Sprite::isDrawingPixelSize() const {
 		return drawPixelSize_;
 	}
 

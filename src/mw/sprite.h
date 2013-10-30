@@ -41,7 +41,7 @@ namespace mw {
 		void setDrawPixelSize(bool drawPixelSize);
 
 		// Returns if the image is to be drawn in pixel size or not.
-		bool isDrawingPixelSize();
+		bool isDrawingPixelSize() const;
 
 	private:
 		TexturePtr texture_;

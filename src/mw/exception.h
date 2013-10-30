@@ -1,16 +1,18 @@
 #ifndef MW_EXCEPTION_H
 #define MW_EXCEPTION_H
 
-#include <string>
+#include <stdexcept>
 
 namespace mw {
 
-	struct Exception {
-		inline Exception(std::string error_) : error(error_) {
+	class Exception : public std::runtime_error {
+	public:
+		inline Exception(const std::string& what_arg) : std::runtime_error(what_arg) {
 		}
-
-		const std::string error;
-	};	
+		
+		inline Exception(const char* what_arg) : std::runtime_error(what_arg) {
+		}
+	};
 
 } // Namespace mw.
 
