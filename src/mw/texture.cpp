@@ -10,8 +10,8 @@ namespace mw {
 
 	namespace {
 
-		// Creates and returns a opengl texture from the surface provided.
-		bool SdlGlLoadTexture(SDL_Surface* const surface, GLuint& textureId) {
+		// Creates and returns an opengl texture from the surface provided.
+		bool sdlGlLoadTexture(SDL_Surface* const surface, GLuint& textureId) {
 			glGenTextures(1, &textureId);
 
 			if (glGetError() == GL_NO_ERROR) {
@@ -33,7 +33,7 @@ namespace mw {
 	Texture::Texture(std::string filename,  std::function<void()> filter) : preLoadSurface_(0), filter_(filter), texture_(0) {
 		preLoadSurface_ = IMG_Load(filename.c_str());
 		if (preLoadSurface_ == 0) {
-			std::cout << "\nImage " << filename << " failed to load: " << IMG_GetError();			
+			std::cout << "\nImage " << filename << " failed to load: " << IMG_GetError() << std::endl;			
 		}
 	}
 
@@ -105,7 +105,7 @@ namespace mw {
 
 	void Texture::loadToVideo() {
 		if (preLoadSurface_ != 0) {
-			SdlGlLoadTexture(preLoadSurface_, texture_);
+			sdlGlLoadTexture(preLoadSurface_, texture_);
 		}
 	}
 

@@ -5,23 +5,23 @@
 namespace mw {
 
 	InitSoundBuffer::InitSoundBuffer() {
-		if (nbrOfInstances_ < 1) {
+		if (nbrOfInstances < 1) {
 			int success = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 			if (success == -1) {
 				std::cout << "\nSound failed to initiate!";
 			}
 		}
-		++nbrOfInstances_;
+		++nbrOfInstances;
 	}
 
 	InitSoundBuffer::~InitSoundBuffer() {
-		--nbrOfInstances_;
-		if (nbrOfInstances_ < 1) {
+		--nbrOfInstances;
+		if (nbrOfInstances < 1) {
 			Mix_CloseAudio();
 		}
 	}	
 
-	int InitSoundBuffer::nbrOfInstances_ = 0;
+	int InitSoundBuffer::nbrOfInstances = 0;
 
 	std::unordered_map<int, int> SoundBuffer::channelList_;
 

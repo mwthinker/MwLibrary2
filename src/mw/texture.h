@@ -35,7 +35,7 @@ namespace mw {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
-		// Cleens the image from memory and the opengl texture from graphic memory.
+		// Cleans the image from memory and the opengl texture from graphic memory.
 		~Texture();
 
 		// Not to be used. Is not copyable.

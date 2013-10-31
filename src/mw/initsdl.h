@@ -12,7 +12,7 @@ namespace mw {
 		InitSdl& operator=(const InitSdl&) = delete;
 
 	private:
-		static int nbrOfInstances_;
+		static int nbrOfInstances;
 	};
 
 } // Namespace mw.

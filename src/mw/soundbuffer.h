@@ -23,7 +23,7 @@ namespace mw {
 		InitSoundBuffer& operator=(const InitSoundBuffer&) = delete;
 
 	private:
-		static int nbrOfInstances_;
+		static int nbrOfInstances;
 	};
 
 	class SoundBuffer : public InitSdl, public InitSoundBuffer {

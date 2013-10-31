@@ -1,17 +1,9 @@
-#include <mw/window.h>
-
-using namespace std;
-using namespace mw;
-
-class TestWindow : public Window {
-public:
-	TestWindow() : Window(300,300,true,"Test") {
-	}
-};
+#include "testwindow.h"
 
 int main(int argc, char** argv) {
-	TestWindow game;
+	// Testing starting 3 window at once.
+	TestWindow game, game2, game3;
 	game.startLoop();
-
-    return 0;
+	
+	return 0;
 }

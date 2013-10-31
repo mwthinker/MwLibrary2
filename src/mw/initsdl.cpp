@@ -5,21 +5,21 @@
 namespace mw {
 
 	InitSdl::InitSdl() {
-		if (nbrOfInstances_ < 1) {
+		if (nbrOfInstances < 1) {
 			if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) ) {
 				//printf( "Unable to init SDL: %s\n", SDL_GetError() );
 			}
 		}
-		++nbrOfInstances_;
+		++nbrOfInstances;
 	}
 
 	InitSdl::~InitSdl() {
-		--nbrOfInstances_;
-		if (nbrOfInstances_ < 1) {
+		--nbrOfInstances;
+		if (nbrOfInstances < 1) {
 			SDL_Quit();
 		}
 	}
 
-	int InitSdl::nbrOfInstances_ = 0;
+	int InitSdl::nbrOfInstances = 0;
 
 } // Namespace mw.
