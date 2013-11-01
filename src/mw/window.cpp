@@ -34,7 +34,8 @@ namespace mw {
 
 		SDL_GL_SetSwapInterval(1);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		mainGLContext_ = SDL_GL_CreateContext(window_);
+		SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
+		glContext_ = SDL_GL_CreateContext(window_);
 
 		quit_ = false;
 		time_ = 0;
@@ -58,7 +59,7 @@ namespace mw {
 
 	Window::~Window() {
 		if (window_ != nullptr) {
-			SDL_GL_DeleteContext(mainGLContext_);
+			SDL_GL_DeleteContext(glContext_);
 			SDL_DestroyWindow(window_);
 			windows.remove_if([this](Window* w) {
 				return getId() == w->getId();
@@ -85,7 +86,7 @@ namespace mw {
 
 			windows.remove_if([](Window* w) {
 				if (w->quit_) {
-					SDL_GL_DeleteContext(w->mainGLContext_);
+					SDL_GL_DeleteContext(w->glContext_);
 					SDL_DestroyWindow(w->window_);
 					w->window_ = nullptr;
 				}
@@ -101,7 +102,7 @@ namespace mw {
 	}
 
 	void Window::updateLoop() {
-		SDL_GL_MakeCurrent(window_, mainGLContext_);
+		SDL_GL_MakeCurrent(window_, glContext_);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		Uint32 currentTime = SDL_GetTicks();

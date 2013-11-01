@@ -1,10 +1,19 @@
 #include "testwindow.h"
 
+#include <mw/sprite.h>
 #include <mw/window.h>
-#include <memory>
 
-TestWindow::TestWindow() : mw::Window(300, 300, true, "Test") {
+TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
 	focus_ = true;
+	sprite_.setDrawPixelSize(true);
+}
+
+void TestWindow::update(Uint32 msDeltaTime) {
+	glPushMatrix();
+	glTranslated(x_, y_, 0);
+	sprite_.draw();
+
+	glPopMatrix();
 }
 
 void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
