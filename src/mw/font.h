@@ -26,6 +26,11 @@ namespace mw {
 			return characterSize_;
 		}
 
+		// Use with care! Gets a pointer to the font data.
+		inline TTF_Font* getTtfFont() const {
+			font_;
+		}
+
 	private:
 		TTF_Font* font_;
 		unsigned int characterSize_;

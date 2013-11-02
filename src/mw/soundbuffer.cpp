@@ -7,8 +7,9 @@ namespace mw {
 	InitSoundBuffer::InitSoundBuffer() {
 		if (nbrOfInstances < 1) {
 			int success = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+			Mix_AllocateChannels(16);
 			if (success == -1) {
-				std::cout << "\nSound failed to initiate!";
+				std::cerr << "\nSound failed to initiate!";
 			}
 		}
 		++nbrOfInstances;
@@ -23,7 +24,7 @@ namespace mw {
 
 	int InitSoundBuffer::nbrOfInstances = 0;
 
-	std::unordered_map<int, int> SoundBuffer::channelList_;
+	std::unordered_map<int, int> SoundBuffer::channelList;
 
 	SoundBuffer::SoundBuffer(std::string filename) : valid_(true) {
 		mixChunk_ = 0;
