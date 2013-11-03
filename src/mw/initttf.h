@@ -8,8 +8,8 @@ namespace mw {
 		InitTtf();
 		~InitTtf();
 
-		InitTtf(const InitTtf&) = delete;
-		InitTtf& operator=(const InitTtf&) = delete;
+		InitTtf(const InitTtf&);
+		InitTtf& operator=(const InitTtf&);
 
 	private:
 		static int nbrOfInstances;

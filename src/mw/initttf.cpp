@@ -18,7 +18,16 @@ namespace mw {
 		if (TTF_WasInit() && nbrOfInstances < 1) {
 			TTF_Quit();
 		}
-	}	
+	}
+
+	InitTtf::InitTtf(const InitTtf&) {
+		++nbrOfInstances;
+	}
+
+	InitTtf& InitTtf::operator=(const InitTtf&) {
+		++nbrOfInstances;
+		return *this;
+	}
 
 	int InitTtf::nbrOfInstances = 0;
 
