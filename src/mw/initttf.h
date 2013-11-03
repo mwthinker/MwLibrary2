@@ -4,17 +4,15 @@
 namespace mw {
 
 	class InitTtf {
-	public:
-		InitTtf();
-
-		InitTtf(const InitTtf&);
-		InitTtf& operator=(const InitTtf&);
-	
 	protected:
+		InitTtf();
 		~InitTtf();
 
+		InitTtf(const InitTtf&) = delete;
+		InitTtf& operator=(const InitTtf&) = delete;
+
 	private:
-		static int nbrOfInstances_;
+		static int nbrOfInstances;
 	};
 
 } // Namespace mw.

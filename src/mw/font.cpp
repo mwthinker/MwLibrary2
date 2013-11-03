@@ -9,7 +9,7 @@ namespace mw {
 		font_ = TTF_OpenFont(filename.c_str(),characterSize);
 
 		if (font_ == 0) {
-			std::cout << "Error font" << std::endl;
+			std::cerr << "Error font" << std::endl;
 		}
 	}
 

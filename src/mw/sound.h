@@ -18,17 +18,22 @@ namespace mw {
 		Sound& operator=(const Sound& sound);
 
 		void play(int loops = 0);
+		
 		void pause();
-		bool isPaused() const;
+		void resume();
 
-		/*
-		void setVolume(bool loop);    
-		bool getVolume() const;
-		}*/
+		bool isPaused() const;		
+
+		inline const SoundBufferPtr getSoundBuffer() const {
+			return soundBuffer_;
+		}
+
+		// Returns the sounds channel. If no channel is own 0 is returned.
+		int getChannel() const;
 
 	private:
 		int channel_;
-		int id_;    
+		int id_;
 		SoundBufferPtr soundBuffer_;
 
 		static int lastId_;

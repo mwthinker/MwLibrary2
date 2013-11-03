@@ -15,17 +15,15 @@ namespace mw {
 	typedef std::shared_ptr<SoundBuffer> SoundBufferPtr;
 
 	class InitSoundBuffer {
-	public:
-		InitSoundBuffer();
-
-		InitSoundBuffer(const InitSoundBuffer&);
-		InitSoundBuffer& operator=(const InitSoundBuffer&);
-	
 	protected:
+		InitSoundBuffer();
 		~InitSoundBuffer();
-	
+
+		InitSoundBuffer(const InitSoundBuffer&) = delete;
+		InitSoundBuffer& operator=(const InitSoundBuffer&) = delete;
+
 	private:
-		static int nbrOfInstances_;
+		static int nbrOfInstances;
 	};
 
 	class SoundBuffer : public InitSdl, public InitSoundBuffer {
@@ -42,21 +40,17 @@ namespace mw {
 		// If no error string will be empty.
 		std::string getError() const;
 
+		// Use with care! Gets a pointer to the sound data.
+		inline Mix_Chunk* getTtfFont() const {
+			mixChunk_;
+		}
+
 	private:
-		SoundBuffer(const SoundBuffer&) {
-			// Not to be used. Is not copyable.
-		}
-
-		SoundBuffer& operator=(const SoundBuffer&) {
-			// Not to be used. Is not copyable.
-			return *this;
-		}
-
 		Mix_Chunk* mixChunk_;
-
-		static std::unordered_map<int, int> channelList_;// <channel, sound id>
 		bool valid_;
 		std::string error_;
+
+		static std::unordered_map<int, int> channelList;// <channel, sound id>
 	};
 
 } // Namespace mw.

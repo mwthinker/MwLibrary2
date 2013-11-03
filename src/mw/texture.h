@@ -35,8 +35,14 @@ namespace mw {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
-		// Cleens the image from memory and the opengl texture from graphic memory.
+		// Cleans the image from memory and the opengl texture from graphic memory.
 		~Texture();
+
+		// Is not copyable.
+		Texture(const Texture&) = delete;
+
+		// Is not copyable.
+		Texture& operator=(const Texture&) = delete;
 
 		// Binds the texture to the target GL_TEXTURE_2D. First call, copies 
 		// the image data to graphic memory.
@@ -48,28 +54,21 @@ namespace mw {
 		// Returns the height of the image in pixels. 
 		int getHeight() const;
 
-		// Use with care. Gets a copy of the underlaying surface.
+		// Use with care! Gets a pointer to the underlaying surface.
 		SDL_Surface* getSdlSurface() const;
 
-		// Returns if the image is loadad correctly. It may however not be loaded
+		// Use with care! Gets the int to the underlaying opengl texture.
+		GLuint getOpenGlTexture() const;
+
+		// Returns if the image is loaded correctly. It may however not be loaded
 		// to graphic memory despite the result of this function.
 		bool isValid() const;
 
 	private:
-		Texture(const Texture&) {
-			// Not to be used. Is not copyable.
-		}
-
-		Texture& operator=(const Texture&) {
-			// Not to be used. Is not copyable.
-			return *this;
-		}
-
-		// Is called when the opengl context need to be loaded.
-		void loadToVideo();
-
-		GLuint texture_;
 		SDL_Surface* preLoadSurface_;
+		bool firstCallToBind_;
+		GLuint texture_;
+
 		std::function<void()> filter_;
 	};
 
