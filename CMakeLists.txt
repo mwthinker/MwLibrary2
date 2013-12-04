@@ -16,6 +16,7 @@ endif (MSVC)
 
 # Source files.
 SET(SOURCES
+	src/mw/color.h
 	src/mw/exception.h
 	src/mw/initsdl.cpp
 	src/mw/initsdl.h
@@ -39,6 +40,12 @@ SET(SOURCES
 	src/mw/font.h
 	src/mw/music.h
 )
+
+SET(SOURCES_TEST
+	srcTest/main.cpp
+	srcTest/testwindow.cpp
+	srcTest/testwindow.h
+)
 # End of source files.
 
 FIND_PACKAGE(OpenGL REQUIRED)
@@ -50,13 +57,6 @@ FIND_PACKAGE(SDL2_ttf REQUIRED)
 INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR} ${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR})
 ADD_LIBRARY(MwLibrary2 ${SOURCES})
 
-# Source files.
-SET(SOURCES_TEST
-	srcTest/main.cpp
-	srcTest/testwindow.cpp
-	srcTest/testwindow.h
-)
-
 SET(ALL_SDL_LIBRARIES
 	${SDL2_LIBRARIES}
 	${SDL2_TTF_LIBRARIES}
@@ -65,7 +65,7 @@ SET(ALL_SDL_LIBRARIES
 )
 
 INCLUDE_DIRECTORIES(src)
-ADD_EXECUTABLE(TestMwLibrary ${SOURCES_TEST})
-TARGET_LINK_LIBRARIES(TestMwLibrary MwLibrary2 ${ALL_SDL_LIBRARIES} ${OPENGL_LIBRARIES})
+ADD_EXECUTABLE(MwLibrary2Test ${SOURCES_TEST})
+TARGET_LINK_LIBRARIES(MwLibrary2Test MwLibrary2 ${ALL_SDL_LIBRARIES} ${OPENGL_LIBRARIES})
 
 FILE(COPY dataTest/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.
