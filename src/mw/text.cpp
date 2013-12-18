@@ -86,7 +86,7 @@ namespace mw {
 		if (font_) {
 			if (str.size() > 0) {
 				SDL_Color color = {255,255,255};
-				SDL_Surface* surface = TTF_RenderText_Blended(font_->font_, str.c_str(), color);
+				SDL_Surface* surface = TTF_RenderUTF8_Blended(font_->font_, str.c_str(), color);
 				// texture_ takes ownership of surface
 				TexturePtr texture = TexturePtr(new Texture(surface,[]() {
 					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
