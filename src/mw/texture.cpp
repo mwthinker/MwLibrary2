@@ -26,14 +26,19 @@ namespace mw {
 
 	}
 
-	Texture::Texture(std::string filename, std::function<void()> filter) : preLoadSurface_(0), firstCallToBind_(true), texture_(0), filter_(filter) {
+	Texture::Texture(std::string filename, std::function<void()> filter) : preLoadSurface_(0), firstCallToBind_(true), texture_(0), filter_(filter), width_(0), height_(0) {
 		preLoadSurface_ = IMG_Load(filename.c_str());
-		if (preLoadSurface_ == 0) {
+		if (preLoadSurface_ != 0) {
+			width_ = preLoadSurface_->w;
+			height_ = preLoadSurface_->h;
+			valid_ = true;
+		} else {
 			std::cerr << "\nImage " << filename << " failed to load: " << IMG_GetError() << std::endl;
+			valid_ = false;
 		}
 	}
 
-	Texture::Texture(SDL_Surface* surface, std::function<void()> filter) : preLoadSurface_(surface), firstCallToBind_(true), texture_(0), filter_(filter) {
+	Texture::Texture(SDL_Surface* surface, std::function<void()> filter) : preLoadSurface_(surface), firstCallToBind_(true), texture_(0), filter_(filter), width_(surface->w), height_(surface->h), valid_(true) {
 	}
 
 	Texture::~Texture() {
@@ -71,15 +76,15 @@ namespace mw {
 	}
 
 	int Texture::getWidth() const {
-		return preLoadSurface_->w;
+		return width_;
 	}
 
 	int Texture::getHeight() const {
-		return preLoadSurface_->h;
+		return height_;
 	}
 
 	bool Texture::isValid() const {
-		return preLoadSurface_ != 0;
+		return valid_;
 	}
 
 } // Namespace mw.

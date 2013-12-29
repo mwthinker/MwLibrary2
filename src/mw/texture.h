@@ -65,6 +65,8 @@ namespace mw {
 		mutable SDL_Surface* preLoadSurface_;
 		mutable bool firstCallToBind_;
 		mutable GLuint texture_;
+		int width_, height_;
+		bool valid_;
 
 		std::function<void()> filter_;
 	};
