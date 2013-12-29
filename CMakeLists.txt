@@ -18,10 +18,15 @@ endif (MSVC)
 SET(SOURCES
 	src/mw/color.h
 	src/mw/exception.h
+	src/mw/font.cpp
+	src/mw/font.h
 	src/mw/initsdl.cpp
 	src/mw/initsdl.h
 	src/mw/initttf.cpp
 	src/mw/initttf.h
+	src/mw/joystick.cpp
+	src/mw/joystick.h
+	src/mw/music.h
 	src/mw/sound.cpp
 	src/mw/sound.h
 	src/mw/soundbuffer.cpp
@@ -36,9 +41,6 @@ SET(SOURCES
 	src/mw/texture.h
 	src/mw/window.cpp
 	src/mw/window.h
-	src/mw/font.cpp
-	src/mw/font.h
-	src/mw/music.h
 )
 
 SET(SOURCES_TEST
