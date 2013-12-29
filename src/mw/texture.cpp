@@ -14,21 +14,16 @@ namespace mw {
 		GLuint sdlGlLoadTexture(SDL_Surface* const surface) {
 			GLuint textureId = 0;
 			glGenTextures(1, &textureId);
-
-			if (glGetError() == GL_NO_ERROR) {
-				int mode = GL_RGB;
-				if (surface->format->BytesPerPixel == 4) {
-					mode = GL_RGBA;
-				}
-
-				glBindTexture(GL_TEXTURE_2D, textureId);
-				glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
-
-				return textureId;
+			int mode = GL_RGB;
+			if (surface->format->BytesPerPixel == 4) {
+				mode = GL_RGBA;
 			}
 
-			return 0;
+			glBindTexture(GL_TEXTURE_2D, textureId);
+			glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
+			return textureId;
 		}
+
 	}
 
 	Texture::Texture(std::string filename, std::function<void()> filter) : preLoadSurface_(0), firstCallToBind_(true), texture_(0), filter_(filter) {
@@ -51,7 +46,7 @@ namespace mw {
 		SDL_FreeSurface(preLoadSurface_);
 	}
 
-	void Texture::bind() {
+	void Texture::bind() const {
 		if (firstCallToBind_) {
 			firstCallToBind_ = false;
 
@@ -59,6 +54,9 @@ namespace mw {
 			if (preLoadSurface_ != 0) {
 				// Load to texture.
 				texture_ = sdlGlLoadTexture(preLoadSurface_);
+				SDL_FreeSurface(preLoadSurface_);
+				preLoadSurface_ = nullptr;
+
 				// Texture valid?
 				if (texture_ != 0) {
 					filter_();
@@ -78,14 +76,6 @@ namespace mw {
 
 	int Texture::getHeight() const {
 		return preLoadSurface_->h;
-	}
-
-	SDL_Surface* Texture::getSdlSurface() const {
-		return preLoadSurface_;
-	}
-
-	GLuint Texture::getOpenGlTexture() const {
-		return texture_;
 	}
 
 	bool Texture::isValid() const {

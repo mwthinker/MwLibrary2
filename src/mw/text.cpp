@@ -68,7 +68,7 @@ namespace mw {
 		return 0.0;
     }
 
-    void Text::draw() {
+    void Text::draw() const {
 		if (font_) {
 			if (text_.size() > 0) {
 				glPushMatrix();

@@ -34,7 +34,7 @@ namespace mw {
 		// Draws the image in in x = [-0.5,0.5] and y = [-0.5,0.5] by default.
 		// If drawPixelSize is set to true then the image is drawn in pixel size
 		// and centered in origo.
-		void draw();
+		void draw() const;
 
 		// Draws the image in pixel size if the parameter drawPixelSize is true.
 		// Else the image is drawn with sides with length one.

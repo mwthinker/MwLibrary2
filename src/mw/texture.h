@@ -46,7 +46,7 @@ namespace mw {
 
 		// Binds the texture to the target GL_TEXTURE_2D. First call, copies 
 		// the image data to graphic memory.
-		void bind();
+		void bind() const;
 
 		// Returns the width of the image in pixels.
 		int getWidth() const;
@@ -54,20 +54,17 @@ namespace mw {
 		// Returns the height of the image in pixels. 
 		int getHeight() const;
 
-		// Use with care! Gets a pointer to the underlaying surface.
-		SDL_Surface* getSdlSurface() const;
-
-		// Use with care! Gets the int to the underlaying opengl texture.
-		GLuint getOpenGlTexture() const;
-
 		// Returns if the image is loaded correctly. It may however not be loaded
 		// to graphic memory despite the result of this function.
 		bool isValid() const;
 
 	private:
-		SDL_Surface* preLoadSurface_;
-		bool firstCallToBind_;
-		GLuint texture_;
+		// Is mutable in order for the bind() function to be const.
+		// It's ok beacause the variables can be seen as cache variables.
+		// So the external "constness" is preserved.
+		mutable SDL_Surface* preLoadSurface_;
+		mutable bool firstCallToBind_;
+		mutable GLuint texture_;
 
 		std::function<void()> filter_;
 	};

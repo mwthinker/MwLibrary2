@@ -26,7 +26,7 @@ namespace mw {
 		double getWidth() const;
 		double getHeight() const;
 
-		void draw();
+		void draw() const;
 
 	private:
 		void loadText(std::string str);

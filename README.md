@@ -7,7 +7,7 @@ SDL2_ttf and SDL2_mixer.
 Build and usage
 ======
 Create a "build" directory in the project directory and execute CMake from 
-there and point to the project directory (i.e. there the "CMakeLists.txt" is).
+there and point to the project directory (i.e. where the "CMakeLists.txt" is).
 
 Open source
 ======

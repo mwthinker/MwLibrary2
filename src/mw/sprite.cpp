@@ -29,7 +29,7 @@ namespace mw {
         return texture_;
     }
 
-    void Sprite::draw() {
+    void Sprite::draw() const {
 		if (texture_ != 0 && texture_->isValid()) {
             texture_->bind();
 
