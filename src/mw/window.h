@@ -28,7 +28,6 @@ namespace mw {
 		// The id for the windows. Is tha same as calling SDL_GetWindowID.
 		Uint32 getId() const;
 
-	protected:
 		// Gets the window pointer. Use with care.
 		SDL_Window* getSdlWindow() const;
 
