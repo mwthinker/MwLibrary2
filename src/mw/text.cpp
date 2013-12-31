@@ -39,6 +39,7 @@ namespace mw {
 					return;
 				}
 			}
+			text_ = text; // = "" is the same.
 			width_ = 0;
 			height_ = 0;
 		}
