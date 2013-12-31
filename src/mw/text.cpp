@@ -10,15 +10,15 @@
 
 namespace mw {
 
-	Text::Text() : characterSize_(0) {
+	Text::Text() : characterSize_(0), width_(0), height_(0) {
 		setText("");
 	}
 
-	Text::Text(std::string text, FontPtr font) : characterSize_(font->getCharacterSize()), font_(font) {
+	Text::Text(std::string text, FontPtr font) : characterSize_(font->getCharacterSize()), font_(font), width_(0), height_(0) {
 		setText(text);
     }
 
-	Text::Text(std::string text, FontPtr font, double characterSize) : characterSize_(characterSize), font_(font) {
+	Text::Text(std::string text, FontPtr font, double characterSize) : characterSize_(characterSize), font_(font), width_(0), height_(0) {
 		setText(text);
     }
 
