@@ -4,9 +4,7 @@
 #include "initttf.h"
 
 #include <SDL_ttf.h>
-
 #include <string>
-#include <iostream>
 #include <memory>
 
 namespace mw {
@@ -16,26 +14,23 @@ namespace mw {
 
 	class Font : public InitTtf {
 	public:
-
-		// Loads a font located in file named (filename). The font is created to be in
-		// size (characterSize) default 30 size. Higher size demands higher memory usage.
-		Font(std::string filename, unsigned int characterSize = 30);
+		// Loads a font located in file named (filename). 
+		// Higher character size demands higher memory usage.
+		Font(std::string filename, int characterSize);
 		~Font();
 
-		inline unsigned int getCharacterSize() const {
+		inline int getCharacterSize() const {
 			return characterSize_;
 		}
 
-		// Use with care! Gets a pointer to the font data.
+		// Use with care! Returns a pointer to the font data.
 		inline TTF_Font* getTtfFont() const {
-			font_;
+			return font_;
 		}
 
 	private:
 		TTF_Font* font_;
-		unsigned int characterSize_;
-
-		friend class Text;
+		int characterSize_;
 	};
 
 } // Namespace mw.

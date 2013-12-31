@@ -6,13 +6,19 @@
 TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
 	focus_ = true;
 	sprite_.setDrawPixelSize(true);
+	mw::FontPtr font(new mw::Font("Ubuntu-B.ttf", 30));
+	text_ = mw::Text("hej", font);
+	text_.setCharacterSize(60);
+	int a = 1;
 }
 
 void TestWindow::update(Uint32 msDeltaTime) {
 	glPushMatrix();
 	glTranslated(x_, y_, 0);
+	glColor4d(1, 1, 1, 0.3);
 	sprite_.draw();
-
+	glColor3d(1, 0, 0);
+	text_.draw();
 	glPopMatrix();
 }
 
