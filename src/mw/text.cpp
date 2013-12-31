@@ -27,19 +27,21 @@ namespace mw {
 
     void Text::setText(std::string text) {
 		// Text changed? => load new textImage.
-		if (font_ && text.size() > 0 && text_ != text) {
-			int w, h;
-			if (TTF_SizeUTF8(font_->getTtfFont(), text.c_str(), &w, &h) == 0) {
-				double scale = characterSize_ / font_->getCharacterSize();
-				width_ = w;
-				height_ = h;
-				loadText(text);
-				text_ = text;
-				return;
+		if (text_ != text) {
+			if (font_ && text.size() > 0) {
+				int w, h;
+				if (TTF_SizeUTF8(font_->getTtfFont(), text.c_str(), &w, &h) == 0) {
+					double scale = characterSize_ / font_->getCharacterSize();
+					width_ = w;
+					height_ = h;
+					loadText(text);
+					text_ = text;
+					return;
+				}
 			}
+			width_ = 0;
+			height_ = 0;
 		}
-		width_ = 0;
-		height_ = 0;
     }
 	
     void Text::draw() const {
