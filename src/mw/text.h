@@ -50,14 +50,20 @@ namespace mw {
 		// Returns the width of the text to be drawn.
 		// (The width in openGl)
 		inline double getWidth() const {
-			double scale = characterSize_ / font_->getCharacterSize();
+			double scale = 0;
+			if (font_) {
+				scale = characterSize_ / font_->getCharacterSize();
+			}
 			return width_ * scale;
 		}
 
 		// Returns the height of the text to be drawn.
 		// (The height in openGl)
 		inline double getHeight() const {
-			double scale = characterSize_ / font_->getCharacterSize();
+			double scale = 0;
+			if (font_) {
+				scale = characterSize_ / font_->getCharacterSize();
+			}
 			return height_ * scale;
 		}
 
