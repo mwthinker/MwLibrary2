@@ -38,6 +38,18 @@ namespace mw {
 		}
 	}
 
+	Texture::Texture(int width, int height, int pixelSize, void* data, std::function<void()> filter) : preLoadSurface_(0), firstCallToBind_(true), texture_(0), filter_(filter), width_(width), height_(height), valid_(true) {
+		preLoadSurface_ = SDL_CreateRGBSurfaceFrom(data, width, height, pixelSize * 8, 0, 0, 0, 0, 0);
+		if (preLoadSurface_ != 0) {
+			width_ = preLoadSurface_->w;
+			height_ = preLoadSurface_->h;
+			valid_ = true;
+		} else {
+			std::cerr << "\nData failed to load: " << IMG_GetError() << std::endl;
+			valid_ = false;
+		}
+	}
+
 	Texture::Texture(SDL_Surface* surface, std::function<void()> filter) : preLoadSurface_(surface), firstCallToBind_(true), texture_(0), filter_(filter), width_(surface->w), height_(surface->h), valid_(true) {
 	}
 
