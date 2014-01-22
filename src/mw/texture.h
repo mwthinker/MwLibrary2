@@ -22,12 +22,6 @@ namespace mw {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
-		// Loads a image from data.
-		Texture(int width, int height, int pixelSize, void* data, std::function<void()> filter = []() {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		});
-
 		// Takes over ownership of surface and is responsable of deallocation.
 		// Not safe to use surface outside this class after calling the constuctor.
 		Texture(SDL_Surface* surface, std::function<void()> filter = []() {
