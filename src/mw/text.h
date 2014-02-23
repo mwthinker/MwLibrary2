@@ -30,14 +30,14 @@ namespace mw {
 
 		void setText(std::string text);
 
-		inline std::string Text::getText() const {
+		inline std::string getText() const {
 			return text_;
 		}
 
 		// Set the character size. The text texture is created in size 
 		// provided by the font but then scaled to match the 
 		// provided character size.
-		inline void Text::setCharacterSize(double characterSize) {
+		inline void setCharacterSize(double characterSize) {
 			characterSize_ = characterSize;
 		}
 
@@ -68,7 +68,7 @@ namespace mw {
 		}
 
 		// Returns the internal font. Can be null if no font used.
-		inline FontPtr Text::getFont() const {
+		inline FontPtr getFont() const {
 			return font_;
 		}
 
