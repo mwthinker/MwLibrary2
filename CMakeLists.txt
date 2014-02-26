@@ -53,7 +53,13 @@ find_package(SDL2_image REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 
-include_directories(${OPENGL_INCLUDE_DIR} ${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR})
+include_directories(${OPENGL_INCLUDE_DIR}
+	${SDL2_INCLUDE_DIR}
+	${SDL2_IMAGE_INCLUDE_DIR}
+	${SDL2_TTF_INCLUDE_DIR}
+	${SDL2_MIXER_INCLUDE_DIR}
+)
+
 add_library(MwLibrary2 ${SOURCES})
 
 set(ALL_SDL_LIBRARIES
