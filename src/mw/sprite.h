@@ -21,15 +21,15 @@ namespace mw {
 
 		// Creates a sprite from a texture (texture) already existing.
 		// Safe to use the same texture object in other code.
-		Sprite(const TexturePtr& texture);
+		Sprite(const Texture& texture);
 
 		// Sets a texture to the sprite. Safe to use the same 
 		// object texture in other code.
-		void setTexture(const TexturePtr& texture);
+		void setTexture(const Texture& texture);
 
 		// Returns the sprites texture. Returns null if the sprite is
 		// empty.
-		TexturePtr getTexture() const;
+		const Texture& getTexture() const;
 
 		// Draws the image in in x = [-0.5,0.5] and y = [-0.5,0.5] by default.
 		// If drawPixelSize is set to true then the image is drawn in pixel size
@@ -44,7 +44,7 @@ namespace mw {
 		bool isDrawingPixelSize() const;
 
 	private:
-		TexturePtr texture_;
+		Texture texture_;
 		bool drawPixelSize_;
 	};
 

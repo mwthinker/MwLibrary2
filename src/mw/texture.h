@@ -10,9 +10,6 @@
 
 namespace mw {
 
-	class Texture;
-	typedef std::shared_ptr<Texture> TexturePtr;
-
 	class Texture {
 	public:
 		// Loads a image from a file. It stores the image in memory and no opengl
@@ -32,12 +29,6 @@ namespace mw {
 		// Cleans the image from memory and the opengl texture from graphic memory.
 		~Texture();
 
-		// Is not copyable.
-		Texture(const Texture&) = delete;
-
-		// Is not copyable.
-		Texture& operator=(const Texture&) = delete;
-
 		// Binds the texture to the target GL_TEXTURE_2D. First call, copies 
 		// the image data to graphic memory.
 		void bind() const;
@@ -53,16 +44,36 @@ namespace mw {
 		bool isValid() const;
 
 	private:
-		// Is mutable in order for the bind() function to be const.
-		// It's ok beacause the variables can be seen as cache variables.
-		// So the external "constness" is preserved.
-		mutable SDL_Surface* preLoadSurface_;
-		mutable bool firstCallToBind_;
-		mutable GLuint texture_;
+		class ImageData {
+		public:
+			ImageData(std::function<void()> filter) : preLoadSurface_(0), texture_(0), firstCallToBind_(false), filter_(filter) {
+			}
+
+			ImageData(SDL_Surface* surface, std::function<void()> filter) : preLoadSurface_(surface), texture_(0), firstCallToBind_(false), filter_(filter) {
+			}
+
+			~ImageData();
+
+			// Is not copyable.
+			ImageData(const ImageData&) = delete;
+
+			// Is not copyable.
+			ImageData& operator=(const ImageData&) = delete;
+
+			void bind() const;
+
+			// Is mutable in order for the bind() function to be const.
+			// It's ok beacause the variables can be seen as cache variables.
+			// So the external "constness" is preserved.
+			mutable SDL_Surface* preLoadSurface_;
+			mutable GLuint texture_;
+			mutable bool firstCallToBind_;
+			std::function<void()> filter_;
+		};
+		
 		int width_, height_;
 		bool valid_;
-
-		std::function<void()> filter_;
+		std::shared_ptr<ImageData> imageData_;
 	};
 
 } // Namespace mw.

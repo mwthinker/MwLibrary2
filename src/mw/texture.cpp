@@ -23,14 +23,13 @@ namespace mw {
 			glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
 			return textureId;
 		}
-
 	}
 
-	Texture::Texture(std::string filename, std::function<void()> filter) : preLoadSurface_(0), firstCallToBind_(true), texture_(0), filter_(filter), width_(0), height_(0) {
-		preLoadSurface_ = IMG_Load(filename.c_str());
-		if (preLoadSurface_ != 0) {
-			width_ = preLoadSurface_->w;
-			height_ = preLoadSurface_->h;
+	Texture::Texture(std::string filename, std::function<void()> filter) : imageData_(std::make_shared<ImageData>(filter)), width_(0), height_(0) {
+		imageData_->preLoadSurface_ = IMG_Load(filename.c_str());
+		if (imageData_->preLoadSurface_ != 0) {
+			width_ = imageData_->preLoadSurface_->w;
+			height_ = imageData_->preLoadSurface_->h;
 			valid_ = true;
 		} else {
 			std::cerr << "\nImage " << filename << " failed to load: " << IMG_GetError() << std::endl;
@@ -38,20 +37,26 @@ namespace mw {
 		}
 	}
 
-	Texture::Texture(SDL_Surface* surface, std::function<void()> filter) : preLoadSurface_(surface), firstCallToBind_(true), texture_(0), filter_(filter), width_(surface->w), height_(surface->h), valid_(true) {
-	}
-
-	Texture::~Texture() {
-		if (texture_ != 0) {
-			// Is called if the opengl texture is valid and therefore need to be cleaned up.
-			glDeleteTextures(1, &texture_);
-		}
-
-		// Safe to pass null.
-		SDL_FreeSurface(preLoadSurface_);
-	}
+	Texture::Texture(SDL_Surface* surface, std::function<void()> filter) : imageData_(std::make_shared<ImageData>(filter)), width_(surface->w), height_(surface->h), valid_(true) {
+	}	
 
 	void Texture::bind() const {
+		imageData_->bind();
+	}
+
+	int Texture::getWidth() const {
+		return width_;
+	}
+
+	int Texture::getHeight() const {
+		return height_;
+	}
+
+	bool Texture::isValid() const {
+		return valid_;
+	}
+
+	void Texture::ImageData::bind() const {
 		if (firstCallToBind_) {
 			firstCallToBind_ = false;
 
@@ -75,16 +80,14 @@ namespace mw {
 		}
 	}
 
-	int Texture::getWidth() const {
-		return width_;
-	}
+	Texture::ImageData::~ImageData() {
+		if (texture_ != 0) {
+			// Is called if the opengl texture is valid and therefore need to be cleaned up.
+			glDeleteTextures(1, &texture_);
+		}
 
-	int Texture::getHeight() const {
-		return height_;
-	}
-
-	bool Texture::isValid() const {
-		return valid_;
+		// Safe to pass null.
+		SDL_FreeSurface(preLoadSurface_);
 	}
 
 } // Namespace mw.

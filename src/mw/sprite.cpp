@@ -7,21 +7,19 @@
 
 namespace mw {
 
-    Sprite::Sprite() {
+	Sprite::Sprite() : drawPixelSize_(false) {
+    }
+
+	Sprite::Sprite(std::string image, std::function<void()> filter) : texture_(image, filter), drawPixelSize_(false) {
 		drawPixelSize_ = false;
     }
 
-	Sprite::Sprite(std::string image, std::function<void()> filter) {
-		texture_ = TexturePtr(new mw::Texture(image, filter));
-		drawPixelSize_ = false;
-    }
-
-    Sprite::Sprite(const TexturePtr& texture) {
+	Sprite::Sprite(const Texture& texture) : texture_(texture), drawPixelSize_(false) {
         texture_ = texture;
 		drawPixelSize_ = false;
     }
 
-    void Sprite::setTexture(const TexturePtr& texture) {
+    void Sprite::setTexture(const Texture& texture) {
         texture_ = texture;
     }
 
