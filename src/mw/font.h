@@ -9,15 +9,14 @@
 
 namespace mw {
 
-	class Font;
-	typedef std::shared_ptr<Font> FontPtr;
-
 	class Font : public InitTtf {
 	public:
+		Font() : fontData_(std::make_shared<FontData>()) {
+		}
+
 		// Loads a font located in file named (filename). 
 		// Higher character size demands higher memory usage.
 		Font(std::string filename, int characterSize);
-		~Font();
 
 		inline int getCharacterSize() const {
 			return characterSize_;
@@ -25,11 +24,25 @@ namespace mw {
 
 		// Use with care! Returns a pointer to the font data.
 		inline TTF_Font* getTtfFont() const {
-			return font_;
+			return fontData_ ? fontData_->font_ : 0;
 		}
 
 	private:
-		TTF_Font* font_;
+		class FontData {
+		public:
+			FontData() : font_(0) {
+			}
+
+			~FontData() {
+				if (font_ != 0) {
+					TTF_CloseFont(font_);
+				}
+			}
+
+			TTF_Font* font_;
+		};
+
+		std::shared_ptr<FontData> fontData_;
 		int characterSize_;
 	};
 

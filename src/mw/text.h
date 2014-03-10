@@ -19,12 +19,12 @@ namespace mw {
 
 		// Create a Text object with the text and font provided.
 		// The character size for the text is the same as the font.
-		Text(std::string text, FontPtr font);
+		Text(std::string text, const Font& font);
 		
 		// Create a Text object with the text,font and characte size provided.
 		// The text texture is created in size provided by the font but then 
 		// scaled to match the provided character size.
-		Text(std::string text, FontPtr font, double characterSize);
+		Text(std::string text, const Font& font, double characterSize);
 		
 		~Text();
 
@@ -51,8 +51,8 @@ namespace mw {
 		// (The width in openGl)
 		inline double getWidth() const {
 			double scale = 0;
-			if (font_) {
-				scale = characterSize_ / font_->getCharacterSize();
+			if (font_.getTtfFont()) {
+				scale = characterSize_ / font_.getCharacterSize();
 			}
 			return width_ * scale;
 		}
@@ -61,14 +61,14 @@ namespace mw {
 		// (The height in openGl)
 		inline double getHeight() const {
 			double scale = 0;
-			if (font_) {
-				scale = characterSize_ / font_->getCharacterSize();
+			if (font_.getTtfFont()) {
+				scale = characterSize_ / font_.getCharacterSize();
 			}
 			return height_ * scale;
 		}
 
 		// Returns the internal font. Can be null if no font used.
-		inline FontPtr getFont() const {
+		inline const Font& getFont() const {
 			return font_;
 		}
 
@@ -83,7 +83,7 @@ namespace mw {
 		std::string text_;
 		double characterSize_;
 		double width_, height_;
-		FontPtr font_;
+		Font font_;
 	};
 
 } // Namespace mw

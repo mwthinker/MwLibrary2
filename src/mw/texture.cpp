@@ -25,6 +25,9 @@ namespace mw {
 		}
 	}
 
+	Texture::Texture() : imageData_(std::make_shared<ImageData>([](){})), width_(0), height_(0), valid_(false) {
+	}
+
 	Texture::Texture(std::string filename, std::function<void()> filter) : imageData_(std::make_shared<ImageData>(filter)), width_(0), height_(0) {
 		imageData_->preLoadSurface_ = IMG_Load(filename.c_str());
 		if (imageData_->preLoadSurface_ != 0) {
@@ -37,8 +40,8 @@ namespace mw {
 		}
 	}
 
-	Texture::Texture(SDL_Surface* surface, std::function<void()> filter) : imageData_(std::make_shared<ImageData>(filter)), width_(surface->w), height_(surface->h), valid_(true) {
-	}	
+	Texture::Texture(SDL_Surface* surface, std::function<void()> filter) : imageData_(std::make_shared<ImageData>(surface, filter)), width_(surface->w), height_(surface->h), valid_(true) {
+	}
 
 	void Texture::bind() const {
 		imageData_->bind();

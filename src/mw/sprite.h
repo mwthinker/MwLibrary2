@@ -27,8 +27,7 @@ namespace mw {
 		// object texture in other code.
 		void setTexture(const Texture& texture);
 
-		// Returns the sprites texture. Returns null if the sprite is
-		// empty.
+		// Returns the sprites texture.
 		const Texture& getTexture() const;
 
 		// Draws the image in in x = [-0.5,0.5] and y = [-0.5,0.5] by default.

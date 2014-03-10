@@ -12,6 +12,9 @@ namespace mw {
 
 	class Texture {
 	public:
+		// Empty texture. Does nothing.
+		Texture();
+
 		// Loads a image from a file. It stores the image in memory and no opengl
 		// code are of use in the constructor (safe to call constructor in other threads).
 		Texture(std::string filename, std::function<void()> filter = []() {
@@ -25,9 +28,6 @@ namespace mw {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
-
-		// Cleans the image from memory and the opengl texture from graphic memory.
-		~Texture();
 
 		// Binds the texture to the target GL_TEXTURE_2D. First call, copies 
 		// the image data to graphic memory.
@@ -46,10 +46,10 @@ namespace mw {
 	private:
 		class ImageData {
 		public:
-			ImageData(std::function<void()> filter) : preLoadSurface_(0), texture_(0), firstCallToBind_(false), filter_(filter) {
+			ImageData(std::function<void()> filter) : preLoadSurface_(0), texture_(0), firstCallToBind_(true), filter_(filter) {
 			}
 
-			ImageData(SDL_Surface* surface, std::function<void()> filter) : preLoadSurface_(surface), texture_(0), firstCallToBind_(false), filter_(filter) {
+			ImageData(SDL_Surface* surface, std::function<void()> filter) : preLoadSurface_(surface), texture_(0), firstCallToBind_(true), filter_(filter) {
 			}
 
 			~ImageData();
