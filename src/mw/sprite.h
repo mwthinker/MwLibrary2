@@ -20,12 +20,16 @@ namespace mw {
 		});
 
 		// Creates a sprite from a texture (texture) already existing.
-		// Safe to use the same texture object in other code.
 		Sprite(const Texture& texture);
 
-		// Sets a texture to the sprite. Safe to use the same 
-		// object texture in other code.
+		// Creates a sprite from a texture (texture) already existing.
+		Sprite(const Texture& texture, double x, double y, double dx, double dy);
+
 		void setTexture(const Texture& texture);
+
+		// Sets a texture to the sprite. The sprite represents the square of the texture,
+		// defined by (x,y) in the lower left postion with (dx,dy) = (width,height). 
+		void setTexture(const Texture& texture, double x, double y, double dx, double dy);		
 
 		// Returns the sprites texture.
 		const Texture& getTexture() const;
@@ -45,6 +49,7 @@ namespace mw {
 	private:
 		Texture texture_;
 		bool drawPixelSize_;
+		double x_, y_, dx_, dy_;
 	};
 
 } // Namespace mw
