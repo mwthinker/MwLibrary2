@@ -34,6 +34,10 @@ namespace mw {
 		// Return the sprite texture.
 		const Texture& getTexture() const;
 
+		inline void bind() const {
+			texture_.bind();
+		}
+
 		// Draw the image in in x = [-0.5,0.5] and y = [-0.5,0.5] by default.
 		// If drawPixelSize is set to true then the image is drawn in pixel size
 		// and centered in origo.
@@ -53,7 +57,7 @@ namespace mw {
 
 		// Return the lower left y position of the image drawn.
 		inline float getY() const {
-			return x_;
+			return y_;
 		}
 		
 		// Return the width of the image.
