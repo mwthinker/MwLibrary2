@@ -10,31 +10,31 @@ namespace mw {
 
 	class Sprite {
 	public:
-		// Creates an empty sprite, can be used but it will draw nothing.
+		// Create a empty sprite, but it will draw nothing.
 		Sprite();
 
-		// Loads the image from file (image).
+		// Load a image from file.
 		Sprite(std::string image, std::function<void()> filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
-		// Creates a sprite from a texture (texture) already existing.
+		// Create a sprite from a texture already existing.
 		Sprite(const Texture& texture);
 
-		// Creates a sprite from a texture (texture) already existing.
-		Sprite(const Texture& texture, double x, double y, double dx, double dy);
+		// Create a sprite from a texture already existing.
+		Sprite(const Texture& texture, float x, float y, float dx, float dy);
 
 		void setTexture(const Texture& texture);
 
-		// Sets a texture to the sprite. The sprite represents the square of the texture,
+		// Set a texture to the sprite. The sprite represents the square of the texture,
 		// defined by (x,y) in the lower left postion with (dx,dy) = (width,height). 
-		void setTexture(const Texture& texture, double x, double y, double dx, double dy);		
+		void setTexture(const Texture& texture, float x, float y, float dx, float dy);
 
-		// Returns the sprites texture.
+		// Return the sprite texture.
 		const Texture& getTexture() const;
 
-		// Draws the image in in x = [-0.5,0.5] and y = [-0.5,0.5] by default.
+		// Draw the image in in x = [-0.5,0.5] and y = [-0.5,0.5] by default.
 		// If drawPixelSize is set to true then the image is drawn in pixel size
 		// and centered in origo.
 		void draw() const;
@@ -43,15 +43,35 @@ namespace mw {
 		// Else the image is drawn with sides with length one.
 		void setDrawPixelSize(bool drawPixelSize);
 
-		// Returns if the image is to be drawn in pixel size or not.
+		// Return if the image is to be drawn in pixel size or not.
 		bool isDrawingPixelSize() const;
+
+		// Return the lower left x position of the image drawn.
+		inline float getX() const {
+			return x_;
+		}
+
+		// Return the lower left y position of the image drawn.
+		inline float getY() const {
+			return x_;
+		}
+		
+		// Return the width of the image.
+		inline float getWidth() const {
+			return dx_;
+		}
+		
+		// Return the height of the image.
+		inline float getHeight() const {
+			return dy_;
+		}
 
 	private:
 		Texture texture_;
 		bool drawPixelSize_;
-		double x_, y_, dx_, dy_;
+		float x_, y_, dx_, dy_;
 	};
 
-} // Namespace mw
+} // Namespace mw.
 
 #endif // MW_SPRITE_H
