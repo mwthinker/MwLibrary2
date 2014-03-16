@@ -19,8 +19,6 @@ namespace mw {
 	}
 
 	Sprite::Sprite(const Texture& texture) : texture_(texture), drawPixelSize_(false) {
-		texture_ = texture;
-		drawPixelSize_ = false;
 		x_ = 0;
 		y_ = 0;
 		dx_ = (float) texture.getWidth();
@@ -28,12 +26,6 @@ namespace mw {
 	}
 
 	Sprite::Sprite(const Texture& texture, float x, float y, float dx, float dy) : texture_(texture), drawPixelSize_(false), x_(x), y_(y), dx_(dx), dy_(dy) {
-		texture_ = texture;
-		drawPixelSize_ = false;
-		x_ = 0;
-		y_ = 0;
-		dx_ = (float) texture.getWidth();
-		dy_ = (float) texture.getHeight();
 	}
 
 	void Sprite::setTexture(const Texture& texture) {
