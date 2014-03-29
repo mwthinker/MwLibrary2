@@ -4,19 +4,40 @@
 #include <SDL_opengl.h>
 
 #include <iostream>
+#include <algorithm>
 
 namespace mw {
 
 	namespace {
 
+		template <int pitch>
+		struct Data {
+			char color[pitch];
+		};
+
+		template <int pixelSize>
+		void invert(SDL_Surface* surface) {			
+			for (int i = 0; i < surface->h/2; ++i) {
+				for (int j = 0; j < surface->w; ++j) {
+					Data<pixelSize>* startElement = (Data<pixelSize>*) surface->pixels + i * surface->w + j;
+					Data<pixelSize>* endElement = (Data<pixelSize>*) surface->pixels + (surface->h - i - 1) * surface->w + j;
+					std::cout << i * surface->w + j << " " << (surface->h - i) * surface->w + j << "\n";
+					std::swap(*startElement, *endElement);
+				}
+			}
+		}
+
 		// Returns an opengl texture from the surface provided. Return 0 if the
 		// operation failed.
-		GLuint sdlGlLoadTexture(SDL_Surface* const surface) {
+		GLuint sdlGlLoadTexture(SDL_Surface* surface) {
 			GLuint textureId = 0;
 			glGenTextures(1, &textureId);
 			int mode = GL_RGB;
 			if (surface->format->BytesPerPixel == 4) {
 				mode = GL_RGBA;
+				invert<4>(surface);
+			} else {
+				invert<3>(surface);
 			}
 
 			glBindTexture(GL_TEXTURE_2D, textureId);
@@ -25,7 +46,7 @@ namespace mw {
 		}
 	}
 
-	Texture::Texture() : imageData_(std::make_shared<ImageData>([](){})), width_(0), height_(0), valid_(false) {
+	Texture::Texture() : imageData_(std::make_shared<ImageData>([]() {})), width_(0), height_(0), valid_(false) {
 	}
 
 	Texture::Texture(std::string filename, std::function<void()> filter) : imageData_(std::make_shared<ImageData>(filter)), width_(0), height_(0) {

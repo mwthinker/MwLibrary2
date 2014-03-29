@@ -56,14 +56,10 @@ namespace mw {
 			glEnable(GL_TEXTURE_2D);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			glPushMatrix();
-
 			if (drawPixelSize_) {
+				glPushMatrix();
 				glScalef((float) texture_.getWidth(), (float) texture_.getHeight(), 1);
 			}
-
-			// Inverts the image. Y-is "up" for the window and x is "right".
-			glScaled(1, -1, 1);
 
 			glNormal3f(0, 0, 1);
 			glBegin(GL_QUADS);
@@ -80,7 +76,10 @@ namespace mw {
 			glVertex2f(-0.5, 0.5);
 			glEnd();
 
-			glPopMatrix();
+			if (drawPixelSize_) {
+				glPopMatrix();
+			}
+			
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_BLEND);
 		}
