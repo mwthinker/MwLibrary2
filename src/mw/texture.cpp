@@ -21,7 +21,6 @@ namespace mw {
 				for (int j = 0; j < surface->w; ++j) {
 					Data<pixelSize>* startElement = (Data<pixelSize>*) surface->pixels + i * surface->w + j;
 					Data<pixelSize>* endElement = (Data<pixelSize>*) surface->pixels + (surface->h - i - 1) * surface->w + j;
-					std::cout << i * surface->w + j << " " << (surface->h - i) * surface->w + j << "\n";
 					std::swap(*startElement, *endElement);
 				}
 			}
