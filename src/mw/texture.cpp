@@ -16,8 +16,8 @@ namespace mw {
 		};
 
 		template <int pixelSize>
-		void invert(SDL_Surface* surface) {			
-			for (int i = 0; i < surface->h/2; ++i) {
+		void invert(SDL_Surface* surface) {
+			for (int i = 0; i < surface->h / 2; ++i) {
 				for (int j = 0; j < surface->w; ++j) {
 					Data<pixelSize>* startElement = (Data<pixelSize>*) surface->pixels + i * surface->w + j;
 					Data<pixelSize>* endElement = (Data<pixelSize>*) surface->pixels + (surface->h - i - 1) * surface->w + j;

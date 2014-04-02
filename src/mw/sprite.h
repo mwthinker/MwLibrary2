@@ -19,11 +19,23 @@ namespace mw {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
+		// Load a image from file.
+		Sprite(std::string image, std::function<void(const mw::Sprite& sprite)> draw, std::function<void()> filter = []() {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		});
+
 		// Create a sprite from a texture already existing.
 		Sprite(const Texture& texture);
 
 		// Create a sprite from a texture already existing.
+		Sprite(const Texture& texture, std::function<void(const mw::Sprite& sprite)> draw);
+
+		// Create a sprite from a texture already existing.
 		Sprite(const Texture& texture, float x, float y, float dx, float dy);
+
+		// Create a sprite from a texture already existing.
+		Sprite(const Texture& texture, std::function<void(const mw::Sprite& sprite)> draw, float x, float y, float dx, float dy);
 
 		void setTexture(const Texture& texture);
 
@@ -32,7 +44,9 @@ namespace mw {
 		void setTexture(const Texture& texture, float x, float y, float dx, float dy);
 
 		// Return the sprite texture.
-		const Texture& getTexture() const;
+		const Texture& getTexture() const {
+			return texture_;
+		}
 
 		inline void bind() const {
 			texture_.bind();
@@ -43,12 +57,7 @@ namespace mw {
 		// and centered in origo.
 		void draw() const;
 
-		// Draws the image in pixel size if the parameter drawPixelSize is true.
-		// Else the image is drawn with sides with length one.
-		void setDrawPixelSize(bool drawPixelSize);
-
-		// Return if the image is to be drawn in pixel size or not.
-		bool isDrawingPixelSize() const;
+		void setDrawFunction(const std::function<void(const mw::Sprite& sprite)>& drawFunc);
 
 		// Return the lower left x position of the image drawn.
 		inline float getX() const {
@@ -59,12 +68,12 @@ namespace mw {
 		inline float getY() const {
 			return y_;
 		}
-		
+
 		// Return the width of the image.
 		inline float getWidth() const {
 			return dx_;
 		}
-		
+
 		// Return the height of the image.
 		inline float getHeight() const {
 			return dy_;
@@ -72,7 +81,7 @@ namespace mw {
 
 	private:
 		Texture texture_;
-		bool drawPixelSize_;
+		std::function<void(const mw::Sprite& sprite)> drawFunc_;
 		float x_, y_, dx_, dy_;
 	};
 
