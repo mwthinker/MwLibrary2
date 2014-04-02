@@ -74,18 +74,18 @@ namespace mw {
 	}
 
 	Sprite::Sprite(const Texture& texture, float x, float y, float dx, float dy) : texture_(texture), drawFunc_(std::bind(drawSprite, std::placeholders::_1)), x_(x), y_(y), dx_(dx), dy_(dy) {
-		x_ = 0;
-		y_ = 0;
-		dx_ = (float) texture.getWidth();
-		dy_ = (float) texture.getHeight();
+		x_ = x;
+		y_ = y;
+		dx_ = dx;
+		dy_ = dy;
 	}
 
 	// Create a sprite from a texture already existing.
 	Sprite::Sprite(const Texture& texture, std::function<void(const mw::Sprite& sprite)> draw, float x, float y, float dx, float dy) : texture_(texture), drawFunc_(draw) {
-		x_ = 0;
-		y_ = 0;
-		dx_ = (float) texture.getWidth();
-		dy_ = (float) texture.getHeight();
+		x_ = x;
+		y_ = y;
+		dx_ = dx;
+		dy_ = dy;
 	}
 
 	void Sprite::setTexture(const Texture& texture) {
