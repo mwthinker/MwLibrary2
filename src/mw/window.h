@@ -2,6 +2,7 @@
 #define MW_WINDOW_H
 
 #include "initsdl.h"
+#include "opengl.h"
 
 #include <SDL.h>
 

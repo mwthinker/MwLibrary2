@@ -11,6 +11,18 @@ else (MSVC)
 	SET(CMAKE_CXX_FLAGS "-std=c++11")
 endif (MSVC)
 
+option(OpenGL "MW_OPENGL" TRUE)
+option(OpenGLES "MW_OPENGLES" OFF)
+option(OpenGLES2 "MW_OPENGLES2" OFF)
+
+if (OpenGLES2)
+	add_definitions(-DMW_OPENGL=2)
+elseif (OpenGLES)
+	add_definitions(-DMW_OPENGL=1)
+else ()
+	add_definitions(-DMW_OPENGL=0)
+endif ()
+
 # Source files.
 set(SOURCES
 	src/mw/color.h
@@ -24,6 +36,7 @@ set(SOURCES
 	src/mw/joystick.cpp
 	src/mw/joystick.h
 	src/mw/music.h
+	src/mw/opengl.h
 	src/mw/sound.cpp
 	src/mw/sound.h
 	src/mw/soundbuffer.cpp

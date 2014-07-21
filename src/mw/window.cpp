@@ -1,8 +1,8 @@
 #include "window.h"
 #include "exception.h"
+#include "opengl.h"
 
 #include <SDL_image.h>
-#include <SDL_opengl.h>
 
 namespace mw {
 
@@ -43,13 +43,16 @@ namespace mw {
 		height_ = height;
 
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+#if MW_OPENGL == 0
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
+#endif
 		glViewport(0, 0, width_, height_);
+#if MW_OPENGL == 0
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glOrtho(0, width_, 0, height_, -1, 1);
-
+#endif
 		if (windows.empty()) {
 			windows.push_back(this);
 		} else {

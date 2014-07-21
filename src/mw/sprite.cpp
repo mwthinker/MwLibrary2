@@ -1,7 +1,7 @@
 #include "sprite.h"
+#include "opengl.h"
 
 #include <SDL.h>
-#include <SDL_opengl.h>
 
 #include <string>
 #include <functional>
@@ -19,6 +19,8 @@ namespace mw {
 				glEnable(GL_TEXTURE_2D);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+#if MW_OPENGL == 0
+
 				glNormal3f(0, 0, 1);
 				glBegin(GL_QUADS);
 				glTexCoord2f(sprite.getX() / texture.getWidth(), sprite.getY() / texture.getHeight());
@@ -33,7 +35,7 @@ namespace mw {
 				glTexCoord2f(sprite.getX() / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight());
 				glVertex2f(-0.5, 0.5);
 				glEnd();
-
+#endif
 				glDisable(GL_TEXTURE_2D);
 				glDisable(GL_BLEND);
 			}

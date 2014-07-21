@@ -1,7 +1,7 @@
 #include "texture.h"
+#include "opengl.h"
 
 #include <SDL_image.h>
-#include <SDL_opengl.h>
 
 #include <iostream>
 #include <algorithm>

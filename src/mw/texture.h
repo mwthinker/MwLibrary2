@@ -1,7 +1,7 @@
 #ifndef MW_TEXTURE_H
 #define MW_TEXTURE_H
 
-#include <SDL_opengl.h>
+#include "opengl.h"
 #include <SDL_image.h>
 
 #include <string>

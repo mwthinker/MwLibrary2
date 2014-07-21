@@ -1,7 +1,7 @@
 #ifndef MW_COLOR_H
 #define MW_COLOR_H
 
-#include <SDL_opengl.h>
+#include "opengl.h"
 
 namespace mw {
 
