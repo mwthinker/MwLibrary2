@@ -39,12 +39,10 @@ set(SOURCES
 	src/mw/opengl.h
 	src/mw/sound.cpp
 	src/mw/sound.h
-	src/mw/soundbuffer.cpp
-	src/mw/soundbuffer.h
+	src/mw/initmixer.cpp
+	src/mw/initmixer.h
 	src/mw/sprite.cpp
 	src/mw/sprite.h
-	src/mw/soundbuffer.cpp
-	src/mw/soundbuffer.h
 	src/mw/text.cpp
 	src/mw/text.h
 	src/mw/texture.cpp
@@ -57,6 +55,7 @@ set(SOURCES_TEST
 	srcTest/main.cpp
 	srcTest/testwindow.cpp
 	srcTest/testwindow.h
+	srcTest/testwindow2.h
 )
 # End of source files.
 

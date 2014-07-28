@@ -1,6 +1,7 @@
 #include "sound.h"
 
 #include <iostream>
+#include <algorithm>
 
 namespace mw {
 
@@ -12,17 +13,11 @@ namespace mw {
 	}
 
 	Sound::Sound(std::string filename) {
-		soundBuffer_ = SoundBufferPtr(new SoundBuffer(filename));
+		soundBuffer_ = std::make_shared<SoundBuffer>(filename);
 		channel_ = -1;
 		id_ = ++lastId_;
 	}
-
-	Sound::Sound(SoundBufferPtr soundBuffer) {
-		soundBuffer_ = soundBuffer;
-		channel_ = -1;
-		id_ = ++lastId_;
-	}
-
+	
 	Sound::Sound(const Sound& sound) {
 		soundBuffer_ = sound.soundBuffer_;
 		channel_ = -1;
@@ -39,10 +34,10 @@ namespace mw {
 	void Sound::play(int loops) {
 		if (soundBuffer_ != 0) {
 			bool ownChannel = (channel_ != -1 && SoundBuffer::channelList[channel_] == id_);
-			bool isPlaying = !(channel_ != -1 && Mix_Playing(channel_) != 1);
-			
+			bool playing = isPlaying();
+
 			// Have no chanel? Or has stopped played the sound?
-			if (!ownChannel || !isPlaying) {
+			if (!ownChannel || !playing) {
 				channel_ = Mix_PlayChannel(-1, soundBuffer_->mixChunk_, loops);
 				if (channel_ != -1) {
 					SoundBuffer::channelList[channel_] = id_;
@@ -84,7 +79,7 @@ namespace mw {
 		}
 		return false;
 	}
-	
+
 	int Sound::getChannel() const {
 		// Owns the channel?
 		if (SoundBuffer::channelList[channel_] == id_) {
@@ -93,4 +88,18 @@ namespace mw {
 		return 0;
 	}
 
-} // Namespace mw
+	std::map<int, int> Sound::SoundBuffer::channelList;
+
+	Sound::SoundBuffer::SoundBuffer(std::string filename) : valid_(true) {
+		mixChunk_ = Mix_LoadWAV(filename.c_str());
+		std::cerr << filename + " failed to load!";
+	}
+
+	Sound::SoundBuffer::~SoundBuffer() {
+		if (mixChunk_ != 0) {
+			// Posible memory leak!
+			//Mix_FreeChunk(mixChunk_); // Always fails under Windows.
+		}
+	}
+
+} // Namespace mw.
