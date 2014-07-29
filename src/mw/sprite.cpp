@@ -19,8 +19,8 @@ namespace mw {
 				glEnable(GL_TEXTURE_2D);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-#if MW_OPENGL == 0
-
+#if MW_OPENGLES2
+#else
 				glNormal3f(0, 0, 1);
 				glBegin(GL_QUADS);
 				glTexCoord2f(sprite.getX() / texture.getWidth(), sprite.getY() / texture.getHeight());

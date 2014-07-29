@@ -1,18 +1,17 @@
 #ifndef MW_OPENGL_H
 #define MW_OPENGL_H
 
-#if MW_OPENGL == 0
-#include <SDL_opengl.h>
-#elif MW_OPENGL == 1
-#include <SDL_opengles.h>
-#else
+#if MW_OPENGLES2
 #include <SDL_opengles2.h>
+#else
+#include <SDL_opengl.h>
 #endif
 
 #include <string>
 
 namespace mw {
-#if MW_OPENGL == 2
+
+#if MW_OPENGLES2
 	static std::string shader_ver = ""
 		"attribute vec4 a_v4Position;"
 		"attribute vec4 a_v4FillColor;"
@@ -31,7 +30,8 @@ namespace mw {
 		"void main() {"
 		"	gl_FragColor = v_v4FillColor;"
 		"}";
-#endif
+#endif // MW_OPENGLES2
+
 } // Namespace mw.
 
 #endif // MW_OPENGL_H
