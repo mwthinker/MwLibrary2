@@ -24,9 +24,7 @@ namespace mw {
 		// Create a Text object with the text,font and characte size provided.
 		// The text texture is created in size provided by the font but then 
 		// scaled to match the provided character size.
-		Text(std::string text, const Font& font, double characterSize);
-		
-		~Text();
+		Text(std::string text, const Font& font, float characterSize);		
 
 		void setText(std::string text);
 
@@ -37,20 +35,20 @@ namespace mw {
 		// Set the character size. The text texture is created in size 
 		// provided by the font but then scaled to match the 
 		// provided character size.
-		inline void setCharacterSize(double characterSize) {
+		inline void setCharacterSize(float characterSize) {
 			characterSize_ = characterSize;
 		}
 
 		// Returns the character size used for the text. May
 		// or may not correspond to the internal font size.
-		inline double getCharacterSize() const {
+		inline float getCharacterSize() const {
 			return characterSize_;
 		}
 
 		// Returns the width of the text to be drawn.
 		// (The width in openGl)
-		inline double getWidth() const {
-			double scale = 0;
+		inline float getWidth() const {
+			float scale = 0;
 			if (font_.getTtfFont()) {
 				scale = characterSize_ / font_.getCharacterSize();
 			}
@@ -59,8 +57,8 @@ namespace mw {
 
 		// Returns the height of the text to be drawn.
 		// (The height in openGl)
-		inline double getHeight() const {
-			double scale = 0;
+		inline float getHeight() const {
+			float scale = 0;
 			if (font_.getTtfFont()) {
 				scale = characterSize_ / font_.getCharacterSize();
 			}
@@ -81,8 +79,8 @@ namespace mw {
 		Sprite sprite_;
 
 		std::string text_;
-		double characterSize_;
-		double width_, height_;
+		float characterSize_;
+		float width_, height_;
 		Font font_;
 	};
 

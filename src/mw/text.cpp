@@ -14,15 +14,12 @@ namespace mw {
 		setText("");
 	}
 
-	Text::Text(std::string text, const Font& font) : characterSize_(font.getCharacterSize()), font_(font), width_(0), height_(0) {
+	Text::Text(std::string text, const Font& font) : characterSize_((float)font.getCharacterSize()), font_(font), width_(0), height_(0) {
 		setText(text);
     }
 
-	Text::Text(std::string text, const Font& font, double characterSize) : characterSize_(characterSize), font_(font), width_(0), height_(0) {
+	Text::Text(std::string text, const Font& font, float characterSize) : characterSize_(characterSize), font_(font), width_(0), height_(0) {
 		setText(text);
-    }
-
-    Text::~Text() {
     }
 
     void Text::setText(std::string text) {
@@ -32,9 +29,9 @@ namespace mw {
 			if (font && text.size() > 0) {
 				int w, h;
 				if (TTF_SizeUTF8(font, text.c_str(), &w, &h) == 0) {
-					double scale = characterSize_ / font_.getCharacterSize();
-					width_ = w;
-					height_ = h;
+					float scale = characterSize_ / font_.getCharacterSize();
+					width_ = (float) w;
+					height_ = (float) h;
 					loadText(text);
 					text_ = text;
 					return;

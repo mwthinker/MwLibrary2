@@ -31,7 +31,6 @@ set(SOURCES
 	src/mw/joystick.cpp
 	src/mw/joystick.h
 	src/mw/music.h
-	src/mw/opengl.cpp
 	src/mw/opengl.h
 	src/mw/sound.cpp
 	src/mw/sound.h
