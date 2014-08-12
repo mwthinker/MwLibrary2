@@ -46,7 +46,7 @@ namespace mw {
     void Text::draw() const {
 		if (font_.getTtfFont()) {
 			if (text_.size() > 0) {
-#if MW_OPENGL == 0
+#ifndef MW_OPENGLES2
 				glPushMatrix();
 				glScaled(getWidth(), getHeight(), 1.0);
 				glTranslated(0.5,0.5,0.0);

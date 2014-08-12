@@ -7,16 +7,16 @@ if (MSVC)
 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /EHsc")
 	
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -DWIN32)
-else (MSVC)
+else ()
 	SET(CMAKE_CXX_FLAGS "-std=c++11")
-endif (MSVC)
+endif ()
 
 option(OpenGLES2 "OpenGLES2 is activated" OFF)
 option(MwLibrary2Test "MwLibrary2Test project is added" OFF)
 
 if (OpenGLES2)
 	add_definitions(-DMW_OPENGLES2)
-endif (OpenGLES2)
+endif ()
 
 # Source files.
 set(SOURCES
@@ -31,6 +31,7 @@ set(SOURCES
 	src/mw/joystick.cpp
 	src/mw/joystick.h
 	src/mw/music.h
+	src/mw/opengl.cpp
 	src/mw/opengl.h
 	src/mw/sound.cpp
 	src/mw/sound.h
@@ -54,13 +55,16 @@ set(SOURCES_TEST
 )
 # End of source files.
 
-find_package(OpenGL REQUIRED)
+if (NOT OpenGLES2)
+	find_package(OpenGL REQUIRED)
+endif ()
+
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 
-include_directories(${OPENGL_INCLUDE_DIR}
+include_directories(
 	${SDL2_INCLUDE_DIR}
 	${SDL2_IMAGE_INCLUDE_DIR}
 	${SDL2_TTF_INCLUDE_DIR}
@@ -83,8 +87,12 @@ if (MwLibrary2Test)
 	if (MSVC)	
 		set_target_properties(MwLibrary2Test PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:msvcrt")
 	endif (MSVC)
-
-	target_link_libraries(MwLibrary2Test MwLibrary2 ${ALL_SDL_LIBRARIES} ${OPENGL_LIBRARIES})
-
+	
+	if (OpenGLES2)
+		target_link_libraries(MwLibrary2Test MwLibrary2 ${ALL_SDL_LIBRARIES})
+	else ()
+		target_link_libraries(MwLibrary2Test MwLibrary2 ${ALL_SDL_LIBRARIES} ${OPENGL_LIBRARIES})
+	endif ()
+	
 	file(COPY dataTest/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.
 endif (MwLibrary2Test)

@@ -4,6 +4,7 @@
 #include <mw/window.h>
 #include <mw/opengl.h>
 
+#if MW_OPENGLES2
 static GLuint loadShader(GLuint program, GLenum type, const GLchar *shaderSrc) {
 	GLuint shader;
 	shader = glCreateShader(type);
@@ -12,6 +13,7 @@ static GLuint loadShader(GLuint program, GLenum type, const GLchar *shaderSrc) {
 	glAttachShader(program, shader);
 	return 0;
 }
+#endif
 
 static const GLchar vertex[] =
 	"#version 100\n"
@@ -33,15 +35,17 @@ static const GLchar fragment[] =
 class TestWindow2 : public mw::Window {
 public:
 	TestWindow2() : mw::Window(600, 600, true, "Test") {
+#if MW_OPENGLES2
 		//GLuint programObject = glCreateProgram();
 		//loadShader(programObject, GL_VERTEX_SHADER, vertex);
 		//loadShader(programObject, GL_FRAGMENT_SHADER, fragment);
 		//glLinkProgram(programObject);
 		//glUseProgram(programObject);
+#endif
 	}
 
 	void update(Uint32 msDeltaTime) override {
-		glDrawArrays(GL_POINTS, 0, 1);
+		//glDrawArrays(GL_POINTS, 0, 1);
 		//glGenBuffers();
 		//glBindBuffer(GL_ARRAY_BUFFER,)
 	}

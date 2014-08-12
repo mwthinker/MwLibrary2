@@ -13,14 +13,20 @@ namespace mw {
 		void drawSprite(const mw::Sprite& sprite) {
 			const Texture& texture = sprite.getTexture();
 			if (texture.isValid()) {
-				sprite.bind();
+				sprite.bind();				
 
+#if MW_OPENGLES2
+				mw::glEnable(GL_BLEND);
+				mw::glEnable(GL_TEXTURE_2D);
+				mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+				mw::glDisable(GL_TEXTURE_2D);
+				mw::glDisable(GL_BLEND);
+
+#else
 				glEnable(GL_BLEND);
 				glEnable(GL_TEXTURE_2D);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-#if MW_OPENGLES2
-#else
 				glNormal3f(0, 0, 1);
 				glBegin(GL_QUADS);
 				glTexCoord2f(sprite.getX() / texture.getWidth(), sprite.getY() / texture.getHeight());
@@ -35,9 +41,10 @@ namespace mw {
 				glTexCoord2f(sprite.getX() / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight());
 				glVertex2f(-0.5, 0.5);
 				glEnd();
-#endif
 				glDisable(GL_TEXTURE_2D);
 				glDisable(GL_BLEND);
+#endif
+				
 			}
 		}
 

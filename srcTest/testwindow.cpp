@@ -8,7 +8,7 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(300, 300, t
 	sprite_.setDrawFunction([](const mw::Sprite& sprite) {
 		const mw::Texture& texture = sprite.getTexture();
 		if (texture.isValid()) {
-#if MW_OPENGL == 0
+#ifndef MW_OPENGLES2
 			glColor3d(1, 1, 1);
 			sprite.bind();
 
@@ -26,8 +26,8 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(300, 300, t
 			glTexCoord2f(sprite.getX() / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight());
 			glVertex2f(0, sprite.getHeight());
 			glEnd();
-#endif
 			glDisable(GL_TEXTURE_2D);
+#endif
 		}
 	});
 
@@ -38,7 +38,7 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(300, 300, t
 }
 
 void TestWindow::update(Uint32 msDeltaTime) {
-#if MW_OPENGL == 0
+#ifndef MW_OPENGLES2
 	glPushMatrix();
 	glTranslated(x_, y_, 0);
 	glColor4d(1, 1, 1, 1);

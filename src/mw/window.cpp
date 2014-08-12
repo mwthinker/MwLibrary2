@@ -16,6 +16,16 @@ namespace mw {
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
 
+		SDL_GL_SetSwapInterval(1);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
+#ifdef MW_OPENGLES2
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+		SDL_GL_LoadLibrary(0);
+#endif
+
 		window_ = SDL_CreateWindow(
 			title.c_str(),
 			SDL_WINDOWPOS_UNDEFINED,
@@ -32,32 +42,34 @@ namespace mw {
 		SDL_SetWindowIcon(window_, surface);
 		SDL_FreeSurface(surface);
 
-		SDL_GL_SetSwapInterval(1);
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
-		glContext_ = SDL_GL_CreateContext(window_);
-
 		quit_ = false;
 		time_ = 0;
 		width_ = width;
 		height_ = height;
 
+		glContext_ = SDL_GL_CreateContext(window_);
+#ifdef MW_OPENGLES2
+		initGLES2();
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-#ifndef MW_OPENGLES2
+#else //MW_OPENGLES2
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-#endif
+
 		glViewport(0, 0, width_, height_);
-#ifndef MW_OPENGLES2
+
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glOrtho(0, width_, 0, height_, -1, 1);
-#endif
+#endif //MW_OPENGLES2
+
 		if (windows.empty()) {
 			windows.push_back(this);
 		} else {
 			addWindows.push_back(this);
 		}
+		printf("\nGL_VERSION: %s\n", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+		printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 	}
 
 	Window::~Window() {
