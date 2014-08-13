@@ -7,10 +7,10 @@
 #if MW_OPENGLES2
 static GLuint loadShader(GLuint program, GLenum type, const GLchar *shaderSrc) {
 	GLuint shader;
-	shader = glCreateShader(type);
-	glShaderSource(shader, 1, &shaderSrc, NULL);
-	glCompileShader(shader);
-	glAttachShader(program, shader);
+	shader = mw::glCreateShader(type);
+	mw::glShaderSource(shader, 1, &shaderSrc, NULL);
+	mw::glCompileShader(shader);
+	mw::glAttachShader(program, shader);
 	return 0;
 }
 #endif
@@ -36,11 +36,11 @@ class TestWindow2 : public mw::Window {
 public:
 	TestWindow2() : mw::Window(600, 600, true, "Test") {
 #if MW_OPENGLES2
-		//GLuint programObject = glCreateProgram();
-		//loadShader(programObject, GL_VERTEX_SHADER, vertex);
-		//loadShader(programObject, GL_FRAGMENT_SHADER, fragment);
-		//glLinkProgram(programObject);
-		//glUseProgram(programObject);
+		GLuint programObject = mw::glCreateProgram();
+		loadShader(programObject, GL_VERTEX_SHADER, vertex);
+		loadShader(programObject, GL_FRAGMENT_SHADER, fragment);
+		mw::glLinkProgram(programObject);
+		mw::glUseProgram(programObject);
 #endif
 	}
 

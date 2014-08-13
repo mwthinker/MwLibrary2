@@ -9,22 +9,35 @@ namespace mw {
 	std::list<Window*> Window::windows;
 	std::list<Window*> Window::addWindows;
 
-	Window::Window(int width, int height, bool resizeable, std::string title, std::string icon) {
+	int Window::nbrOfInstances = 0;
+
+	void Window::initOpenGl() {
+		if (nbrOfInstances < 1) {
+			SDL_GL_SetSwapInterval(1);
+			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+			SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 0);
+#ifdef MW_OPENGLES2
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+			SDL_GL_LoadLibrary(0);
+		} else {
+			SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
+#endif
+		}
+	}
+
+	Window::Window(int width, int height, bool resizeable, std::string title, std::string icon, bool borderless) {
 		// Create an application window with the following settings:
 		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 		if (resizeable) {
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
+		if (borderless) {
+			flags |= SDL_WINDOW_BORDERLESS;
+		}
 
-		SDL_GL_SetSwapInterval(1);
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
-#ifdef MW_OPENGLES2
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-		SDL_GL_LoadLibrary(0);
-#endif
+		initOpenGl();
 
 		window_ = SDL_CreateWindow(
 			title.c_str(),
@@ -47,9 +60,22 @@ namespace mw {
 		width_ = width;
 		height_ = height;
 
+		setupOpenGlContext();
+		++nbrOfInstances;
+
+		if (windows.empty()) {
+			windows.push_back(this);
+		} else {
+			addWindows.push_back(this);
+		}
+	}
+
+	void Window::setupOpenGlContext() {
 		glContext_ = SDL_GL_CreateContext(window_);
 #ifdef MW_OPENGLES2
-		initGLES2();
+		if (nbrOfInstances < 1) {
+			initGLES2();
+		}
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 #else //MW_OPENGLES2
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -62,14 +88,8 @@ namespace mw {
 		glLoadIdentity();
 		glOrtho(0, width_, 0, height_, -1, 1);
 #endif //MW_OPENGLES2
-
-		if (windows.empty()) {
-			windows.push_back(this);
-		} else {
-			addWindows.push_back(this);
-		}
-		printf("\nGL_VERSION: %s\n", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
-		printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+		printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+		printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 	}
 
 	Window::~Window() {
