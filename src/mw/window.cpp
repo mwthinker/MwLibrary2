@@ -33,6 +33,7 @@ namespace mw {
 		if (resizeable) {
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
+		borderless_ = borderless;
 		if (borderless) {
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
@@ -157,6 +158,7 @@ namespace mw {
 		if (isFullScreen()) {
 			SDL_SetWindowFullscreen(window_, 0);
 			SDL_SetWindowSize(window_, width_, height_);
+			SDL_SetWindowBordered(window_, (SDL_bool) !borderless_);
 		} else {
 			SDL_GetWindowSize(window_, &width_, &height_);
 			SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN_DESKTOP);

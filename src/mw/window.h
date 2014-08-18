@@ -67,6 +67,7 @@ namespace mw {
 
 		int width_, height_;
 		unsigned int time_;
+		bool borderless_;
 
 		SDL_Window* window_;
 		SDL_GLContext glContext_;
