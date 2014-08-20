@@ -36,14 +36,14 @@ namespace mw {
 	}
 
 	void Sound::play(int loops) {
-		if (soundBuffer_ != 0) {
+		if (soundBuffer_ && soundBuffer_->valid_) {
 			// Have no chanel? Or has stopped played the sound?
 			if (!ownChannel() || !isPlaying()) {
 				channel_ = Mix_PlayChannel(-1, soundBuffer_->mixChunk_, loops);
 				if (channel_ != -1) {
 					SoundBuffer::channelList[channel_] = id_;
 					// Set the volume on the current channel.
-					Mix_Volume(channel_, (int) (volume_ * MIX_MAX_VOLUME));
+					setVolume(volume_);
 				} else {
 					// All channels is being used.
 					std::cerr << "\nFailed to play sound, id " << id_ << ", all channels is being used!\n";
@@ -56,7 +56,7 @@ namespace mw {
 	}
 
 	void Sound::pause() {
-		if (soundBuffer_ != 0) {
+		if (soundBuffer_ && soundBuffer_->valid_) {
 			// Owns the channel?
 			if (SoundBuffer::channelList[channel_] == id_) {
 				Mix_Pause(channel_);
@@ -65,7 +65,7 @@ namespace mw {
 	}
 
 	void Sound::resume() {
-		if (soundBuffer_ != 0) {
+		if (soundBuffer_ && soundBuffer_->valid_) {
 			// Owns the channel?
 			if (SoundBuffer::channelList[channel_] == id_) {
 				Mix_Resume(channel_);
@@ -74,7 +74,7 @@ namespace mw {
 	}
 
 	bool Sound::isPaused() const {
-		if (soundBuffer_ != 0) {
+		if (soundBuffer_ && soundBuffer_->valid_) {
 			// Owns the channel?
 			if (SoundBuffer::channelList[channel_] == id_) {
 				return Mix_Paused(id_) == 1;
@@ -91,10 +91,17 @@ namespace mw {
 
 	void Sound::setVolume(float volume) {
 		volume_ = volume;
+		if (soundBuffer_ && soundBuffer_->valid_) {
+			Mix_Volume(channel_, (int) (volume_ * MIX_MAX_VOLUME));
+		}
 	}
 
 	float Sound::getVolume() const {
 		return volume_;
+	}
+
+	bool Sound::isValid() const {
+		return soundBuffer_ ? soundBuffer_->valid_ : false;
 	}
 
 	int Sound::getChannel() const {
@@ -109,13 +116,15 @@ namespace mw {
 
 	Sound::SoundBuffer::SoundBuffer(std::string filename) : valid_(true) {
 		mixChunk_ = Mix_LoadWAV(filename.c_str());
-		std::cerr << filename + " failed to load!";
+		if (mixChunk_ == nullptr) {
+			valid_ = false;
+			std::cerr << filename + " failed to load!" << std::endl;
+		}
 	}
 
 	Sound::SoundBuffer::~SoundBuffer() {
 		if (mixChunk_ != 0) {
-			// Posible memory leak!
-			//Mix_FreeChunk(mixChunk_); // Always fails under Windows.
+			Mix_FreeChunk(mixChunk_);
 		}
 	}
 
