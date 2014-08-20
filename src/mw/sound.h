@@ -24,6 +24,12 @@ namespace mw {
 
 		bool isPaused() const;
 
+		void stopPlaying();
+
+		void setVolume(float volume);
+
+		float getVolume() const;
+
 		// Use with care! Return the pointer to the Mix_Chunk data.
 		inline Mix_Chunk* getMixChunk() const {
 			return soundBuffer_ ? soundBuffer_->mixChunk_ : nullptr;
@@ -40,6 +46,10 @@ namespace mw {
 			return !(channel_ != -1 && Mix_Playing(channel_) != 1);
 		}
 
+		inline bool ownChannel() const {
+			return (channel_ != -1 && SoundBuffer::channelList[channel_] == id_);
+		}
+
 		class SoundBuffer : public InitMixer {
 		public:
 			SoundBuffer(std::string filename);
@@ -52,6 +62,7 @@ namespace mw {
 			static std::map<int, int> channelList;// <channel, sound id>
 		};
 
+		float volume_;
 		int channel_;
 		int id_;
 		SoundBufferPtr soundBuffer_;

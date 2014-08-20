@@ -10,44 +10,47 @@ namespace mw {
 	Sound::Sound() {
 		channel_ = -1;
 		id_ = ++lastId_;
+		volume_ = 1;
 	}
 
 	Sound::Sound(std::string filename) {
 		soundBuffer_ = std::make_shared<SoundBuffer>(filename);
 		channel_ = -1;
 		id_ = ++lastId_;
+		volume_ = 1;
 	}
 	
 	Sound::Sound(const Sound& sound) {
 		soundBuffer_ = sound.soundBuffer_;
 		channel_ = -1;
 		id_ = ++lastId_;
+		volume_ = sound.volume_;
 	}
 
 	Sound& Sound::operator=(const Sound& sound) {
 		soundBuffer_ = sound.soundBuffer_;
 		channel_ = -1;
 		id_ = ++lastId_;
+		volume_ = sound.volume_;
 		return *this;
 	}
 
 	void Sound::play(int loops) {
 		if (soundBuffer_ != 0) {
-			bool ownChannel = (channel_ != -1 && SoundBuffer::channelList[channel_] == id_);
-			bool playing = isPlaying();
-
 			// Have no chanel? Or has stopped played the sound?
-			if (!ownChannel || !playing) {
+			if (!ownChannel() || !isPlaying()) {
 				channel_ = Mix_PlayChannel(-1, soundBuffer_->mixChunk_, loops);
 				if (channel_ != -1) {
 					SoundBuffer::channelList[channel_] = id_;
+					// Set the volume on the current channel.
+					Mix_Volume(channel_, (int) (volume_ * MIX_MAX_VOLUME));
 				} else {
 					// All channels is being used.
 					std::cerr << "\nFailed to play sound, id " << id_ << ", all channels is being used!\n";
 					std::cerr << Mix_GetError() << std::endl;
 				}
 			} else {
-				std::cerr << "\nFailed to play sound, id " << id_ << ", already playing";
+				std::cerr << "\nFailed to play sound, id " << id_ << ", already playing" << std::endl;
 			}
 		}
 	}
@@ -78,6 +81,20 @@ namespace mw {
 			}
 		}
 		return false;
+	}
+
+	void Sound::stopPlaying() {
+		if (ownChannel() && isPlaying()) {
+			Mix_HaltChannel(channel_);
+		}
+	}
+
+	void Sound::setVolume(float volume) {
+		volume_ = volume;
+	}
+
+	float Sound::getVolume() const {
+		return volume_;
 	}
 
 	int Sound::getChannel() const {
