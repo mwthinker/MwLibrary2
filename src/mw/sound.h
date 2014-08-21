@@ -15,6 +15,8 @@ namespace mw {
 		// a regular sound, but no sound will be heared.
 		Sound();
 
+		~Sound();
+
 		// Loads a soundfile and creates a sound.
 		Sound(std::string filename);
 

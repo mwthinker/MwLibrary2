@@ -13,6 +13,10 @@ namespace mw {
 		volume_ = 1;
 	}
 
+	Sound::~Sound() {
+		stopPlaying();
+	}
+
 	Sound::Sound(std::string filename) {
 		soundBuffer_ = std::make_shared<SoundBuffer>(filename);
 		channel_ = -1;
