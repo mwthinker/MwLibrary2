@@ -27,7 +27,7 @@ namespace mw {
 		}
 	}
 
-	Window::Window(int width, int height, bool resizeable, std::string title, std::string icon, bool borderless) {
+	Window::Window(int x, int y, int width, int height, bool resizeable, std::string title, std::string icon, bool borderless) {
 		// Create an application window with the following settings:
 		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 		if (resizeable) {
@@ -40,10 +40,17 @@ namespace mw {
 
 		initOpenGl();
 
+		if (x < 0) {
+			x = SDL_WINDOWPOS_UNDEFINED;
+		}
+		if (y < 0) {
+			y = SDL_WINDOWPOS_UNDEFINED;
+		}
+
 		window_ = SDL_CreateWindow(
 			title.c_str(),
-			SDL_WINDOWPOS_UNDEFINED,
-			SDL_WINDOWPOS_UNDEFINED,
+			x,
+			y,
 			width,
 			height,
 			flags);
@@ -79,6 +86,11 @@ namespace mw {
 		}
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 #else //MW_OPENGLES2
+		if (nbrOfInstances < 1) {
+			printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+			printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+		}
+
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -89,8 +101,6 @@ namespace mw {
 		glLoadIdentity();
 		glOrtho(0, width_, 0, height_, -1, 1);
 #endif //MW_OPENGLES2
-		printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
-		printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 	}
 
 	Window::~Window() {
@@ -158,7 +168,9 @@ namespace mw {
 		if (isFullScreen()) {
 			SDL_SetWindowFullscreen(window_, 0);
 			SDL_SetWindowSize(window_, width_, height_);
-			SDL_SetWindowBordered(window_, (SDL_bool) !borderless_);
+			if (borderless_) {
+				SDL_SetWindowBordered(window_, SDL_bool::SDL_FALSE);
+			}
 		} else {
 			SDL_GetWindowSize(window_, &width_, &height_);
 			SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN_DESKTOP);

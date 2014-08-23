@@ -3,7 +3,7 @@
 #include <mw/sprite.h>
 #include <mw/window.h>
 
-TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
+TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
 	focus_ = true;
 	sprite_.setDrawFunction([](const mw::Sprite& sprite) {
 		const mw::Texture& texture = sprite.getTexture();

@@ -17,7 +17,7 @@ namespace mw {
 	class Window : public InitSdl {
 	public:
 		// Creates a window with size determined by width and height in pixels.
-		Window(int width, int height, bool resizeable, std::string title = "", std::string icon = "", bool borderless = false);
+		Window(int x, int y, int width, int height, bool resizeable, std::string title = "", std::string icon = "", bool borderless = false);
 
 		virtual ~Window();
 

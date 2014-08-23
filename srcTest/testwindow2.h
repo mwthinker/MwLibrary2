@@ -34,7 +34,7 @@ static const GLchar fragment[] =
 
 class TestWindow2 : public mw::Window {
 public:
-	TestWindow2() : mw::Window(600, 600, true, "Test") {
+	TestWindow2() : mw::Window(-1, -1, 600, 600, true, "Test") {
 #if MW_OPENGLES2
 		GLuint programObject = mw::glCreateProgram();
 		loadShader(programObject, GL_VERTEX_SHADER, vertex);
