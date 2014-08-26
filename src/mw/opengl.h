@@ -161,22 +161,34 @@ namespace mw {
 		void initGLES2();
 
 	static std::string shader_ver = ""
-		"attribute vec4 a_v4Position;"
-		"attribute vec4 a_v4FillColor;"
-		"varying vec4 v_v4FillColor;"
+		"#version 100"
+		""
+		"precision mediump float"
+		""
+		"uniform mat4 uModelMatrix;"
+		"uniform mat4 uProjectionMatrix;"
+		""
+		"attribute vec2 aPosition;"
+		"attribute vec2 aTexCoord;"
+		""
+		"varying vec2 vTexCoord;"
 		""
 		"void main() {"
-		"	v_v4FillColor = a_v4FillColor;"
-		"	gl_Position = a_v4Position;"
+		"	gl_Position = uProjectionMatrix * uModelMatrix * aPosition;"
+		"	vTexCoord = aTexCoord;"
 		"}";
 
 	static std::string shader_frag = ""
-		"precision mediump float;"
+		"#version 100"
 		""
-		"varying vec4 v_v4FillColor; "
+		"precision mediump float"
+		""
+		"uniform sampler2D uTexture;"
+		""
+		"varying vec2 vTexCoord; "
 		""
 		"void main() {"
-		"	gl_FragColor = v_v4FillColor;"
+		"	gl_FragColor = texture2D(uTexture, vTexCoord);"
 		"}";
 
 #endif // MW_OPENGLES2
