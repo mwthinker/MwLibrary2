@@ -13,6 +13,37 @@ namespace mw {
 
 #if MW_OPENGLES2
 
+	static const std::string SHADER_VER =
+		"#version 100\n"
+		""
+		"precision mediump float;\n"
+		""
+		"uniform mat4 uModelMatrix;\n"
+		"uniform mat4 uProjectionMatrix;\n"
+		""
+		"attribute vec4 aPosition;\n"
+		"attribute vec2 aTexCoord;\n"
+		""
+		"varying vec2 vTexCoord;\n"
+		""
+		"void main() {"
+		"	gl_Position = uProjectionMatrix * uModelMatrix * aPosition;"
+		"	vTexCoord = aTexCoord;"
+		"}";
+
+	static const std::string SHADER_FRAG =
+		"#version 100\n"
+		""
+		"precision mediump float;\n"
+		""
+		"uniform sampler2D uTexture;\n"
+		""
+		"varying vec2 vTexCoord;\n"
+		""
+		"void main() {"
+		"	gl_FragColor = texture2D(uTexture, vTexCoord);"
+		"}";
+
 #define FUNC_POINTER_DEC(ret,func,params) extern ret (KHRONOS_APIENTRY *func) params;
 	FUNC_POINTER_DEC(void, glActiveTexture, (GLenum))
 	FUNC_POINTER_DEC(void, glAttachShader, (GLuint, GLuint))
@@ -158,38 +189,7 @@ namespace mw {
 	FUNC_POINTER_DEC(void, glViewport, (GLint, GLint, GLsizei, GLsizei))
 #undef FuncPointer
 
-		void initGLES2();
-
-	static std::string shader_ver = ""
-		"#version 100"
-		""
-		"precision mediump float"
-		""
-		"uniform mat4 uModelMatrix;"
-		"uniform mat4 uProjectionMatrix;"
-		""
-		"attribute vec2 aPosition;"
-		"attribute vec2 aTexCoord;"
-		""
-		"varying vec2 vTexCoord;"
-		""
-		"void main() {"
-		"	gl_Position = uProjectionMatrix * uModelMatrix * aPosition;"
-		"	vTexCoord = aTexCoord;"
-		"}";
-
-	static std::string shader_frag = ""
-		"#version 100"
-		""
-		"precision mediump float"
-		""
-		"uniform sampler2D uTexture;"
-		""
-		"varying vec2 vTexCoord; "
-		""
-		"void main() {"
-		"	gl_FragColor = texture2D(uTexture, vTexCoord);"
-		"}";
+	void initGLES2();
 
 #endif // MW_OPENGLES2
 
