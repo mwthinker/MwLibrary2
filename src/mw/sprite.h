@@ -3,6 +3,10 @@
 
 #include "texture.h"
 
+#if MW_OPENGLES2
+#include "programgl.h"
+#endif // MW_OPENGLES2
+
 #include <string>
 #include <functional>
 
@@ -10,6 +14,8 @@ namespace mw {
 
 	class Sprite {
 	public:
+		friend class Window;
+
 		// Create a empty sprite, but it will draw nothing.
 		Sprite();
 
@@ -79,10 +85,19 @@ namespace mw {
 			return dy_;
 		}
 
+#if MW_OPENGLES2
+		static ProgramGlPtr getProgramGl();
+#endif // MW_OPENGLES2
+
 	private:
 		Texture texture_;
 		std::function<void(const mw::Sprite& sprite)> drawFunc_;
 		float x_, y_, dx_, dy_;
+
+#if MW_OPENGLES2
+		ProgramGlPtr programGl;
+		static ProgramGlPtr globalProgramGl;
+#endif // MW_OPENGLES2
 	};
 
 } // Namespace mw.

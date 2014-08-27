@@ -13,16 +13,38 @@ namespace mw {
 		void drawSprite(const mw::Sprite& sprite) {
 			const Texture& texture = sprite.getTexture();
 			if (texture.isValid()) {
-				sprite.bind();				
-
+				sprite.bind();
 #if MW_OPENGLES2
 				mw::glEnable(GL_BLEND);
 				mw::glEnable(GL_TEXTURE_2D);
 				mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+				// Centered square in ORIGO.
+				static GLfloat aVertices[] = {
+					-0.5f, -0.5f,
+					 0.5f, -0.5f
+					-0.5f,  0.5f,
+					 0.5f,  0.5f};
+
+				// Map the sprite out from the texture.
+				static GLfloat aTexCoord[] = {
+					sprite.getX() / texture.getWidth(), sprite.getY() / texture.getHeight(),
+					(sprite.getX() + sprite.getWidth()) / texture.getWidth(), sprite.getY() / texture.getHeight(),
+					sprite.getX() / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight(),
+					(sprite.getX() + sprite.getWidth()) / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight()};
+
+				// Use the program object
+				auto& program = sprite.getProgramGl();
+				program->use();
+
+				// Load the vertex data
+				mw::glVertexAttribPointer(program->getAttributeLocation(SHADER_ATTRIBUTE_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
+				mw::glVertexAttribPointer(program->getAttributeLocation(SHADER_ATTRIBUTE_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
+				mw::glEnableVertexAttribArray(program->getAttributeLocation(SHADER_ATTRIBUTE_VEC4_POSITION));
+				mw::glEnableVertexAttribArray(program->getAttributeLocation(SHADER_ATTRIBUTE_VEC2_TEXCOORD));
+
 				mw::glDisable(GL_TEXTURE_2D);
 				mw::glDisable(GL_BLEND);
-
 #else
 				glEnable(GL_BLEND);
 				glEnable(GL_TEXTURE_2D);
@@ -49,6 +71,14 @@ namespace mw {
 		}
 
 	}
+
+#if MW_OPENGLES2
+	ProgramGlPtr Sprite::globalProgramGl = nullptr;
+
+	ProgramGlPtr Sprite::getProgramGl() {
+		return globalProgramGl;
+	}
+#endif
 
 	Sprite::Sprite() : drawFunc_(std::bind(drawSprite, std::placeholders::_1)) {
 	}

@@ -2,6 +2,7 @@
 #define MW_TEXTURE_H
 
 #include "opengl.h"
+
 #include <SDL_image.h>
 
 #include <string>

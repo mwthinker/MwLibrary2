@@ -6,6 +6,46 @@ namespace mw {
 
 #if MW_OPENGLES2
 
+	Matrix44 getTranslateMatrix(float x, float y, float z) {
+		Matrix44 m(ZERO_44);
+		m(0, 3) = m(0, 0) * x + m(0, 1) * y + m(0, 2) * z + m(0, 3);
+		m(1, 3) = m(1, 0) * x + m(1, 1) * y + m(1, 2) * z + m(1, 3);
+		m(2, 3) = m(2, 0) * x + m(2, 1) * y + m(2, 2) * z + m(2, 3);
+		return m;
+	}
+
+	Matrix44 getRotateMatrix(float angle, float x, float y, float z) {
+		float s = std::sin(angle);
+		float c = std::cos(angle);
+
+		mw::Matrix44 m(
+			x*x*(1 - c) + c, x*y*(1 - c) - z*s, x*z*(1 - c) + y*s, 0,
+			y*x*(1 - c) + z*s, y*y*(1 - c) + c, y*z*(1 - c) + x*s, 0,
+			z*x*(1 - c) - y*s, y*z*(1 - c) + x*s, z*z*(1 - c) + c, 0,
+			0, 0, 0, 1);
+
+		return m;
+	}
+
+	Matrix44 getScaleMatrix(float x, float y, float z) {
+		mw::Matrix44 m(
+			x, 0, 0, 0,
+			0, y, 0, 0,
+			0, 0, z, 0,
+			0, 0, 0, 1);
+		return m;
+	}
+
+	Matrix44 getOrthoProjectionMatrix(float left, float right, float bottom, float top, float near, float far) {
+		mw::Matrix44 ortho(
+			2 / (right - left), 0, 0, -(right + left) / (right - left),
+			0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom),
+			0, 0, -2 / (far - near), -(far + near) / (far - near),
+			0, 0, 0, 1);
+
+		return ortho;
+	}
+
 #define FUNC_POINTER_DEF(ret,func,params) ret (KHRONOS_APIENTRY *func) params = func;
 	FUNC_POINTER_DEF(void, glActiveTexture, (GLenum))
 	FUNC_POINTER_DEF(void, glAttachShader, (GLuint, GLuint))

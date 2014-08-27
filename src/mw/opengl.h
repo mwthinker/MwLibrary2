@@ -2,17 +2,34 @@
 #define MW_OPENGL_H
 
 #if MW_OPENGLES2
+#include "matrix.h"
+
 #include <SDL_opengles2.h>
+
+#include <string>
+
 #else
 #include <SDL_opengl.h>
 #endif
-
-#include <string>
 
 namespace mw {
 
 #if MW_OPENGLES2
 
+	Matrix44 getTranslateMatrix(float x, float y, float z = 0);
+
+	Matrix44 getRotateMatrix(float angle, float x, float y, float z);
+
+	Matrix44 getScaleMatrix(float x, float y, float z = 1);
+	
+	Matrix44 getOrthoProjectionMatrix(float left, float right, float bottom, float top, float near = -1, float far = 1);
+
+	static const std::string SHADER_ATTRIBUTE_VEC4_POSITION = "aPosition";
+	static const std::string SHADER_ATTRIBUTE_VEC2_TEXCOORD = "aTexCoord";
+
+	static const std::string SHADER_UNIFORM_MAT4_MODEL = "uModelMatrix";
+	static const std::string SHADER_UNIFORM_MAT4_PROJ = "uProjectionMatrix";
+	
 	static const std::string SHADER_VER =
 		"#version 100\n"
 		""

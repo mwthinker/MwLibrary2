@@ -7,12 +7,36 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300
 	focus_ = true;
 	sprite_.setDrawFunction([](const mw::Sprite& sprite) {
 		const mw::Texture& texture = sprite.getTexture();
-		if (texture.isValid()) {
-#ifndef MW_OPENGLES2
-			glColor3d(1, 1, 1);
+		if (texture.isValid()) {			
 			sprite.bind();
+			
+#if MW_OPENGLES2
+			mw::glEnable(GL_TEXTURE_2D);
+			GLfloat aVertices[] = {
+				0, 0,
+				sprite.getWidth(), 0,
+				0, sprite.getHeight(),
+				sprite.getWidth(), sprite.getHeight()};
 
+			GLfloat aTexCoord[] = {
+				sprite.getX() / texture.getWidth(), sprite.getY() / texture.getHeight(),
+				(sprite.getX() + sprite.getWidth()) / texture.getWidth(), sprite.getY() / texture.getHeight(),
+				sprite.getX() / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight(),
+				(sprite.getX() + sprite.getWidth()) / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight()};
+
+			// Use the program object
+			auto& program = sprite.getProgramGl();
+			program->use();
+
+			// Load the vertex data
+			mw::glVertexAttribPointer(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
+			mw::glVertexAttribPointer(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
+			mw::glEnableVertexAttribArray(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC4_POSITION));
+			mw::glEnableVertexAttribArray(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC2_TEXCOORD));
+			mw::glDisable(GL_TEXTURE_2D);
+#else // MW_OPENGLES2
 			glEnable(GL_TEXTURE_2D);
+			glColor3d(1, 1, 1);
 			glBegin(GL_QUADS);
 			glTexCoord2f(sprite.getX() / texture.getWidth(), sprite.getY() / texture.getHeight());
 			glVertex2f(0, 0);
@@ -27,7 +51,7 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300
 			glVertex2f(0, sprite.getHeight());
 			glEnd();
 			glDisable(GL_TEXTURE_2D);
-#endif
+#endif // MW_OPENGLES2
 		}
 	});
 

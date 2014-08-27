@@ -1,6 +1,7 @@
 #include "window.h"
 #include "exception.h"
-#include "opengl.h"
+#include "sprite.h"
+#include "programgl.h"
 
 #include <SDL_image.h>
 
@@ -83,8 +84,17 @@ namespace mw {
 #ifdef MW_OPENGLES2
 		if (nbrOfInstances < 1) {
 			initGLES2();
+			glViewport(0, 0, width_, height_);
+			Sprite::globalProgramGl = std::make_shared<ProgramGl>();
+			Sprite::globalProgramGl->bindAttribute(SHADER_ATTRIBUTE_VEC4_POSITION);
+			Sprite::globalProgramGl->bindAttribute(SHADER_ATTRIBUTE_VEC2_TEXCOORD);
+			Sprite::globalProgramGl->loadAndLinkShaders(SHADER_VER, SHADER_FRAG);
+			mw::glUniformMatrix4fv(Sprite::globalProgramGl->getUniformLocation(SHADER_UNIFORM_MAT4_MODEL), 1, false, I_44.data());
+			Matrix44 ortho = getOrthoProjectionMatrix(0, (float) width_, 0, (float) height_, -1, 1);
+			mw::glUniformMatrix4fv(Sprite::globalProgramGl->getUniformLocation(SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
+			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		}
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		
 #else //MW_OPENGLES2
 		if (nbrOfInstances < 1) {
 			printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));

@@ -14,7 +14,7 @@ namespace mw {
 		return m;
 	}
 
-	Matrix44 Matrix44::operator + (const Matrix44& matrix) const {
+	Matrix44 Matrix44::operator+(const Matrix44& matrix) const {
 		Matrix44 m;
 		for (int i = 0; i < 16; ++i) {
 			m[i] = data_[i] + matrix.data_[i];

@@ -14,6 +14,9 @@ namespace mw {
 
 	void loadAndLinkShadersFromFile(GLint programObject, std::string vShader, std::string fShader);
 
+	class ProgramGl;
+	typedef std::shared_ptr<ProgramGl> ProgramGlPtr;
+
 	class ProgramGl {
 	public:
 		// Create a empty non linked shader.

@@ -56,7 +56,6 @@ set(SOURCES_TEST
 	srcTest/main.cpp
 	srcTest/testwindow.cpp
 	srcTest/testwindow.h
-	srcTest/testwindow2.h
 )
 # End of source files.
 
