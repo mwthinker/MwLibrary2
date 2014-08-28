@@ -26,9 +26,10 @@ namespace mw {
 
 	static const std::string SHADER_ATTRIBUTE_VEC4_POSITION = "aPosition";
 	static const std::string SHADER_ATTRIBUTE_VEC2_TEXCOORD = "aTexCoord";
-
+	
 	static const std::string SHADER_UNIFORM_MAT4_MODEL = "uModelMatrix";
 	static const std::string SHADER_UNIFORM_MAT4_PROJ = "uProjectionMatrix";
+	static const std::string SHADER_UNIFORM_VEC4_COLOR = "uColor";
 	
 	static const std::string SHADER_VER =
 		"#version 100\n"
@@ -54,11 +55,13 @@ namespace mw {
 		"precision mediump float;\n"
 		""
 		"uniform sampler2D uTexture;\n"
+		"uniform vec4 uColor;\n"
 		""
 		"varying vec2 vTexCoord;\n"
 		""
 		"void main() {"
-		"	gl_FragColor = texture2D(uTexture, vTexCoord);"
+		"	vec4 tex = texture2D(uTexture, vTexCoord);"
+		"	gl_FragColor = vec4(uColor.x * tex.x, uColor.y * tex.y, uColor.z * tex.z, uColor.a * tex.a);"
 		"}";
 
 #define FUNC_POINTER_DEC(ret,func,params) extern ret (KHRONOS_APIENTRY *func) params;

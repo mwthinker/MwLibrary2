@@ -21,7 +21,10 @@ namespace mw {
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-			SDL_GL_LoadLibrary(0);
+			if (SDL_GL_LoadLibrary(0) != 0) {
+				std::printf("\n Failed to load OpenGl ES 2\n");
+				std::exit(1);
+			}
 		} else {
 			SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
 #endif
@@ -92,13 +95,14 @@ namespace mw {
 			mw::glUniformMatrix4fv(Sprite::globalShaderPtr->getUniformLocation(SHADER_UNIFORM_MAT4_MODEL), 1, false, I_44.data());
 			Matrix44 ortho = getOrthoProjectionMatrix(0, (float) width_, 0, (float) height_, -1, 1);
 			mw::glUniformMatrix4fv(Sprite::globalShaderPtr->getUniformLocation(SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
+			mw::glUniform4f(Sprite::globalShaderPtr->getUniformLocation(SHADER_UNIFORM_VEC4_COLOR), 1, 1, 1, 1);
 			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		}
 		
 #else //MW_OPENGLES2
 		if (nbrOfInstances < 1) {
-			printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
-			printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+			std::printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+			std::printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 		}
 
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

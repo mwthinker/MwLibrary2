@@ -3,36 +3,27 @@
 
 #include "opengl.h"
 
+#include <string>
+
 namespace mw {
 
 	// Holds RGB-color needed to define the color in openGl.
 	class Color {
 	public:
-		Color() {
-			red_ = 1.f;
-			green_ = 1.f;
-			blue_ = 1.f;
-			alpha_ = 1.f;
-		}
+		Color();
 
-		Color(float red, float green, float blue, float alpha = 1.f) {
-			red_ = red;
-			green_ = green;
-			blue_ = blue;
-			alpha_ = alpha;
-		}
+		Color(float red, float green, float blue, float alpha = 1.f);
 
 		// Calls ::glColor3d(red_,green_,blue_).
-		void glColor3f() const {
-			::glColor3d(red_,green_,blue_);
-		}
+		void glColor3f() const;
 
 		// Calls ::glColor4d(red_,green_,blue_,alpha_).
-		void glColor4f() const  {
-			::glColor4f(red_,green_,blue_,alpha_);
-		}
+		void glColor4f() const;
 
 		float red_, green_, blue_, alpha_;
+#if MW_OPENGLES2
+		static std::string SHADER_UNIFORM_VEC4_COLOR;
+#endif // MW_OPENGLES2
 	};
 
 } // Namespace mw.

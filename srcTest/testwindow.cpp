@@ -1,6 +1,7 @@
 #include "testwindow.h"
 
 #include <mw/sprite.h>
+#include <mw/color.h>
 #include <mw/window.h>
 #include <mw/matrix.h>
 
@@ -71,7 +72,11 @@ void TestWindow::update(Uint32 msDeltaTime) {
 	mw::glUniformMatrix4fv(mw::Sprite::getShaderPtr()->getUniformLocation(mw::SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
 	mw::Matrix44 m = mw::getTranslateMatrix((float) x_, (float) y_);
 	mw::glUniformMatrix4fv(mw::Sprite::getShaderPtr()->getUniformLocation(mw::SHADER_UNIFORM_MAT4_MODEL), 1, false, m.transpose().data());
+	mw::Color color(1, 1, 1, 1);
+	color.glColor4f();
 	sprite_.draw();
+	color = mw::Color(1, 0, 0);
+	color.glColor4f();
 	text_.draw();
 #else // MW_OPENGLES2
 	glPushMatrix();
