@@ -2,6 +2,7 @@
 
 #include <mw/sprite.h>
 #include <mw/window.h>
+#include <mw/matrix.h>
 
 TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
 	focus_ = true;
@@ -25,18 +26,21 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300
 				(sprite.getX() + sprite.getWidth()) / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight()};
 
 			// Use the program object
-			auto& program = sprite.getProgramGl();
-			program->use();
+			auto& program = sprite.getShaderPtr();
+			program->glUseProgram();
 
 			// Load the vertex data
 			mw::glVertexAttribPointer(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
 			mw::glVertexAttribPointer(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
 			mw::glEnableVertexAttribArray(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC4_POSITION));
 			mw::glEnableVertexAttribArray(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC2_TEXCOORD));
+
+			// Upload the attributes and draw the sprite.
+			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
 			mw::glDisable(GL_TEXTURE_2D);
 #else // MW_OPENGLES2
 			glEnable(GL_TEXTURE_2D);
-			glColor3d(1, 1, 1);
 			glBegin(GL_QUADS);
 			glTexCoord2f(sprite.getX() / texture.getWidth(), sprite.getY() / texture.getHeight());
 			glVertex2f(0, 0);
@@ -58,11 +62,18 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300
 	mw::Font font("Ubuntu-B.ttf", 30);
 	text_ = mw::Text("hej", font);
 	text_.setCharacterSize(60);
-	int a = 1;
 }
 
 void TestWindow::update(Uint32 msDeltaTime) {
-#ifndef MW_OPENGLES2
+#if MW_OPENGLES2
+	mw::Matrix44 ortho = mw::getOrthoProjectionMatrix(0, (float) getWidth(), 0, (float) getHeight());
+	// Update projection and model matrix.
+	mw::glUniformMatrix4fv(mw::Sprite::getShaderPtr()->getUniformLocation(mw::SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
+	mw::Matrix44 m = mw::getTranslateMatrix((float) x_, (float) y_);
+	mw::glUniformMatrix4fv(mw::Sprite::getShaderPtr()->getUniformLocation(mw::SHADER_UNIFORM_MAT4_MODEL), 1, false, m.transpose().data());
+	sprite_.draw();
+	text_.draw();
+#else // MW_OPENGLES2
 	glPushMatrix();
 	glTranslated(x_, y_, 0);
 	glColor4d(1, 1, 1, 1);
@@ -105,8 +116,6 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					if (focus_) {
 						quit();
 					}
-					break;
-				default:
 					break;
 			}
 			break;

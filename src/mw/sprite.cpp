@@ -34,14 +34,17 @@ namespace mw {
 					(sprite.getX() + sprite.getWidth()) / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight()};
 
 				// Use the program object
-				auto& program = sprite.getProgramGl();
-				program->use();
+				auto& shader = sprite.getShaderPtr();
+				shader->glUseProgram();
 
 				// Load the vertex data
-				mw::glVertexAttribPointer(program->getAttributeLocation(SHADER_ATTRIBUTE_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
-				mw::glVertexAttribPointer(program->getAttributeLocation(SHADER_ATTRIBUTE_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
-				mw::glEnableVertexAttribArray(program->getAttributeLocation(SHADER_ATTRIBUTE_VEC4_POSITION));
-				mw::glEnableVertexAttribArray(program->getAttributeLocation(SHADER_ATTRIBUTE_VEC2_TEXCOORD));
+				mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_ATTRIBUTE_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
+				mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_ATTRIBUTE_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
+				mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_ATTRIBUTE_VEC4_POSITION));
+				mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_ATTRIBUTE_VEC2_TEXCOORD));
+
+				// Upload the attributes and draw the sprite.
+				mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 				mw::glDisable(GL_TEXTURE_2D);
 				mw::glDisable(GL_BLEND);
@@ -73,10 +76,10 @@ namespace mw {
 	}
 
 #if MW_OPENGLES2
-	ProgramGlPtr Sprite::globalProgramGl = nullptr;
+	ShaderPtr Sprite::globalShaderPtr = nullptr;
 
-	ProgramGlPtr Sprite::getProgramGl() {
-		return globalProgramGl;
+	ShaderPtr Sprite::getShaderPtr() {
+		return globalShaderPtr;
 	}
 #endif
 

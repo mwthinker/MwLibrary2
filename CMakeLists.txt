@@ -36,8 +36,8 @@ set(SOURCES
 	src/mw/music.h
 	src/mw/opengl.cpp
 	src/mw/opengl.h
-	src/mw/programgl.cpp
-	src/mw/programgl.h
+	src/mw/shader.cpp
+	src/mw/shader.h
 	src/mw/sound.cpp
 	src/mw/sound.h
 	src/mw/initmixer.cpp

@@ -3,7 +3,7 @@
 
 #include "initttf.h"
 #include "font.h"
-#include "sprite.h"
+#include "texture.h"
 
 #include <SDL_ttf.h>
 
@@ -70,13 +70,15 @@ namespace mw {
 			return font_;
 		}
 
-		// The text is drawn, in the square [width, height] with the lower left 
+		// The text is drawn, in the square [width, height] (i.e. in pixelsize) with the lower left 
 		// point at origo, in OpenGl coordinate space.
 		void draw() const;
 
 	private:
 		void loadText(std::string str);
-		Sprite sprite_;
+		void drawText() const;
+
+		mw::Texture texture_;
 
 		std::string text_;
 		float characterSize_;

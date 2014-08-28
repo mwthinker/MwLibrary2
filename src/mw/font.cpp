@@ -5,12 +5,14 @@
 
 namespace mw {
 
-	Font::Font(std::string filename, int characterSize) {
+	Font::Font() : fontData_(std::make_shared<FontData>()) {
+	}
+
+	Font::Font(std::string filename, int characterSize) : fontData_(std::make_shared<FontData>()) {
 		characterSize_ = characterSize;
 		TTF_Font* font = TTF_OpenFont(filename.c_str(), characterSize);
 
 		if (font) {
-			fontData_ = std::make_shared<FontData>();
 			fontData_->font_ = font;
 		} else {
 			std::cerr << "Error font" << std::endl;

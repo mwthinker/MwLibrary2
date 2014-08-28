@@ -1,7 +1,7 @@
 #include "window.h"
 #include "exception.h"
 #include "sprite.h"
-#include "programgl.h"
+#include "shader.h"
 
 #include <SDL_image.h>
 
@@ -85,13 +85,13 @@ namespace mw {
 		if (nbrOfInstances < 1) {
 			initGLES2();
 			glViewport(0, 0, width_, height_);
-			Sprite::globalProgramGl = std::make_shared<ProgramGl>();
-			Sprite::globalProgramGl->bindAttribute(SHADER_ATTRIBUTE_VEC4_POSITION);
-			Sprite::globalProgramGl->bindAttribute(SHADER_ATTRIBUTE_VEC2_TEXCOORD);
-			Sprite::globalProgramGl->loadAndLinkShaders(SHADER_VER, SHADER_FRAG);
-			mw::glUniformMatrix4fv(Sprite::globalProgramGl->getUniformLocation(SHADER_UNIFORM_MAT4_MODEL), 1, false, I_44.data());
+			Sprite::globalShaderPtr = std::make_shared<Shader>();
+			Sprite::globalShaderPtr->bindAttribute(SHADER_ATTRIBUTE_VEC4_POSITION);
+			Sprite::globalShaderPtr->bindAttribute(SHADER_ATTRIBUTE_VEC2_TEXCOORD);
+			Sprite::globalShaderPtr->loadAndLink(SHADER_VER, SHADER_FRAG);
+			mw::glUniformMatrix4fv(Sprite::globalShaderPtr->getUniformLocation(SHADER_UNIFORM_MAT4_MODEL), 1, false, I_44.data());
 			Matrix44 ortho = getOrthoProjectionMatrix(0, (float) width_, 0, (float) height_, -1, 1);
-			mw::glUniformMatrix4fv(Sprite::globalProgramGl->getUniformLocation(SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
+			mw::glUniformMatrix4fv(Sprite::globalShaderPtr->getUniformLocation(SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
 			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		}
 		

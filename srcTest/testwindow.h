@@ -4,6 +4,7 @@
 #include <mw/window.h>
 #include <mw/sprite.h>
 #include <mw/text.h>
+#include <mw/matrix.h>
 
 class TestWindow : public mw::Window {
 public:

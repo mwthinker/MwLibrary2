@@ -4,7 +4,7 @@
 #include "texture.h"
 
 #if MW_OPENGLES2
-#include "programgl.h"
+#include "shader.h"
 #endif // MW_OPENGLES2
 
 #include <string>
@@ -86,7 +86,7 @@ namespace mw {
 		}
 
 #if MW_OPENGLES2
-		static ProgramGlPtr getProgramGl();
+		static ShaderPtr getShaderPtr();
 #endif // MW_OPENGLES2
 
 	private:
@@ -95,8 +95,7 @@ namespace mw {
 		float x_, y_, dx_, dy_;
 
 #if MW_OPENGLES2
-		ProgramGlPtr programGl;
-		static ProgramGlPtr globalProgramGl;
+		static ShaderPtr globalShaderPtr;
 #endif // MW_OPENGLES2
 	};
 

@@ -1,5 +1,5 @@
 #if MW_OPENGLES2
-#include "programgl.h"
+#include "shader.h"
 #include "opengl.h"
 
 #include <fstream>
@@ -52,17 +52,17 @@ namespace mw {
 		}
 	}
 
-	ProgramGl::ProgramGl() {
+	Shader::Shader() {
 		programObject_ = 0;
 		location_ = 0;
 	}
 
-	void ProgramGl::bindAttribute(std::string attribute) {
+	void Shader::bindAttribute(std::string attribute) {
 		assert(programObject_ == 0);
 		attributes_[attribute] = location_;
 	}
 
-	int ProgramGl::getAttributeLocation(std::string attribute) {
+	int Shader::getAttributeLocation(std::string attribute) {
 		auto it = attributes_.find(attribute);
 		if (it != attributes_.end()) {
 			return it->second;
@@ -70,7 +70,7 @@ namespace mw {
 		return -1;
 	}
 
-	int ProgramGl::getUniformLocation(std::string uniform) {
+	int Shader::getUniformLocation(std::string uniform) {
 		if (programObject_ != 0) {
 			unsigned int size = uniforms_.size();
 
@@ -84,7 +84,7 @@ namespace mw {
 		return -1;
 	}
 
-	bool ProgramGl::loadAndLinkShadersFromFile(std::string vShaderFile, std::string fShaderFile) {
+	bool Shader::loadAndLinkFromFile(std::string vShaderFile, std::string fShaderFile) {
 		if (programObject_ == 0) {
 			std::ifstream inFile(vShaderFile);
 			std::stringstream stream;
@@ -95,12 +95,12 @@ namespace mw {
 			stream << inFile.rdbuf();
 			fShaderFile = stream.str();
 
-			return loadAndLinkShaders(vShaderFile, fShaderFile);
+			return loadAndLink(vShaderFile, fShaderFile);
 		}
 		return false;
 	}
 
-	bool ProgramGl::loadAndLinkShaders(std::string vShader, std::string fShader) {
+	bool Shader::loadAndLink(std::string vShader, std::string fShader) {
 		if (programObject_ == 0) {
 			programObject_ = mw::glCreateProgram();
 			if (programObject_ == 0) {
@@ -141,7 +141,7 @@ namespace mw {
 		return false;
 	}
 
-	void ProgramGl::use() {
+	void Shader::glUseProgram() {
 		if (programObject_ != 0) {
 			mw::glUseProgram(programObject_);
 		}

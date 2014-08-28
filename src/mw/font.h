@@ -11,8 +11,8 @@ namespace mw {
 
 	class Font : public InitTtf {
 	public:
-		Font() : fontData_(std::make_shared<FontData>()) {
-		}
+		// Creates a empty font.
+		Font();
 
 		// Loads a font located in file named (filename). 
 		// Higher character size demands higher memory usage.
@@ -24,7 +24,7 @@ namespace mw {
 
 		// Use with care! Returns a pointer to the font data.
 		inline TTF_Font* getTtfFont() const {
-			return fontData_ ? fontData_->font_ : 0;
+			return fontData_->font_;
 		}
 
 	private:
