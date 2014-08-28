@@ -3,7 +3,9 @@
 
 #include "opengl.h"
 
+#if MW_OPENGLES2
 #include <string>
+#endif // MW_OPENGLES2
 
 namespace mw {
 

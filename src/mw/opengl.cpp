@@ -6,7 +6,7 @@
 
 namespace mw {
 
-#if MW_OPENGLES2	
+#if MW_OPENGLES2
 
 	Matrix44 getTranslateMatrix(float x, float y, float z) {
 		Matrix44 m(I_44);

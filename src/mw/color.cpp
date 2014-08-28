@@ -41,4 +41,3 @@ namespace mw {
 	}
 
 } // Namespace mw.
-

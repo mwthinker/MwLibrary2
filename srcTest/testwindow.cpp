@@ -86,7 +86,7 @@ void TestWindow::update(Uint32 msDeltaTime) {
 	glColor3d(1, 0, 0);
 	text_.draw();
 	glPopMatrix();
-#endif
+#endif // MW_OPENGLES2
 }
 
 void TestWindow::eventUpdate(const SDL_Event& windowEvent) {

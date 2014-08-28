@@ -1,7 +1,11 @@
 #include "window.h"
 #include "exception.h"
 #include "sprite.h"
+
+#if MW_OPENGLES2
 #include "shader.h"
+#include "matrix.h"
+#endif // MW_OPENGLES2
 
 #include <SDL_image.h>
 

@@ -2,7 +2,6 @@
 #define MW_WINDOW_H
 
 #include "initsdl.h"
-#include "matrix.h"
 
 #include <SDL.h>
 

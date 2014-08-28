@@ -20,15 +20,15 @@ namespace mw {
 			mw::glEnable(GL_TEXTURE_2D);
 			mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			// Centered square in ORIGO.
-			static GLfloat aVertices[] = {
+			// Lower left corner is in ORIGO.
+			GLfloat aVertices[] = {
 				0, 0,
 				getWidth(), 0,
 				0, getHeight(),
 				getWidth(), getHeight()};
 
 			// Map the sprite out from the texture.
-			static GLfloat aTexCoord[] = {
+			GLfloat aTexCoord[] = {
 				0, 0,
 				1, 0,
 				0, 1,

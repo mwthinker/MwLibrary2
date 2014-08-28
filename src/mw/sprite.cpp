@@ -48,7 +48,7 @@ namespace mw {
 
 				mw::glDisable(GL_TEXTURE_2D);
 				mw::glDisable(GL_BLEND);
-#else
+#else // MW_OPENGLES2
 				glEnable(GL_BLEND);
 				glEnable(GL_TEXTURE_2D);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -68,7 +68,7 @@ namespace mw {
 				glEnd();
 				glDisable(GL_TEXTURE_2D);
 				glDisable(GL_BLEND);
-#endif
+#endif // MW_OPENGLES2
 				
 			}
 		}
@@ -81,7 +81,7 @@ namespace mw {
 	ShaderPtr Sprite::getShaderPtr() {
 		return globalShaderPtr;
 	}
-#endif
+#endif // MW_OPENGLES2
 
 	Sprite::Sprite() : drawFunc_(std::bind(drawSprite, std::placeholders::_1)) {
 	}
