@@ -40,6 +40,7 @@ namespace mw {
 		"uniform mat4 uProjectionMatrix;\n"
 		""
 		"attribute vec4 aPosition;\n"
+		"attribute vec2 aTexCoord;\n"
 		""
 		"varying vec2 vTexCoord;\n"
 		""
