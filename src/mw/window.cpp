@@ -92,14 +92,15 @@ namespace mw {
 		if (nbrOfInstances < 1) {
 			initGLES2();
 			glViewport(0, 0, width_, height_);
-			Sprite::globalShaderPtr = std::make_shared<Shader>();
-			Sprite::globalShaderPtr->bindAttribute(SHADER_ATTRIBUTE_VEC4_POSITION);
-			Sprite::globalShaderPtr->bindAttribute(SHADER_ATTRIBUTE_VEC2_TEXCOORD);
-			Sprite::globalShaderPtr->loadAndLink(SHADER_VER, SHADER_FRAG);
-			mw::glUniformMatrix4fv(Sprite::globalShaderPtr->getUniformLocation(SHADER_UNIFORM_MAT4_MODEL), 1, false, I_44.data());
+			ShaderPtr shader = std::make_shared<Shader>();
+			shader->bindAttribute(SHADER_ATTRIBUTE_VEC4_POSITION);
+			shader->bindAttribute(SHADER_ATTRIBUTE_VEC2_TEXCOORD);
+			shader->loadAndLink(SHADER_VER, SHADER_FRAG);
+			Shader::setDefaultShader(shader);
+			mw::glUniformMatrix4fv(shader->getUniformLocation(SHADER_UNIFORM_MAT4_MODEL), 1, false, I_44.data());
 			Matrix44 ortho = getOrthoProjectionMatrix(0, (float) width_, 0, (float) height_, -1, 1);
-			mw::glUniformMatrix4fv(Sprite::globalShaderPtr->getUniformLocation(SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
-			mw::glUniform4f(Sprite::globalShaderPtr->getUniformLocation(SHADER_UNIFORM_VEC4_COLOR), 1, 1, 1, 1);
+			mw::glUniformMatrix4fv(shader->getUniformLocation(SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
+			mw::glUniform4f(shader->getUniformLocation(SHADER_UNIFORM_VEC4_COLOR), 1, 1, 1, 1);
 			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		}
 		

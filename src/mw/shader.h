@@ -51,6 +51,12 @@ namespace mw {
 		// Does nothing if the program is not loaded.
 		void glUseProgram();
 
+		// Get the default shader.
+		static ShaderPtr getDefaultShader();
+
+		// Set the default shader.
+		static void setDefaultShader(const ShaderPtr& shader);
+
 	private:
 		std::map<std::string, int> attributes_;
 		std::map<std::string, int> uniforms_;
@@ -58,6 +64,8 @@ namespace mw {
 		int location_;
 
 		GLuint programObject_;
+
+		static ShaderPtr defaultShader;
 	};
 
 } // Namespace mw.

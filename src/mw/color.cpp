@@ -1,5 +1,5 @@
 #include "color.h"
-#include "sprite.h"
+#include "shader.h"
 #include "opengl.h"
 
 namespace mw {
@@ -25,7 +25,7 @@ namespace mw {
 	// Calls ::glColor3d(red_,green_,blue_).
 	void Color::glColor3f() const {
 #if MW_OPENGLES2
-		mw::glUniform4f(Sprite::getShaderPtr()->getUniformLocation(Color::SHADER_UNIFORM_VEC4_COLOR), red_, green_, blue_, 1);
+		mw::glUniform4f(Shader::getDefaultShader()->getUniformLocation(Color::SHADER_UNIFORM_VEC4_COLOR), red_, green_, blue_, 1);
 #else // MW_OPENGLES2
 		::glColor3d(red_,green_,blue_);
 #endif // MW_OPENGLES2
@@ -34,7 +34,7 @@ namespace mw {
 	// Calls ::glColor4d(red_,green_,blue_,alpha_).
 	void Color::glColor4f() const {
 #if MW_OPENGLES2
-		mw::glUniform4f(Sprite::getShaderPtr()->getUniformLocation(Color::SHADER_UNIFORM_VEC4_COLOR), red_, green_, blue_, alpha_);
+		mw::glUniform4f(Shader::getDefaultShader()->getUniformLocation(Color::SHADER_UNIFORM_VEC4_COLOR), red_, green_, blue_, alpha_);
 #else // MW_OPENGLES2
 		::glColor4f(red_,green_,blue_,alpha_);
 #endif // MW_OPENGLES2

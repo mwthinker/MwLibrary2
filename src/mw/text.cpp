@@ -2,8 +2,8 @@
 
 #include "initttf.h"
 #include "font.h"
-#include "texture.h"
 #include "sprite.h"
+#include "shader.h"
 
 #include <SDL_ttf.h>
 
@@ -35,7 +35,7 @@ namespace mw {
 				1, 1};
 
 			// Use the program object
-			auto& shader = Sprite::getShaderPtr();
+			auto& shader = Shader::getDefaultShader();
 			shader->glUseProgram();
 
 			// Load the vertex data

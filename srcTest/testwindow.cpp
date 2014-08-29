@@ -4,6 +4,7 @@
 #include <mw/color.h>
 #include <mw/window.h>
 #include <mw/matrix.h>
+#include <mw/shader.h>
 
 TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
 	focus_ = true;
@@ -27,7 +28,7 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300
 				(sprite.getX() + sprite.getWidth()) / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight()};
 
 			// Use the program object
-			auto& program = sprite.getShaderPtr();
+			auto& program = mw::Shader::getDefaultShader();
 			program->glUseProgram();
 
 			// Load the vertex data
@@ -69,9 +70,9 @@ void TestWindow::update(Uint32 msDeltaTime) {
 #if MW_OPENGLES2
 	mw::Matrix44 ortho = mw::getOrthoProjectionMatrix(0, (float) getWidth(), 0, (float) getHeight());
 	// Update projection and model matrix.
-	mw::glUniformMatrix4fv(mw::Sprite::getShaderPtr()->getUniformLocation(mw::SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
+	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
 	mw::Matrix44 m = mw::getTranslateMatrix((float) x_, (float) y_);
-	mw::glUniformMatrix4fv(mw::Sprite::getShaderPtr()->getUniformLocation(mw::SHADER_UNIFORM_MAT4_MODEL), 1, false, m.transpose().data());
+	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_UNIFORM_MAT4_MODEL), 1, false, m.transpose().data());
 	mw::Color color(1, 1, 1, 1);
 	color.glColor4f();
 	sprite_.draw();
@@ -102,6 +103,18 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					}
 					break;
 				case SDL_WINDOWEVENT_RESIZED:
+					if (windowEvent.window.windowID == getId()) {
+#ifdef MW_OPENGLES2
+						mw::glViewport(0, 0, windowEvent.window.data1, windowEvent.window.data2);
+#else //MW_OPENGLES2
+						glMatrixMode(GL_PROJECTION);
+						glLoadIdentity();
+						glViewport(0, 0, windowEvent.window.data1, windowEvent.window.data2);
+						glMatrixMode(GL_MODELVIEW);
+						glLoadIdentity();
+						glOrtho(0, windowEvent.window.data1, 0, windowEvent.window.data2, -1, 1);
+#endif //MW_OPENGLES2
+					}
 					break;
 				case SDL_WINDOWEVENT_FOCUS_GAINED:
 					if (windowEvent.window.windowID == getId()) {

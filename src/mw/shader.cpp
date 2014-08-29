@@ -10,7 +10,7 @@
 
 namespace mw {
 
-	static GLuint loadShader(GLuint program, GLenum type, const GLchar* shaderSrc) {
+	GLuint loadShader(GLuint program, GLenum type, const GLchar* shaderSrc) {
 		GLuint shader;
 		shader = mw::glCreateShader(type);
 		mw::glShaderSource(shader, 1, &shaderSrc, NULL);
@@ -19,7 +19,7 @@ namespace mw {
 		return shader;
 	}
 
-	static void loadAndLinkShadersFromFile(GLint programObject, std::string vShader, std::string fShader) {
+	void loadAndLinkShadersFromFile(GLint programObject, std::string vShader, std::string fShader) {
 		std::ifstream inFile(vShader);
 		std::stringstream stream;
 		stream << inFile.rdbuf();
@@ -145,6 +145,16 @@ namespace mw {
 		if (programObject_ != 0) {
 			mw::glUseProgram(programObject_);
 		}
+	}
+
+	ShaderPtr Shader::defaultShader = nullptr;
+
+	ShaderPtr Shader::getDefaultShader() {
+		return defaultShader;
+	}
+
+	void Shader::setDefaultShader(const ShaderPtr& shader) {
+		defaultShader = shader;
 	}
 
 } // Namespace mw.

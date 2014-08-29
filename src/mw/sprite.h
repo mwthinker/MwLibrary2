@@ -3,10 +3,6 @@
 
 #include "texture.h"
 
-#if MW_OPENGLES2
-#include "shader.h"
-#endif // MW_OPENGLES2
-
 #include <string>
 #include <functional>
 
@@ -16,17 +12,17 @@ namespace mw {
 	public:
 		friend class Window;
 
-		// Create a empty sprite, but it will draw nothing.
+		// Create an empty sprite, but it will draw nothing.
 		Sprite();
 
-		// Load a image from file.
-		Sprite(std::string image, std::function<void()> filter = []() {
+		// Load an image from file.
+		explicit Sprite(std::string image, std::function<void()> filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
-		// Load a image from file.
-		Sprite(std::string image, std::function<void(const mw::Sprite& sprite)> draw, std::function<void()> filter = []() {
+		// Load an image from file.
+		explicit Sprite(std::string image, std::function<void(const mw::Sprite& sprite)> draw, std::function<void()> filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
@@ -85,18 +81,10 @@ namespace mw {
 			return dy_;
 		}
 
-#if MW_OPENGLES2
-		static ShaderPtr getShaderPtr();
-#endif // MW_OPENGLES2
-
 	private:
 		Texture texture_;
 		std::function<void(const mw::Sprite& sprite)> drawFunc_;
 		float x_, y_, dx_, dy_;
-
-#if MW_OPENGLES2
-		static ShaderPtr globalShaderPtr;
-#endif // MW_OPENGLES2
 	};
 
 } // Namespace mw.

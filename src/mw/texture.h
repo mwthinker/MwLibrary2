@@ -18,14 +18,14 @@ namespace mw {
 
 		// Loads a image from a file. It stores the image in memory and no opengl
 		// code are of use in the constructor (safe to call constructor in other threads).
-		Texture(std::string filename, std::function<void()> filter = []() {
+		explicit Texture(std::string filename, std::function<void()> filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
 		// Takes over ownership of surface and is responsable of deallocation.
 		// Not safe to use surface outside this class after calling the constuctor.
-		Texture(SDL_Surface* surface, std::function<void()> filter = []() {
+		explicit Texture(SDL_Surface* surface, std::function<void()> filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});

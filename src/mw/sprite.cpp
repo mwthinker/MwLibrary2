@@ -1,5 +1,6 @@
 #include "sprite.h"
 #include "opengl.h"
+#include "shader.h"
 
 #include <SDL.h>
 
@@ -34,7 +35,7 @@ namespace mw {
 					(sprite.getX() + sprite.getWidth()) / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight()};
 
 				// Use the program object
-				auto& shader = sprite.getShaderPtr();
+				auto& shader = Shader::getDefaultShader();
 				shader->glUseProgram();
 
 				// Load the vertex data
@@ -74,14 +75,6 @@ namespace mw {
 		}
 
 	}
-
-#if MW_OPENGLES2
-	ShaderPtr Sprite::globalShaderPtr = nullptr;
-
-	ShaderPtr Sprite::getShaderPtr() {
-		return globalShaderPtr;
-	}
-#endif // MW_OPENGLES2
 
 	Sprite::Sprite() : drawFunc_(std::bind(drawSprite, std::placeholders::_1)) {
 	}
