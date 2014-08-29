@@ -95,7 +95,7 @@ namespace mw {
 			ShaderPtr shader = std::make_shared<Shader>();
 			shader->bindAttribute(SHADER_ATTRIBUTE_VEC4_POSITION);
 			shader->bindAttribute(SHADER_ATTRIBUTE_VEC2_TEXCOORD);
-			shader->loadAndLink(SHADER_VER, SHADER_FRAG);
+			shader->loadAndLink(SHADER_TEXTURE_VER, SHADER_TEXTURE_FRAG);
 			Shader::setDefaultShader(shader);
 			mw::glUniformMatrix4fv(shader->getUniformLocation(SHADER_UNIFORM_MAT4_MODEL), 1, false, I_44.data());
 			Matrix44 ortho = getOrthoProjectionMatrix(0, (float) width_, 0, (float) height_, -1, 1);

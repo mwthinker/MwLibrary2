@@ -31,7 +31,7 @@ namespace mw {
 	static const std::string SHADER_UNIFORM_MAT4_PROJ = "uProjectionMatrix";
 	static const std::string SHADER_UNIFORM_VEC4_COLOR = "uColor";
 	
-	static const std::string SHADER_VER =
+	static const std::string SHADER_TEXTURE_VER =
 		"#version 100\n"
 		""
 		"precision mediump float;\n"
@@ -40,7 +40,6 @@ namespace mw {
 		"uniform mat4 uProjectionMatrix;\n"
 		""
 		"attribute vec4 aPosition;\n"
-		"attribute vec2 aTexCoord;\n"
 		""
 		"varying vec2 vTexCoord;\n"
 		""
@@ -49,7 +48,7 @@ namespace mw {
 		"	vTexCoord = aTexCoord;"
 		"}";
 
-	static const std::string SHADER_FRAG =
+	static const std::string SHADER_TEXTURE_FRAG =
 		"#version 100\n"
 		""
 		"precision mediump float;\n"
@@ -62,6 +61,31 @@ namespace mw {
 		"void main() {"
 		"	vec4 tex = texture2D(uTexture, vTexCoord);"
 		"	gl_FragColor = vec4(uColor.x * tex.x, uColor.y * tex.y, uColor.z * tex.z, uColor.a * tex.a);"
+		"}";
+
+	static const std::string SHADER_VER =
+		"#version 100\n"
+		""
+		"precision mediump float;\n"
+		""
+		"uniform mat4 uModelMatrix;\n"
+		"uniform mat4 uProjectionMatrix;\n"
+		""
+		"attribute vec4 aPosition;\n"
+		""
+		"void main() {"
+		"	gl_Position = uProjectionMatrix * uModelMatrix * aPosition;"
+		"}";
+
+	static const std::string SHADER_FRAG =
+		"#version 100\n"
+		""
+		"precision mediump float;\n"
+		""
+		"uniform vec4 uColor;\n"
+		""
+		"void main() {"
+		"	gl_FragColor = uColor;"
 		"}";
 
 #define FUNC_POINTER_DEC(ret,func,params) extern ret (KHRONOS_APIENTRY *func) params;
