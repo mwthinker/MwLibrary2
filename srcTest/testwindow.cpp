@@ -30,12 +30,13 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300
 			// Use the program object
 			auto& program = mw::Shader::getDefaultShader();
 			program->glUseProgram();
+			mw::glUniform1f(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
 
 			// Load the vertex data
-			mw::glVertexAttribPointer(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
-			mw::glVertexAttribPointer(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
-			mw::glEnableVertexAttribArray(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC4_POSITION));
-			mw::glEnableVertexAttribArray(program->getAttributeLocation(mw::SHADER_ATTRIBUTE_VEC2_TEXCOORD));
+			mw::glVertexAttribPointer(program->getAttributeLocation(mw::SHADER_A_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
+			mw::glVertexAttribPointer(program->getAttributeLocation(mw::SHADER_A_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
+			mw::glEnableVertexAttribArray(program->getAttributeLocation(mw::SHADER_A_VEC4_POSITION));
+			mw::glEnableVertexAttribArray(program->getAttributeLocation(mw::SHADER_A_VEC2_TEXCOORD));
 
 			// Upload the attributes and draw the sprite.
 			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -70,23 +71,24 @@ void TestWindow::update(Uint32 msDeltaTime) {
 #if MW_OPENGLES2
 	mw::Matrix44 ortho = mw::getOrthoProjectionMatrix(0, (float) getWidth(), 0, (float) getHeight());
 	// Update projection and model matrix.
-	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
+	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_MAT4_PROJ), 1, false, ortho.transpose().data());
 	mw::Matrix44 m = mw::getTranslateMatrix((float) x_, (float) y_);
-	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_UNIFORM_MAT4_MODEL), 1, false, m.transpose().data());
-	mw::Color color(1, 1, 1, 1);
-	color.glColor4f();
+	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_MAT4_MODEL), 1, false, m.transpose().data());
+	mw::glUniform4f(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 1, 1, 1);
 	sprite_.draw();
-	color = mw::Color(1, 0, 0);
-	color.glColor4f();
+	mw::glUniform4f(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 0, 0, 1);
 	text_.draw();
-#else // MW_OPENGLES2
-	glPushMatrix();
+#else // MW_OPENGLES2	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, (float) getWidth(), 0, (float) getHeight(), -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	glTranslated(x_, y_, 0);
 	glColor4d(1, 1, 1, 1);
 	sprite_.draw();
 	glColor3d(1, 0, 0);
 	text_.draw();
-	glPopMatrix();
 #endif // MW_OPENGLES2
 }
 
@@ -103,18 +105,10 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					}
 					break;
 				case SDL_WINDOWEVENT_RESIZED:
-					if (windowEvent.window.windowID == getId()) {
-#ifdef MW_OPENGLES2
-						mw::glViewport(0, 0, windowEvent.window.data1, windowEvent.window.data2);
-#else //MW_OPENGLES2
-						glMatrixMode(GL_PROJECTION);
-						glLoadIdentity();
-						glViewport(0, 0, windowEvent.window.data1, windowEvent.window.data2);
-						glMatrixMode(GL_MODELVIEW);
-						glLoadIdentity();
-						glOrtho(0, windowEvent.window.data1, 0, windowEvent.window.data2, -1, 1);
-#endif //MW_OPENGLES2
-					}
+#ifndef MW_OPENGLES2
+					glClearColor(0, 0, 0, 1);
+					glViewport(0, windowEvent.window.data1, 0, windowEvent.window.data2);
+#endif // MW_OPENGLES2
 					break;
 				case SDL_WINDOWEVENT_FOCUS_GAINED:
 					if (windowEvent.window.windowID == getId()) {

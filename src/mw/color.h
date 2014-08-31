@@ -3,10 +3,6 @@
 
 #include "opengl.h"
 
-#if MW_OPENGLES2
-#include <string>
-#endif // MW_OPENGLES2
-
 namespace mw {
 
 	// Holds RGB-color needed to define the color in openGl.
@@ -16,16 +12,17 @@ namespace mw {
 
 		Color(float red, float green, float blue, float alpha = 1.f);
 
-		// Calls ::glColor3d(red_,green_,blue_).
-		void glColor3f() const;
+#ifndef MW_OPENGLES2
+		inline void glColor3f() const {
+			::glColor3f(red_, green_, blue_);
+		}
 
-		// Calls ::glColor4d(red_,green_,blue_,alpha_).
-		void glColor4f() const;
+		inline void glColor4f() const {
+			::glColor4f(red_, green_, blue_, alpha_);
+		}
+#endif // MW_OPENGLES2
 
 		float red_, green_, blue_, alpha_;
-#if MW_OPENGLES2
-		static std::string SHADER_UNIFORM_VEC4_COLOR;
-#endif // MW_OPENGLES2
 	};
 
 } // Namespace mw.

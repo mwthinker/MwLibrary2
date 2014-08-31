@@ -21,14 +21,14 @@ namespace mw {
 				mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 				// Centered square in ORIGO.
-				static GLfloat aVertices[] = {
+				GLfloat aVertices[] = {
 					-0.5f, -0.5f,
-					 0.5f, -0.5f
+					 0.5f, -0.5f,
 					-0.5f,  0.5f,
 					 0.5f,  0.5f};
 
 				// Map the sprite out from the texture.
-				static GLfloat aTexCoord[] = {
+				GLfloat aTexCoord[] = {
 					sprite.getX() / texture.getWidth(), sprite.getY() / texture.getHeight(),
 					(sprite.getX() + sprite.getWidth()) / texture.getWidth(), sprite.getY() / texture.getHeight(),
 					sprite.getX() / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight(),
@@ -37,12 +37,13 @@ namespace mw {
 				// Use the program object
 				auto& shader = Shader::getDefaultShader();
 				shader->glUseProgram();
+				mw::glUniform1f(shader->getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
 
 				// Load the vertex data
-				mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_ATTRIBUTE_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
-				mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_ATTRIBUTE_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
-				mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_ATTRIBUTE_VEC4_POSITION));
-				mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_ATTRIBUTE_VEC2_TEXCOORD));
+				mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_A_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
+				mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_A_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
+				mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_A_VEC4_POSITION));
+				mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_A_VEC2_TEXCOORD));
 
 				// Upload the attributes and draw the sprite.
 				mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

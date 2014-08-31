@@ -91,35 +91,17 @@ namespace mw {
 #ifdef MW_OPENGLES2
 		if (nbrOfInstances < 1) {
 			initGLES2();
-			glViewport(0, 0, width_, height_);
-			ShaderPtr shader = std::make_shared<Shader>();
-			shader->bindAttribute(SHADER_ATTRIBUTE_VEC4_POSITION);
-			shader->bindAttribute(SHADER_ATTRIBUTE_VEC2_TEXCOORD);
-			shader->loadAndLink(SHADER_TEXTURE_VER, SHADER_TEXTURE_FRAG);
+			auto shader = std::make_shared<Shader>();
+			shader->bindAttribute(SHADER_A_VEC4_POSITION);
+			shader->bindAttribute(SHADER_A_VEC2_TEXCOORD);
+			shader->loadAndLink(SHADER_VER, SHADER_FRAG);
 			Shader::setDefaultShader(shader);
-			mw::glUniformMatrix4fv(shader->getUniformLocation(SHADER_UNIFORM_MAT4_MODEL), 1, false, I_44.data());
-			Matrix44 ortho = getOrthoProjectionMatrix(0, (float) width_, 0, (float) height_, -1, 1);
-			mw::glUniformMatrix4fv(shader->getUniformLocation(SHADER_UNIFORM_MAT4_PROJ), 1, false, ortho.transpose().data());
-			mw::glUniform4f(shader->getUniformLocation(SHADER_UNIFORM_VEC4_COLOR), 1, 1, 1, 1);
-			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		}
-		
-#else //MW_OPENGLES2
+#endif //MW_OPENGLES2
 		if (nbrOfInstances < 1) {
 			std::printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
 			std::printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 		}
-
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-
-		glViewport(0, 0, width_, height_);
-
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glOrtho(0, width_, 0, height_, -1, 1);
-#endif //MW_OPENGLES2
 	}
 
 	Window::~Window() {
