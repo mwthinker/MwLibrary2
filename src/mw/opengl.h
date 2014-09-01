@@ -16,16 +16,16 @@ namespace mw {
 
 #if MW_OPENGLES2
 
-	// Return the translation matrix which is in column-major order.
+	// Return the translation matrix.
 	Matrix44 getTranslateMatrix(float x, float y, float z = 0);
 
-	// Return the rotation matrix which is in column-major order.
+	// Return the rotation matrix.
 	Matrix44 getRotateMatrix(float angle, float x, float y, float z);
 
 	// Return the scale matrix.
 	Matrix44 getScaleMatrix(float x, float y, float z = 1);
 	
-	// Return the ortho projection matrix which is in column-major order.
+	// Return the ortho projection matrix.
 	Matrix44 getOrthoProjectionMatrix(float left, float right, float bottom, float top, float near = -1, float far = 1);
 
 	static const std::string SHADER_A_VEC4_POSITION = "aPosition";
