@@ -10,9 +10,9 @@ namespace mw {
 
 	Matrix44 getTranslateMatrix(float x, float y, float z) {
 		Matrix44 m(I_44);
-		m(0, 3) = x;
-		m(1, 3) = y;
-		m(2, 3) = z;
+		m(3, 0) = x;
+		m(3, 1) = y;
+		m(3, 2) = z;
 		m(3, 3) = 1;
 		return m;
 	}
@@ -22,9 +22,9 @@ namespace mw {
 		float c = std::cos(angle);
 
 		mw::Matrix44 m(
-			x*x*(1 - c) + c, x*y*(1 - c) - z*s, x*z*(1 - c) + y*s, 0,
-			y*x*(1 - c) + z*s, y*y*(1 - c) + c, y*z*(1 - c) + x*s, 0,
-			z*x*(1 - c) - y*s, y*z*(1 - c) + x*s, z*z*(1 - c) + c, 0,
+			x*x*(1 - c) + c, x*y*(1 - c) + z*s, x*z*(1 - c) - y*s, 0,
+			y*x*(1 - c) - z*s, y*y*(1 - c) + c, y*z*(1 - c) + x*s, 0,
+			z*x*(1 - c) - y*s, y*z*(1 - c) - x*s, z*z*(1 - c) + c, 0,
 			0, 0, 0, 1);
 
 		return m;
@@ -41,10 +41,10 @@ namespace mw {
 
 	Matrix44 getOrthoProjectionMatrix(float left, float right, float bottom, float top, float near, float far) {
 		mw::Matrix44 ortho(
-			2 / (right - left), 0, 0, -(right + left) / (right - left),
-			0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom),
-			0, 0, -2 / (far - near), -(far + near) / (far - near),
-			0, 0, 0, 1);
+			2 / (right - left), 0, 0, 0,
+			0, 2 / (top - bottom), 0, 0,
+			0, 0, -2 / (far - near), 0,
+			-(right + left) / (right - left), -(top + bottom) / (top - bottom), -(far + near) / (far - near), 1);
 
 		return ortho;
 	}
