@@ -11,7 +11,9 @@ else ()
 	SET(CMAKE_CXX_FLAGS "-std=c++11")
 endif ()
 
-option(OpenGLES2 "OpenGLES2 is activated" OFF)
+if (NOT OpenGLES2_REMOVE_OPTION)
+	option(OpenGLES2 "OpenGLES2 is activated" OFF)
+endif ()
 option(MwLibrary2Test "MwLibrary2Test project is added" OFF)
 
 if (OpenGLES2)
