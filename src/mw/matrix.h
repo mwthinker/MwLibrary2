@@ -69,6 +69,10 @@ namespace mw {
 
 		Matrix44 transpose() const;
 
+		Matrix44 inverse() const;
+
+		float determinant() const;
+
 	private:
 		std::array<float, 16> data_;
 	};
