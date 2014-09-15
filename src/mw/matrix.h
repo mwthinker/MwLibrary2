@@ -77,8 +77,91 @@ namespace mw {
 		std::array<float, 16> data_;
 	};
 
-	static const Matrix44 ZERO_44(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	static const Matrix44 I_44(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	static const Matrix44 ZERO_44(0, 0, 0, 0,
+								  0, 0, 0, 0,
+								  0, 0, 0, 0,
+								  0, 0, 0, 0);
+
+	static const Matrix44 I_44(1, 0, 0, 0,
+							   0, 1, 0, 0,
+							   0, 0, 1, 0,
+							   0, 0, 0, 1);
+
+	class Matrix33 {
+	public:
+		// An empty matrix with undefined values.
+		inline Matrix33() {
+		}
+
+		// Defines a matrix. The matrix is internally saved as an column-major order.
+		inline Matrix33(
+			float m00, float m01, float m02,
+			float m10, float m11, float m12,
+			float m20, float m21, float m22)
+			: data_({
+			m00, m10, m20,
+			m01, m11, m21,
+			m02, m12, m22}) {
+		}
+
+			// Create a matrix based on an array in column-major order.
+			inline Matrix33(const std::array<float, 9>& matrix) {
+				data_ = matrix;
+			}
+
+			Matrix33 operator*(const Matrix33& matrix) const;
+
+			Matrix33 operator+(const Matrix33& matrix) const;
+
+			inline float& operator()(int row, int column) {
+				return data_[row + column * 3];
+			}
+
+			inline float operator()(int row, int column) const {
+				return data_[row + column * 3];
+			}
+
+			inline const float* data() const {
+				return data_.data();
+			}
+
+			inline float& operator[](int index) {
+				return data_[index];
+			}
+
+			inline float operator[](int index) const {
+				return data_[index];
+			}
+
+			inline int size() const {
+				return data_.size();
+			}
+
+			inline std::array<float, 9>::iterator begin() {
+				return data_.begin();
+			}
+
+			inline std::array<float, 9>::iterator end() {
+				return data_.end();
+			}
+
+			Matrix33 transpose() const;
+
+			Matrix33 inverse() const;
+
+			float determinant() const;
+
+	private:
+		std::array<float, 9> data_;
+	};
+
+	static const Matrix33 ZERO_33(0, 0, 0,
+								  0, 0, 0,
+								  0, 0, 0);
+
+	static const Matrix33 I_33(1, 0, 0,
+							   0, 1, 0,
+							   0, 0, 1);
 
 } // Namespace mw.
 

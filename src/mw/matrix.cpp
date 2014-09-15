@@ -3,7 +3,7 @@
 namespace mw {
 	
 	Matrix44 Matrix44::operator*(const Matrix44& matrix) const {
-		Matrix44 m(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		Matrix44 m = ZERO_44;
 		for (int i = 0; i < 4; ++i) {
 			for (int j = 0; j < 4; ++j) {
 				for (int k = 0; k < 4; ++k) {
@@ -66,5 +66,49 @@ namespace mw {
 		return tmp;
 	}
 
+	Matrix33 Matrix33::operator*(const Matrix33& matrix) const {
+		Matrix33 m = ZERO_33;
+		for (int i = 0; i < 3; ++i) {
+			for (int j = 0; j < 3; ++j) {
+				for (int k = 0; k < 3; ++k) {
+					m(i, j) += Matrix33::operator()(i, k)*matrix(k, j);
+				}
+			}
+		}
+		return m;
+	}
+
+	Matrix33 Matrix33::operator+(const Matrix33& matrix) const {
+		Matrix33 m;
+		for (int i = 0; i < 9; ++i) {
+			m[i] = data_[i] + matrix.data_[i];
+		}
+		return m;
+	}
+
+	Matrix33 Matrix33::transpose() const {
+		Matrix33 m;
+		for (int i = 0; i < 3; ++i) {
+			for (int j = 0; j < 3; ++j) {
+				m(i, j) = Matrix33::operator()(j, i);
+			}
+		}
+		return m;
+	}
+
+	float Matrix33::determinant() const {
+		const mw::Matrix33& m = *this;
+		return m(0, 0) * (m(1, 1)*m(2, 2) - m(2, 1)*m(1, 2)) -
+			   m(0, 1) * (m(1, 0)*m(2, 2) - m(1, 2)*m(2, 0)) +
+			   m(0, 2) * (m(1, 0)*m(2, 1) - m(1, 1)*m(2, 0));
+	}
+
+	mw::Matrix33 Matrix33::inverse() const {
+		const mw::Matrix33& m = *this;
+		float scale = 1.f / determinant();
+		return mw::Matrix33(scale*(m(1, 1)*m(2, 2) - m(1, 2)*m(2, 1)), scale*(m(0, 2)*m(2, 1) - m(0, 1)*m(2, 2)), scale*(m(0, 1)*m(1, 2) - m(0, 2)*m(1, 1)),
+							scale*(m(1, 2)*m(2, 0) - m(1, 0)*m(2, 2)), scale*(m(0, 0)*m(2, 2) - m(0, 2)*m(2, 0)), scale*(m(0, 2)*m(1, 0) - m(0, 0)*m(1, 2)),
+							scale*(m(1, 0)*m(2, 1) - m(1, 1)*m(2, 0)), scale*(m(0, 1)*m(2, 0) - m(0, 0)*m(2, 1)), scale*(m(0, 0)*m(1, 1) - m(0, 1)*m(1, 0)));
+	}
 
 } // Namespace mw.
