@@ -1,4 +1,5 @@
 #include "opengl.h"
+#include "matrix.h"
 
 #include <SDL.h>
 
@@ -6,47 +7,74 @@
 
 namespace mw {
 
-#if MW_OPENGLES2
-
-	Matrix44 getTranslateMatrix(float x, float y, float z) {
-		Matrix44 m(I_44);
-		m(0, 3) = x;
-		m(1, 3) = y;
-		m(2, 3) = z;
-		m(3, 3) = 1;
-		return m;
+	Matrix44 getTranslateMatrix44(float x, float y, float z) {
+		return mw::Matrix44(
+			1, 0, 0, x,
+			0, 1, 0, y,
+			0, 0, 1, z,
+			0, 0, 0, 1);
 	}
 
-	Matrix44 getRotateMatrix(float angle, float x, float y, float z) {
+	Matrix44 getRotateMatrix44(float angle, float x, float y, float z) {
 		float s = std::sin(angle);
 		float c = std::cos(angle);
 
-		mw::Matrix44 m(
+		return mw::Matrix44(
 			x*x*(1 - c) + c, x*y*(1 - c) - z*s, x*z*(1 - c) + y*s, 0,
 			y*x*(1 - c) + z*s, y*y*(1 - c) + c, y*z*(1 - c) - x*s, 0,
 			z*x*(1 - c) - y*s, y*z*(1 - c) + x*s, z*z*(1 - c) + c, 0,
 			0, 0, 0, 1);
-
-		return m;
 	}
 
-	Matrix44 getScaleMatrix(float x, float y, float z) {
-		mw::Matrix44 m(
+	Matrix44 getScaleMatrix44(float x, float y, float z) {
+		return mw::Matrix44(
 			x, 0, 0, 0,
 			0, y, 0, 0,
 			0, 0, z, 0,
 			0, 0, 0, 1);
-		return m;
 	}
 
-	Matrix44 getOrthoProjectionMatrix(float left, float right, float bottom, float top, float near, float far) {
-		mw::Matrix44 ortho(
+	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top, float near, float far) {
+		return mw::Matrix44(
 			2 / (right - left), 0, 0, -(right + left) / (right - left),
 			0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom),
 			0, 0, -2 / (far - near), -(far + near) / (far - near),
 			0, 0, 0, 1);
-		return ortho;
 	}
+
+	Matrix33 getTranslateMatrix44(float x, float y) {
+		return mw::Matrix33(1, 0, x,
+			0, 1, y,
+			0, 0, 1);
+	}
+
+	Matrix33 getRotateMatrix33(float angle) {
+		float s = std::sin(angle);
+		float c = std::cos(angle);
+
+		mw::Matrix33 m(c, -s, 0,
+			s, c, 0,
+			0, 0, 1);
+
+		return m;
+	}
+
+	Matrix33 getScaleMatrix33(float x, float y) {
+		mw::Matrix33 m(
+			x, 0, 0,
+			0, y, 0,
+			0, 0, 1);
+		return m;
+	}
+
+	Matrix33 getOrthoProjectionMatrix33(float left, float right, float bottom, float top) {
+		return mw::Matrix33(
+			2 / (right - left), 0, -(right + left) / (right - left),
+			0, 2 / (top - bottom), -(top + bottom) / (top - bottom),
+			0, 0, 1);
+	}
+
+#if MW_OPENGLES2
 
 #define FUNC_POINTER_DEF(ret,func,params) ret (KHRONOS_APIENTRY *func) params = func;
 	FUNC_POINTER_DEF(void, glActiveTexture, (GLenum))

@@ -1,8 +1,9 @@
 #ifndef MW_OPENGL_H
 #define MW_OPENGL_H
 
-#if MW_OPENGLES2
 #include "matrix.h"
+
+#if MW_OPENGLES2
 
 #include <SDL_opengles2.h>
 
@@ -14,19 +15,31 @@
 
 namespace mw {
 
-#if MW_OPENGLES2
-
 	// Return the translation matrix.
-	Matrix44 getTranslateMatrix(float x, float y, float z = 0);
+	Matrix44 getTranslateMatrix44(float x, float y, float z = 0);
 
 	// Return the rotation matrix.
-	Matrix44 getRotateMatrix(float angle, float x, float y, float z);
+	Matrix44 getRotateMatrix44(float angle, float x, float y, float z);
 
 	// Return the scale matrix.
-	Matrix44 getScaleMatrix(float x, float y, float z = 1);
-	
+	Matrix44 getScaleMatrix44(float x, float y, float z = 1);
+
 	// Return the ortho projection matrix.
-	Matrix44 getOrthoProjectionMatrix(float left, float right, float bottom, float top, float near = -1, float far = 1);
+	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top, float near = -1, float far = 1);
+
+	// Return the translation matrix.
+	Matrix33 getTranslateMatrix33(float x, float y);
+
+	// Return the rotation matrix.
+	Matrix33 getRotateMatrix33(float angle);
+
+	// Return the scale matrix.
+	Matrix33 getScaleMatrix33(float x, float y);
+
+	// Return the ortho projection matrix.
+	Matrix33 getOrthoProjectionMatrix33(float left, float right, float bottom, float top);
+
+#if MW_OPENGLES2
 
 	static const std::string SHADER_A_VEC4_POSITION = "aPosition";
 	static const std::string SHADER_A_VEC2_TEXCOORD = "aTexCoord";

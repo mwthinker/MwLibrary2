@@ -69,10 +69,10 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300
 
 void TestWindow::update(Uint32 msDeltaTime) {
 #if MW_OPENGLES2
-	mw::Matrix44 ortho = mw::getOrthoProjectionMatrix(0, (float) getWidth(), 0, (float) getHeight());
+	mw::Matrix44 ortho = mw::getOrthoProjectionMatrix44(0, (float) getWidth(), 0, (float) getHeight());
 	// Update projection and model matrix.
 	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_MAT4_PROJ), 1, false, ortho.data());
-	mw::Matrix44 m = mw::getTranslateMatrix((float) x_, (float) y_);
+	mw::Matrix44 m = mw::getTranslateMatrix44((float) x_, (float) y_);
 	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_MAT4_MODEL), 1, false, m.data());
 	mw::glUniform4f(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 1, 1, 1);
 	sprite_.draw();
