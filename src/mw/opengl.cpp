@@ -34,37 +34,33 @@ namespace mw {
 			0, 0, 0, 1);
 	}
 
-	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top, float near, float far) {
+	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top, float near_, float far_) {
 		return mw::Matrix44(
 			2 / (right - left), 0, 0, -(right + left) / (right - left),
 			0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom),
-			0, 0, -2 / (far - near), -(far + near) / (far - near),
+			0, 0, -2 / (far_ - near_), -(far_ + near_) / (far_ - near_),
 			0, 0, 0, 1);
 	}
 
 	Matrix33 getTranslateMatrix44(float x, float y) {
 		return mw::Matrix33(1, 0, x,
-			0, 1, y,
-			0, 0, 1);
+							0, 1, y,
+							0, 0, 1);
 	}
 
 	Matrix33 getRotateMatrix33(float angle) {
 		float s = std::sin(angle);
 		float c = std::cos(angle);
 
-		mw::Matrix33 m(c, -s, 0,
-			s, c, 0,
-			0, 0, 1);
-
-		return m;
+		return mw::Matrix33(c,-s, 0,
+							s, c, 0,
+							0, 0, 1);
 	}
 
 	Matrix33 getScaleMatrix33(float x, float y) {
-		mw::Matrix33 m(
-			x, 0, 0,
-			0, y, 0,
-			0, 0, 1);
-		return m;
+		return mw::Matrix33(x, 0, 0,
+							0, y, 0,
+							0, 0, 1);
 	}
 
 	Matrix33 getOrthoProjectionMatrix33(float left, float right, float bottom, float top) {
