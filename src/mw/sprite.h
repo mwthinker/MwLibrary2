@@ -10,19 +10,11 @@ namespace mw {
 
 	class Sprite {
 	public:
-		friend class Window;
-
 		// Create an empty sprite, but it will draw nothing.
 		Sprite();
 
 		// Load an image from file.
 		explicit Sprite(std::string image, std::function<void()> filter = []() {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		});
-
-		// Load an image from file.
-		explicit Sprite(std::string image, std::function<void(const mw::Sprite& sprite)> draw, std::function<void()> filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
@@ -54,12 +46,8 @@ namespace mw {
 			texture_.bind();
 		}
 
-		// Draw the image in in x = [-0.5,0.5] and y = [-0.5,0.5] by default.
-		// If drawPixelSize is set to true then the image is drawn in pixel size
-		// and centered in origo.
+		// The image is drawn, x = [-0.5,0.5] and y = [-0.5,0.5].
 		void draw() const;
-
-		void setDrawFunction(const std::function<void(const mw::Sprite& sprite)>& drawFunc);
 
 		// Return the lower left x position of the image drawn.
 		inline float getX() const {
@@ -83,7 +71,6 @@ namespace mw {
 
 	private:
 		Texture texture_;
-		std::function<void(const mw::Sprite& sprite)> drawFunc_;
 		float x_, y_, dx_, dy_;
 	};
 

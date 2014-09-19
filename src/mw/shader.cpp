@@ -53,12 +53,16 @@ namespace mw {
 	}
 
 	Shader::Shader() {
-		programObject_ = 0;
+		programObjectId_ = 0;
 		location_ = 0;
 	}
 
+	Shader::~Shader() {
+		glDeleteProgram(programObjectId_);
+	}
+
 	void Shader::bindAttribute(std::string attribute) {
-		assert(programObject_ == 0);
+		assert(programObjectId_ == 0);
 		attributes_[attribute] = location_;
 	}
 
@@ -71,13 +75,13 @@ namespace mw {
 	}
 
 	int Shader::getUniformLocation(std::string uniform) {
-		if (programObject_ != 0) {
+		if (programObjectId_ != 0) {
 			unsigned int size = uniforms_.size();
 
 			int& loc = uniforms_[uniform];
 
 			if (uniforms_.size() > size) {
-				loc = mw::glGetUniformLocation(programObject_, uniform.c_str());
+				loc = mw::glGetUniformLocation(programObjectId_, uniform.c_str());
 			}
 			return loc;
 		}
@@ -85,7 +89,7 @@ namespace mw {
 	}
 
 	bool Shader::loadAndLinkFromFile(std::string vShaderFile, std::string fShaderFile) {
-		if (programObject_ == 0) {
+		if (programObjectId_ == 0) {
 			std::ifstream inFile(vShaderFile);
 			std::stringstream stream;
 			stream << inFile.rdbuf();
@@ -101,49 +105,49 @@ namespace mw {
 	}
 
 	bool Shader::loadAndLink(std::string vShader, std::string fShader) {
-		if (programObject_ == 0) {
-			programObject_ = mw::glCreateProgram();
-			if (programObject_ == 0) {
+		if (programObjectId_ == 0) {
+			programObjectId_ = mw::glCreateProgram();
+			if (programObjectId_ == 0) {
 				return false;
 			}
 
-			loadShader(programObject_, GL_VERTEX_SHADER, vShader.c_str());
-			loadShader(programObject_, GL_FRAGMENT_SHADER, fShader.c_str());
+			loadShader(programObjectId_, GL_VERTEX_SHADER, vShader.c_str());
+			loadShader(programObjectId_, GL_FRAGMENT_SHADER, fShader.c_str());
 
 			// Bind all attributes.
 			for (auto& pair : attributes_) {
-				mw::glBindAttribLocation(programObject_, location_, pair.first.c_str());
+				mw::glBindAttribLocation(programObjectId_, location_, pair.first.c_str());
 				pair.second = location_++;
 			}
 
-			mw::glLinkProgram(programObject_);
+			mw::glLinkProgram(programObjectId_);
 
 			GLint linked;
-			mw::glGetProgramiv(programObject_, GL_LINK_STATUS, &linked);
+			mw::glGetProgramiv(programObjectId_, GL_LINK_STATUS, &linked);
 			if (!linked) {
 				GLint infoLen = 0;
-				mw::glGetProgramiv(programObject_, GL_INFO_LOG_LENGTH, &infoLen);
+				mw::glGetProgramiv(programObjectId_, GL_INFO_LOG_LENGTH, &infoLen);
 				if (infoLen > 1) {
 					char message[256];
 					GLsizei size;
-					mw::glGetProgramInfoLog(programObject_, sizeof(message), &size, message);
+					mw::glGetProgramInfoLog(programObjectId_, sizeof(message), &size, message);
 					std::string str;
 					str.append(message, message + size);
 					std::cerr << "Error linking program: " << str << "\n";
 				}
-				mw::glDeleteProgram(programObject_);
+				mw::glDeleteProgram(programObjectId_);
 				return false;
 			}
 
-			mw::glUseProgram(programObject_);
+			mw::glUseProgram(programObjectId_);
 			return true;
 		}
 		return false;
 	}
 
 	void Shader::glUseProgram() {
-		if (programObject_ != 0) {
-			mw::glUseProgram(programObject_);
+		if (programObjectId_ != 0) {
+			mw::glUseProgram(programObjectId_);
 		}
 	}
 

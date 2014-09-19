@@ -47,10 +47,12 @@ namespace mw {
 	private:
 		class ImageData {
 		public:
-			ImageData(std::function<void()> filter) : preLoadSurface_(0), texture_(0), firstCallToBind_(true), filter_(filter) {
+			ImageData(std::function<void()> filter) : 
+				preLoadSurface_(0), texture_(0), filter_(filter) {
 			}
 
-			ImageData(SDL_Surface* surface, std::function<void()> filter) : preLoadSurface_(surface), texture_(0), firstCallToBind_(true), filter_(filter) {
+			ImageData(SDL_Surface* surface, std::function<void()> filter) :
+				preLoadSurface_(surface), texture_(0), filter_(filter) {
 			}
 
 			~ImageData();
@@ -61,17 +63,18 @@ namespace mw {
 			// Is not copyable.
 			ImageData& operator=(const ImageData&) = delete;
 
-			void bind() const;
+			void loadImageToGraphic() const;
 
 			// Is mutable in order for the bind() function to be const.
 			// It's ok beacause the variables can be seen as cache variables.
 			// So the external "constness" is preserved.
 			mutable SDL_Surface* preLoadSurface_;
 			mutable GLuint texture_;
-			mutable bool firstCallToBind_;
 			std::function<void()> filter_;
 		};
 		
+		mutable bool firstCallToBind_;
+		mutable GLuint texture_;
 		int width_, height_;
 		bool valid_;
 		std::shared_ptr<ImageData> imageData_;

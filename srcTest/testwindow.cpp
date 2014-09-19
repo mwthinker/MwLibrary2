@@ -6,13 +6,13 @@
 #include <mw/matrix.h>
 #include <mw/shader.h>
 
-TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
-	focus_ = true;
-	sprite_.setDrawFunction([](const mw::Sprite& sprite) {
+namespace {
+
+	void drawFunction(mw::Sprite& sprite) {
 		const mw::Texture& texture = sprite.getTexture();
 		if (texture.isValid()) {
 			sprite.bind();
-			
+
 #if MW_OPENGLES2
 			mw::glEnable(GL_TEXTURE_2D);
 			GLfloat aVertices[] = {
@@ -60,8 +60,12 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300
 			glDisable(GL_TEXTURE_2D);
 #endif // MW_OPENGLES2
 		}
-	});
+	}
 
+}
+
+TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
+	focus_ = true;
 	mw::Font font("Ubuntu-B.ttf", 30);
 	text_ = mw::Text("hej", font);
 	text_.setCharacterSize(60);
@@ -75,7 +79,7 @@ void TestWindow::update(Uint32 msDeltaTime) {
 	mw::Matrix44 m = mw::getTranslateMatrix44((float) x_, (float) y_);
 	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_MAT4_MODEL), 1, false, m.data());
 	mw::glUniform4f(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 1, 1, 1);
-	sprite_.draw();
+	drawFunction(sprite_);
 	mw::glUniform4f(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 0, 0, 1);
 	text_.draw();
 #else // MW_OPENGLES2	
@@ -86,7 +90,7 @@ void TestWindow::update(Uint32 msDeltaTime) {
 	glLoadIdentity();
 	glTranslated(x_, y_, 0);
 	glColor4d(1, 1, 1, 1);
-	sprite_.draw();
+	drawFunction(sprite_);
 	glColor3d(1, 0, 0);
 	text_.draw();
 #endif // MW_OPENGLES2

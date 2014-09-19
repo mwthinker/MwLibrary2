@@ -21,6 +21,7 @@ namespace mw {
 	public:
 		// Create a empty non linked shader.
 		Shader();
+		~Shader();
 
 		// Bind the attribute to the shader.
 		// Must be called before linking the shader in order for the attribute to
@@ -63,7 +64,7 @@ namespace mw {
 
 		int location_;
 
-		GLuint programObject_;
+		GLuint programObjectId_;
 
 		static ShaderPtr defaultShader;
 	};

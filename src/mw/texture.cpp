@@ -45,10 +45,20 @@ namespace mw {
 		}
 	}
 
-	Texture::Texture() : imageData_(std::make_shared<ImageData>([]() {})), width_(0), height_(0), valid_(false) {
+	Texture::Texture() : 
+		firstCallToBind_(true), 
+		texture_(0),
+		width_(0), height_(0), valid_(false),
+		imageData_(std::make_shared<ImageData>([]() {})) {
+
 	}
 
-	Texture::Texture(std::string filename, std::function<void()> filter) : imageData_(std::make_shared<ImageData>(filter)), width_(0), height_(0) {
+	Texture::Texture(std::string filename, std::function<void()> filter) : 
+		firstCallToBind_(true),
+		texture_(0),
+		imageData_(std::make_shared<ImageData>(filter)), 
+		width_(0), height_(0) {
+
 		imageData_->preLoadSurface_ = IMG_Load(filename.c_str());
 		if (imageData_->preLoadSurface_ != 0) {
 			width_ = imageData_->preLoadSurface_->w;
@@ -60,11 +70,24 @@ namespace mw {
 		}
 	}
 
-	Texture::Texture(SDL_Surface* surface, std::function<void()> filter) : imageData_(std::make_shared<ImageData>(surface, filter)), width_(surface->w), height_(surface->h), valid_(true) {
+	Texture::Texture(SDL_Surface* surface, std::function<void()> filter) : 
+		firstCallToBind_(true),
+		texture_(0),
+		width_(surface->w), height_(surface->h), valid_(true),
+		imageData_(std::make_shared<ImageData>(surface, filter)) {
+
 	}
 
 	void Texture::bind() const {
-		imageData_->bind();
+		if (firstCallToBind_) {
+			firstCallToBind_ = false;
+			if (imageData_->preLoadSurface_ != nullptr) {
+				imageData_->loadImageToGraphic();
+				texture_ = imageData_->texture_;
+			}
+		} else {
+			glBindTexture(GL_TEXTURE_2D, texture_);
+		}
 	}
 
 	int Texture::getWidth() const {
@@ -79,26 +102,17 @@ namespace mw {
 		return valid_;
 	}
 
-	void Texture::ImageData::bind() const {
-		if (firstCallToBind_) {
-			firstCallToBind_ = false;
+	void Texture::ImageData::loadImageToGraphic() const {
+		// Current surface is valid?
+		if (preLoadSurface_ != 0) {
+			// Load to texture.
+			texture_ = sdlGlLoadTexture(preLoadSurface_);
+			SDL_FreeSurface(preLoadSurface_);
+			preLoadSurface_ = nullptr;
 
-			// Current surface is valid?
-			if (preLoadSurface_ != 0) {
-				// Load to texture.
-				texture_ = sdlGlLoadTexture(preLoadSurface_);
-				SDL_FreeSurface(preLoadSurface_);
-				preLoadSurface_ = nullptr;
-
-				// Texture valid?
-				if (texture_ != 0) {
-					filter_();
-				}
-			}
-		} else {
 			// Texture valid?
 			if (texture_ != 0) {
-				glBindTexture(GL_TEXTURE_2D, texture_);
+				filter_();
 			}
 		}
 	}
