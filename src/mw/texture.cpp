@@ -26,7 +26,7 @@ namespace mw {
 			}
 		}
 
-		// Returns an opengl texture from the surface provided. Return 0 if the
+		// Return an opengl texture from the surface provided. Return 0 if the
 		// operation failed.
 		GLuint sdlGlLoadTexture(SDL_Surface* surface) {
 			GLuint textureId = 0;
@@ -46,18 +46,19 @@ namespace mw {
 	}
 
 	Texture::Texture() : 
-		firstCallToBind_(true), 
+		firstCallBind_(true),
 		texture_(0),
-		width_(0), height_(0), valid_(false),
+		width_(0), height_(0),
+		valid_(false),
 		imageData_(std::make_shared<ImageData>([]() {})) {
 
 	}
 
 	Texture::Texture(std::string filename, std::function<void()> filter) : 
-		firstCallToBind_(true),
+		firstCallBind_(true),
 		texture_(0),
-		imageData_(std::make_shared<ImageData>(filter)), 
-		width_(0), height_(0) {
+		width_(0), height_(0),
+		imageData_(std::make_shared<ImageData>(filter)) {
 
 		imageData_->preLoadSurface_ = IMG_Load(filename.c_str());
 		if (imageData_->preLoadSurface_ != 0) {
@@ -71,22 +72,28 @@ namespace mw {
 	}
 
 	Texture::Texture(SDL_Surface* surface, std::function<void()> filter) : 
-		firstCallToBind_(true),
+		firstCallBind_(true),
 		texture_(0),
-		width_(surface->w), height_(surface->h), valid_(true),
+		width_(surface->w), height_(surface->h),
+		valid_(true),
 		imageData_(std::make_shared<ImageData>(surface, filter)) {
 
 	}
 
 	void Texture::bind() const {
-		if (firstCallToBind_) {
-			firstCallToBind_ = false;
+		if (firstCallBind_) {
+			firstCallBind_ = false;
 			if (imageData_->preLoadSurface_ != nullptr) {
 				imageData_->loadImageToGraphic();
 				texture_ = imageData_->texture_;
+			} else {
+				texture_ = imageData_->texture_;
+				glBindTexture(GL_TEXTURE_2D, texture_);
 			}
 		} else {
-			glBindTexture(GL_TEXTURE_2D, texture_);
+			if (texture_ != 0) {
+				glBindTexture(GL_TEXTURE_2D, texture_);
+			}
 		}
 	}
 
@@ -100,6 +107,14 @@ namespace mw {
 
 	bool Texture::isValid() const {
 		return valid_;
+	}
+	
+	Texture::ImageData::ImageData(std::function<void()> filter) :
+		preLoadSurface_(0), texture_(0), filter_(filter) {
+	}
+
+	Texture::ImageData::ImageData(SDL_Surface* surface, std::function<void()> filter) :
+		preLoadSurface_(surface), texture_(0), filter_(filter) {
 	}
 
 	void Texture::ImageData::loadImageToGraphic() const {

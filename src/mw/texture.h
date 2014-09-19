@@ -47,13 +47,9 @@ namespace mw {
 	private:
 		class ImageData {
 		public:
-			ImageData(std::function<void()> filter) : 
-				preLoadSurface_(0), texture_(0), filter_(filter) {
-			}
+			ImageData(std::function<void()> filter);
 
-			ImageData(SDL_Surface* surface, std::function<void()> filter) :
-				preLoadSurface_(surface), texture_(0), filter_(filter) {
-			}
+			ImageData(SDL_Surface* surface, std::function<void()> filter);
 
 			~ImageData();
 
@@ -73,7 +69,7 @@ namespace mw {
 			std::function<void()> filter_;
 		};
 		
-		mutable bool firstCallToBind_;
+		mutable bool firstCallBind_;
 		mutable GLuint texture_;
 		int width_, height_;
 		bool valid_;
