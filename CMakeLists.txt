@@ -51,6 +51,8 @@ set(SOURCES
 	src/mw/text.h
 	src/mw/texture.cpp
 	src/mw/texture.h
+	src/mw/vertexbufferobject.cpp
+	src/mw/vertexbufferobject.h
 	src/mw/window.cpp
 	src/mw/window.h
 )
