@@ -30,9 +30,9 @@ namespace mw {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
-		// Binds the texture to the target GL_TEXTURE_2D. First call, copies 
+		// Binds the texture to the target. First call, copies 
 		// the image data to graphic memory.
-		void bind() const;
+		void bindTexture() const;
 
 		// Returns the width of the image in pixels.
 		int getWidth() const;

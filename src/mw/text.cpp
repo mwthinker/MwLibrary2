@@ -13,10 +13,9 @@ namespace mw {
 	
 	void Text::drawText() const {
 		if (texture_.isValid()) {
-			texture_.bind();
+			texture_.bindTexture();
 #if MW_OPENGLES2
 			mw::glEnable(GL_BLEND);
-			mw::glEnable(GL_TEXTURE_2D);
 			mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			// Lower left corner is in ORIGO.
@@ -46,8 +45,6 @@ namespace mw {
 
 			// Upload the attributes and draw the sprite.
 			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-			mw::glDisable(GL_TEXTURE_2D);
 			mw::glDisable(GL_BLEND);
 #else // MW_OPENGLES2
 			glEnable(GL_BLEND);

@@ -42,8 +42,8 @@ namespace mw {
 			return texture_;
 		}
 
-		inline void bind() const {
-			texture_.bind();
+		inline void bindTexture() const {
+			texture_.bindTexture();
 		}
 
 		// The image is drawn, x = [-0.5,0.5] and y = [-0.5,0.5].

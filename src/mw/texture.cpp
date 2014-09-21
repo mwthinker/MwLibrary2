@@ -80,7 +80,7 @@ namespace mw {
 
 	}
 
-	void Texture::bind() const {
+	void Texture::bindTexture() const {
 		if (firstCallBind_) {
 			firstCallBind_ = false;
 			if (imageData_->preLoadSurface_ != nullptr) {

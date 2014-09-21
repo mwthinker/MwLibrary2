@@ -11,10 +11,9 @@ namespace {
 	void drawFunction(mw::Sprite& sprite) {
 		const mw::Texture& texture = sprite.getTexture();
 		if (texture.isValid()) {
-			sprite.bind();
+			sprite.bindTexture();
 
 #if MW_OPENGLES2
-			mw::glEnable(GL_TEXTURE_2D);
 			GLfloat aVertices[] = {
 				0, 0,
 				sprite.getWidth(), 0,
@@ -40,8 +39,6 @@ namespace {
 
 			// Upload the attributes and draw the sprite.
 			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-			mw::glDisable(GL_TEXTURE_2D);
 #else // MW_OPENGLES2
 			glEnable(GL_TEXTURE_2D);
 			glBegin(GL_QUADS);

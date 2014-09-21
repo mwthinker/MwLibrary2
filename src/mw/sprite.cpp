@@ -52,10 +52,9 @@ namespace mw {
 	}
 
 	void Sprite::draw() const {
-		texture_.bind();
+		texture_.bindTexture();
 #if MW_OPENGLES2
 		mw::glEnable(GL_BLEND);
-		mw::glEnable(GL_TEXTURE_2D);
 		mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		// Centered square in ORIGO.
@@ -85,8 +84,6 @@ namespace mw {
 
 		// Upload the attributes and draw the sprite.
 		mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-		mw::glDisable(GL_TEXTURE_2D);
 		mw::glDisable(GL_BLEND);
 #else // MW_OPENGLES2
 		glEnable(GL_BLEND);

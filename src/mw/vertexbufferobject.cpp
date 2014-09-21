@@ -19,14 +19,14 @@ namespace mw {
 		}
 	}
 
-	void VertexBufferObject::bind() {
+	void VertexBufferObject::bindBuffer() {
 		if (vboId_ != 0) {
 			mw::glBindBuffer(target_, vboId_);
 		}
 	}
 
-	void VertexBufferObject::unbind() {
-		mw::glBindBuffer(target_, vboId_);
+	void VertexBufferObject::unbindBuffer() {
+		mw::glBindBuffer(target_, 0);
 	}
 
 	VertexBufferObject::Data::Data() : vboId_(0) {
