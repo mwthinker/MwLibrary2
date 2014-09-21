@@ -4,14 +4,25 @@
 #include <mw/sound.h>
 
 int main(int argc, char** argv) {
-	// Testing starting 3 window at once.
-	mw::Sprite sprite("tetris.bmp");
-	TestWindow w(sprite, 50, 50), w2(sprite), w3;
+	// Testing starting 3 window.
+	{
+		mw::Sprite sprite("tetris.bmp");
+		TestWindow w(sprite, 50, 50);
+		w.startLoop();
+	}
+	{
+		mw::Sprite sprite("tetris.bmp");
+		TestWindow w(sprite);
+		w.startLoop();
+	}
+	{		
+		TestWindow w;
+		w.startLoop();
+	}	
 
 	mw::Sound sound("test.wav");
 	sound.setVolume(0.5f);
-	sound.play();
-	w.startLoop();
+	sound.play();	
 
 	return 0;
 }

@@ -15,6 +15,8 @@ public:
 	void eventUpdate(const SDL_Event& windowEvent) override;
 
 private:
+	void resize(int w, int h);
+
 	bool focus_;
 	mw::Sprite sprite_;
 	int x_, y_;

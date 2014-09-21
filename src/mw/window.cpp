@@ -11,16 +11,12 @@
 
 namespace mw {
 
-	std::list<Window*> Window::windows;
-	std::list<Window*> Window::addWindows;
-
 	int Window::nbrOfInstances = 0;
 
 	void Window::initOpenGl() {
 		if (nbrOfInstances < 1) {
 			SDL_GL_SetSwapInterval(1);
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-			SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 0);
 #ifdef MW_OPENGLES2
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
@@ -29,8 +25,6 @@ namespace mw {
 				std::printf("\n Failed to load OpenGl ES 2\n");
 				std::exit(1);
 			}
-		} else {
-			SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
 #endif
 		}
 	}
@@ -78,87 +72,49 @@ namespace mw {
 
 		setupOpenGlContext();
 		++nbrOfInstances;
-
-		if (windows.empty()) {
-			windows.push_back(this);
-		} else {
-			addWindows.push_back(this);
-		}
 	}
 
 	void Window::setupOpenGlContext() {
 		glContext_ = SDL_GL_CreateContext(window_);
 #ifdef MW_OPENGLES2
-		if (nbrOfInstances < 1) {
-			initGLES2();
-			auto shader = std::make_shared<Shader>();
-			shader->bindAttribute(SHADER_A_VEC4_POSITION);
-			shader->bindAttribute(SHADER_A_VEC2_TEXCOORD);
-			shader->loadAndLink(SHADER_VER, SHADER_FRAG);
-			Shader::setDefaultShader(shader);
-		}
+		initGLES2();
+		auto shader = std::make_shared<Shader>();
+		shader->bindAttribute(SHADER_A_VEC4_POSITION);
+		shader->bindAttribute(SHADER_A_VEC2_TEXCOORD);
+		shader->loadAndLink(SHADER_VER, SHADER_FRAG);
+		Shader::setDefaultShader(shader);
 #endif //MW_OPENGLES2
 		if (nbrOfInstances < 1) {
 			std::printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
 			std::printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 		}
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	Window::~Window() {
 		if (window_ != nullptr) {
 			SDL_GL_DeleteContext(glContext_);
 			SDL_DestroyWindow(window_);
-			windows.remove_if([this](Window* w) {
-				return getId() == w->getId();
-			});
 		}
-
-		addWindows.remove_if([this](Window* w) {
-			return getId() == w->getId();
-		});
 	}
 
 	void Window::startLoop() {
-		while (!windows.empty()) {
+		if (!quit_) {
+			SDL_GL_MakeCurrent(window_, glContext_);
+		}
+		while (!quit_) {
 			SDL_Event eventSDL;
 			while (SDL_PollEvent(&eventSDL)) {
-				for (Window* window : windows) {
-					window->eventUpdate(eventSDL);
-				}
+				eventUpdate(eventSDL);
 			}
 
-			for (Window* window : windows) {
-				window->updateLoop();
-			}
+			Uint32 currentTime = SDL_GetTicks();
+			Uint32 deltaTime = currentTime - time_;
+			time_ = currentTime;
+			update(deltaTime);
 
-			windows.remove_if([](Window* w) {
-				if (w->quit_) {
-					SDL_GL_DeleteContext(w->glContext_);
-					SDL_DestroyWindow(w->window_);
-					w->window_ = nullptr;
-				}
-
-				return w->quit_;
-			});
-
-			addWindows.remove_if([](Window* w) {
-				windows.push_back(w);
-				return true;
-			});
+			SDL_GL_SwapWindow(window_);
 		}
-	}
-
-	void Window::updateLoop() {
-		SDL_GL_MakeCurrent(window_, glContext_);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		Uint32 currentTime = SDL_GetTicks();
-		Uint32 deltaTime = currentTime - time_;
-		time_ = currentTime;
-
-		update(deltaTime);
-
-		SDL_GL_SwapWindow(window_);
 	}
 
 	SDL_Window* Window::getSdlWindow() const {

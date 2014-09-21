@@ -23,7 +23,7 @@ namespace mw {
 		// Starts a loop which handles all inputs and graphics in the windows. It will not 
 		// return until the loop is ended. Is closed when the windows is closed, i.e. a 
 		// call to the protected function quit().
-		static void startLoop();
+		void startLoop();
 
 		// The id for the windows. Is tha same as calling SDL_GetWindowID.
 		Uint32 getId() const;
@@ -51,9 +51,6 @@ namespace mw {
 		void quit();
 
 	private:
-		// The internal loop code.
-		void updateLoop();
-
 		// Is called by the loop. The frequency in which this function is called is fixed
 		// by the vertical frequency of the monitor (VSYNC). The time between two calls can vary,
 		// but is displayed in parameter msDeltaTime in milliseconds.
@@ -72,8 +69,7 @@ namespace mw {
 		SDL_GLContext glContext_;
 
 		void setupOpenGlContext();
-
-		static std::list<Window*> windows, addWindows;
+		
 		static int nbrOfInstances;
 		static void initOpenGl();
 	};

@@ -63,27 +63,29 @@ namespace {
 
 TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
 	focus_ = true;
-	mw::Font font("Ubuntu-B.ttf", 30);
+	mw::Font font("Ubuntu-B.ttf", 60);
 	text_ = mw::Text("hej", font);
-	text_.setCharacterSize(60);
+#if MW_OPENGLES2
+	mw::glClearColor(0, 0, 0, 1);
+#else // MW_OPENGLES2
+	glClearColor(0, 0, 0, 1);
+#endif // MW_OPENGLES2
+	resize(getWidth(), getHeight());
 }
 
 void TestWindow::update(Uint32 msDeltaTime) {
 #if MW_OPENGLES2
-	mw::Matrix44 ortho = mw::getOrthoProjectionMatrix44(0, (float) getWidth(), 0, (float) getHeight());
-	// Update projection and model matrix.
-	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_MAT4_PROJ), 1, false, ortho.data());
+	// Update model matrix.
+	auto shader = mw::Shader::getDefaultShader();
+	shader->glUseProgram();
 	mw::Matrix44 m = mw::getTranslateMatrix44((float) x_, (float) y_);
-	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_MAT4_MODEL), 1, false, m.data());
-	mw::glUniform4f(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 1, 1, 1);
+	mw::glUniformMatrix4fv(shader->getUniformLocation(mw::SHADER_U_MAT4_MODEL), 1, false, m.data());
+	mw::glUniform4f(shader->getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 1, 1, 1);
 	drawFunction(sprite_);
-	mw::glUniform4f(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 0, 0, 1);
+	mw::glUniform4f(shader->getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 0, 0, 1);
 	text_.draw();
-#else // MW_OPENGLES2	
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, (float) getWidth(), 0, (float) getHeight(), -1, 1);
-	glMatrixMode(GL_MODELVIEW);
+#else // MW_OPENGLES2
+	// Update model matrix.
 	glLoadIdentity();
 	glTranslated(x_, y_, 0);
 	glColor4d(1, 1, 1, 1);
@@ -106,10 +108,7 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					}
 					break;
 				case SDL_WINDOWEVENT_RESIZED:
-#ifndef MW_OPENGLES2
-					glClearColor(0, 0, 0, 1);
-					glViewport(0, windowEvent.window.data1, 0, windowEvent.window.data2);
-#endif // MW_OPENGLES2
+					resize(windowEvent.window.data1, windowEvent.window.data2);
 					break;
 				case SDL_WINDOWEVENT_FOCUS_GAINED:
 					if (windowEvent.window.windowID == getId()) {
@@ -133,4 +132,21 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 			}
 			break;
 	}
+}
+
+void TestWindow::resize(int w, int h) {
+#if MW_OPENGLES2
+	mw::glViewport(0, 0, w, h);
+	auto shader = mw::Shader::getDefaultShader();
+	shader->glUseProgram();
+	mw::Matrix44 ortho = mw::getOrthoProjectionMatrix44(0, (float) w, 0, (float) h);
+	// Update projection and model matrix.
+	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_MAT4_PROJ), 1, false, ortho.data());	
+#else MW_OPENGLES2
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, (float) w, 0, (float) h, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+#endif // MW_OPENGLES2
 }
