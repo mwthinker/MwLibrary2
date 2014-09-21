@@ -53,59 +53,61 @@ namespace mw {
 
 	void Sprite::draw() const {
 		texture_.bindTexture();
+		if (texture_.isValid()) {
 #if MW_OPENGLES2
-		mw::glEnable(GL_BLEND);
-		mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			mw::glEnable(GL_BLEND);
+			mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		// Centered square in ORIGO.
-		GLfloat aVertices[] = {
-			-0.5f, -0.5f,
-			0.5f, -0.5f,
-			-0.5f, 0.5f,
-			0.5f, 0.5f};
+			// Centered square in ORIGO.
+			GLfloat aVertices[] = {
+				-0.5f, -0.5f,
+				0.5f, -0.5f,
+				-0.5f, 0.5f,
+				0.5f, 0.5f};
 
-		// Map the sprite out from the texture.
-		GLfloat aTexCoord[] = {
-			x_ / texture_.getWidth(), y_ / texture_.getHeight(),
-			(x_ + dx_) / texture_.getWidth(), y_ / texture_.getHeight(),
-			x_ / texture_.getWidth(), (y_ + dy_) / texture_.getHeight(),
-			(x_ + dx_) / texture_.getWidth(), (y_ + dy_) / texture_.getHeight()};
+			// Map the sprite out from the texture.
+			GLfloat aTexCoord[] = {
+				x_ / texture_.getWidth(), y_ / texture_.getHeight(),
+				(x_ + dx_) / texture_.getWidth(), y_ / texture_.getHeight(),
+				x_ / texture_.getWidth(), (y_ + dy_) / texture_.getHeight(),
+				(x_ + dx_) / texture_.getWidth(), (y_ + dy_) / texture_.getHeight()};
 
-		// Use the program object
-		auto& shader = Shader::getDefaultShader();
-		shader->glUseProgram();
-		mw::glUniform1f(shader->getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
+			// Use the program object
+			auto& shader = Shader::getDefaultShader();
+			shader->glUseProgram();
+			mw::glUniform1f(shader->getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
 
-		// Load the vertex data
-		mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_A_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
-		mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_A_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
-		mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_A_VEC4_POSITION));
-		mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_A_VEC2_TEXCOORD));
+			// Load the vertex data
+			mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_A_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
+			mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_A_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
+			mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_A_VEC4_POSITION));
+			mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_A_VEC2_TEXCOORD));
 
-		// Upload the attributes and draw the sprite.
-		mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		mw::glDisable(GL_BLEND);
+			// Upload the attributes and draw the sprite.
+			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			mw::glDisable(GL_BLEND);
 #else // MW_OPENGLES2
-		glEnable(GL_BLEND);
-		glEnable(GL_TEXTURE_2D);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glNormal3f(0, 0, 1);
-		glBegin(GL_QUADS);
-		glTexCoord2f(x_/ texture_.getWidth(), y_ / texture_.getHeight());
-		glVertex2f(-0.5, -0.5);
+			glEnable(GL_BLEND);
+			glEnable(GL_TEXTURE_2D);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glNormal3f(0, 0, 1);
+			glBegin(GL_QUADS);
+			glTexCoord2f(x_/ texture_.getWidth(), y_ / texture_.getHeight());
+			glVertex2f(-0.5, -0.5);
 
-		glTexCoord2f((x_ + dx_) / texture_.getWidth(), y_ / texture_.getHeight());
-		glVertex2f(0.5, -0.5);
+			glTexCoord2f((x_ + dx_) / texture_.getWidth(), y_ / texture_.getHeight());
+			glVertex2f(0.5, -0.5);
 
-		glTexCoord2f((x_ + dx_) / texture_.getWidth(), (y_ + dy_) / texture_.getHeight());
-		glVertex2f(0.5, 0.5);
+			glTexCoord2f((x_ + dx_) / texture_.getWidth(), (y_ + dy_) / texture_.getHeight());
+			glVertex2f(0.5, 0.5);
 
-		glTexCoord2f(x_ / texture_.getWidth(), (y_ + dy_) / texture_.getHeight());
-		glVertex2f(-0.5, 0.5);
-		glEnd();
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_BLEND);
+			glTexCoord2f(x_ / texture_.getWidth(), (y_ + dy_) / texture_.getHeight());
+			glVertex2f(-0.5, 0.5);
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+			glDisable(GL_BLEND);
 #endif // MW_OPENGLES2
+		}
 	}
 
 } // Namespace mw.

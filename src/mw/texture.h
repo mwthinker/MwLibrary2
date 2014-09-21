@@ -23,7 +23,7 @@ namespace mw {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
-		// Takes over ownership of surface and is responsable of deallocation.
+		// The texture object takes over the ownership of the surface and is responsible of deallocation.
 		// Not safe to use surface outside this class after calling the constuctor.
 		explicit Texture(SDL_Surface* surface, std::function<void()> filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -34,15 +34,21 @@ namespace mw {
 		// the image data to graphic memory.
 		void bindTexture() const;
 
-		// Returns the width of the image in pixels.
-		int getWidth() const;
+		// Return the width of the image in pixels.
+		inline int getWidth() const {
+			return width_;
+		}
 
-		// Returns the height of the image in pixels. 
-		int getHeight() const;
+		// Return the height of the image in pixels. 
+		int getHeight() const {
+			return height_;
+		}
 
-		// Returns if the image is loaded correctly. It may however not be loaded
+		// Return true if the image is loaded correctly. It may however not be loaded
 		// to graphic memory despite the result of this function.
-		bool isValid() const;
+		bool isValid() const {
+			return valid_;
+		}
 
 	private:
 		class ImageData {

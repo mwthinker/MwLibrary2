@@ -96,18 +96,6 @@ namespace mw {
 			}
 		}
 	}
-
-	int Texture::getWidth() const {
-		return width_;
-	}
-
-	int Texture::getHeight() const {
-		return height_;
-	}
-
-	bool Texture::isValid() const {
-		return valid_;
-	}
 	
 	Texture::ImageData::ImageData(std::function<void()> filter) :
 		preLoadSurface_(0), texture_(0), filter_(filter) {
