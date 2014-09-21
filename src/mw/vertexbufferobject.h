@@ -18,13 +18,13 @@ namespace mw {
 		void bindBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage);
 
 		// Bind the current vertex buffer with the initial target.
-		void bindBuffer();
+		void bindBuffer() const;
 
 		// Unbind the current vertex buffer.
-		void unbindBuffer();
+		void unbindBuffer() const;
 
 		// Return the size in bytes for the current data.
-		inline int getSize() {
+		inline int getSize() const {
 			return size_;
 		}
 
