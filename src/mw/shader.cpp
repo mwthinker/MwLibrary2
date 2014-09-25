@@ -66,7 +66,7 @@ namespace mw {
 		attributes_[attribute] = location_;
 	}
 
-	int Shader::getAttributeLocation(std::string attribute) {
+	int Shader::getAttributeLocation(std::string attribute) const {
 		auto it = attributes_.find(attribute);
 		if (it != attributes_.end()) {
 			return it->second;
@@ -145,7 +145,7 @@ namespace mw {
 		return false;
 	}
 
-	void Shader::glUseProgram() {
+	void Shader::glUseProgram() const {
 		if (programObjectId_ != 0) {
 			mw::glUseProgram(programObjectId_);
 		}

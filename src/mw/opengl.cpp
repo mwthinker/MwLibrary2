@@ -4,8 +4,9 @@
 #include <SDL.h>
 
 #include <cmath>
+#include <iostream>
 
-namespace mw {
+namespace mw {	
 
 	Matrix44 getTranslateMatrix44(float x, float y, float z) {
 		return mw::Matrix44(
@@ -71,6 +72,35 @@ namespace mw {
 	}
 
 #if MW_OPENGLES2
+
+	void _checkGlError(const char *file, int line) {
+		GLenum err(glGetError());
+
+		while (err != GL_NO_ERROR) {
+			std::string error;
+
+			switch (err) {
+				case GL_INVALID_OPERATION:
+					error = "INVALID_OPERATION";
+					break;
+				case GL_INVALID_ENUM:
+					error = "INVALID_ENUM";
+					break;
+				case GL_INVALID_VALUE:
+					error = "INVALID_VALUE";
+					break;
+				case GL_OUT_OF_MEMORY:
+					error = "OUT_OF_MEMORY";
+					break;
+				case GL_INVALID_FRAMEBUFFER_OPERATION:
+					error = "INVALID_FRAMEBUFFER_OPERATION";
+					break;
+			}
+
+			std::cerr << "GL_" << error.c_str() << " - " << file << ":" << line << std::endl;
+			err = glGetError();
+		}
+	}
 
 #define FUNC_POINTER_DEF(ret,func,params) ret (KHRONOS_APIENTRY *func) params = func;
 	FUNC_POINTER_DEF(void, glActiveTexture, (GLenum))
@@ -365,6 +395,41 @@ namespace mw {
 #undef FUNC_POINTER_LINC
 
 #else // MW_OPENGLES2
+
+void _checkGlError(const char *file, int line) {
+	GLenum err(glGetError());
+
+	while (err != GL_NO_ERROR) {
+		std::string error;
+
+		switch (err) {
+			case GL_NO_ERROR:
+				error = "GL_NO_ERROR";
+				break;
+			case GL_INVALID_ENUM:
+				error = "GL_INVALID_ENUM";
+				break;
+			case GL_INVALID_VALUE:
+				error = "GL_INVALID_VALUE";
+				break;
+			case GL_INVALID_OPERATION:
+				error = "GL_INVALID_OPERATION";
+				break;
+			case GL_STACK_OVERFLOW:
+				error = "GL_STACK_OVERFLOW";
+				break;
+			case GL_STACK_UNDERFLOW:
+				error = "GL_STACK_UNDERFLOW";
+				break;
+			case GL_OUT_OF_MEMORY:
+				error = "GL_OUT_OF_MEMORY";
+				break;
+		}
+
+		std::cerr << "GL_" << error.c_str() << " - " << file << ":" << line << std::endl;
+		err = glGetError();
+	}
+}
 
 #endif // MW_OPENGLES2
 

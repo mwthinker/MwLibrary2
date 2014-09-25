@@ -30,7 +30,7 @@ namespace mw {
 
 		// Return the gl memory location for the attribute.
 		// Return -1 on error.
-		int getAttributeLocation(std::string attribute);
+		int getAttributeLocation(std::string attribute) const;
 
 		// Return the gl memory location for the uniform.
 		// Return -1 on error.
@@ -50,7 +50,7 @@ namespace mw {
 
 		// Uses the current gl program. I.e. a call to glUseProgram.
 		// Does nothing if the program is not loaded.
-		void glUseProgram();
+		void glUseProgram() const;
 
 		// Get the default shader.
 		static ShaderPtr getDefaultShader();

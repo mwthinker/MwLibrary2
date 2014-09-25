@@ -18,8 +18,8 @@ int main(int argc, char** argv) {
 	{		
 		TestWindow w;
 		w.startLoop();
-	}	
-
+	}
+	
 	mw::Sound sound("test.wav");
 	sound.setVolume(0.5f);
 	sound.play();	

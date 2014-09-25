@@ -95,6 +95,7 @@ namespace mw {
 				glBindTexture(GL_TEXTURE_2D, texture_);
 			}
 		}
+		checkGlError();
 	}
 	
 	Texture::ImageData::ImageData(std::function<void()> filter) :

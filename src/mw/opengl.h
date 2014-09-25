@@ -15,6 +15,17 @@
 
 namespace mw {
 
+	// Print all opengl errors.
+	// Call check_gl_error instead if the error checking only should be in debug mode.
+	void _checkGlError(const char* file, int line);
+
+	// Function checkGlError() prints all opengl errors during debug mode.
+#if _DEBUG
+#define checkGlError() _checkGlError(__FILE__,__LINE__)
+#else
+#define checkGlError() void()
+#endif
+
 	// Return the translation matrix.
 	Matrix44 getTranslateMatrix44(float x, float y, float z = 0);
 

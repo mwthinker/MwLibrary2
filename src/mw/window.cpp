@@ -89,6 +89,7 @@ namespace mw {
 			std::printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 		}
 		glClear(GL_COLOR_BUFFER_BIT);
+		checkGlError();
 	}
 
 	Window::~Window() {
