@@ -4,27 +4,28 @@
 #include "matrix.h"
 
 #if MW_OPENGLES2
-
 #include <SDL_opengles2.h>
-
 #include <string>
-
-#else  // MW_OPENGLES2
+#else // MW_OPENGLES2
 #include <SDL_opengl.h>
-#endif
+#endif // MW_OPENGLES2
 
 namespace mw {
+
+// Function checkGlError() prints all opengl errors during debug mode.
+#if _DEBUG
 
 	// Print all opengl errors.
 	// Call check_gl_error instead if the error checking only should be in debug mode.
 	void _checkGlError(const char* file, int line);
 
-	// Function checkGlError() prints all opengl errors during debug mode.
-#if _DEBUG
 #define checkGlError() _checkGlError(__FILE__,__LINE__)
-#else  // _DEBUG
-#define checkGlError() void()
-#endif
+#else // _DEBUG
+
+	inline void _empty() {}
+
+#define checkGlError() _empty()
+#endif // _DEBUG
 
 	// Return the translation matrix.
 	Matrix44 getTranslateMatrix44(float x, float y, float z = 0);
