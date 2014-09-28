@@ -142,7 +142,7 @@ void TestWindow::resize(int w, int h) {
 	mw::Matrix44 ortho = mw::getOrthoProjectionMatrix44(0, (float) w, 0, (float) h);
 	// Update projection and model matrix.
 	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_MAT4_PROJ), 1, false, ortho.data());	
-#else MW_OPENGLES2
+#else // MW_OPENGLES2
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();

@@ -9,7 +9,7 @@
 
 #include <string>
 
-#else
+#else  // MW_OPENGLES2
 #include <SDL_opengl.h>
 #endif
 
@@ -22,7 +22,7 @@ namespace mw {
 	// Function checkGlError() prints all opengl errors during debug mode.
 #if _DEBUG
 #define checkGlError() _checkGlError(__FILE__,__LINE__)
-#else
+#else  // _DEBUG
 #define checkGlError() void()
 #endif
 

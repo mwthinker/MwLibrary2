@@ -63,7 +63,6 @@ namespace mw {
 		std::map<std::string, int> uniforms_;
 
 		int location_;
-
 		GLuint programObjectId_;
 
 		static ShaderPtr defaultShader;

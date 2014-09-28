@@ -58,6 +58,7 @@ namespace mw {
 		firstCallBind_(true),
 		texture_(0),
 		width_(0), height_(0),
+		valid_(false),
 		imageData_(std::make_shared<ImageData>(filter)) {
 
 		imageData_->preLoadSurface_ = IMG_Load(filename.c_str());

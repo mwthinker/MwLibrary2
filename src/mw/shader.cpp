@@ -5,7 +5,6 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <stack>
 #include <cassert>
 
 namespace mw {
@@ -20,14 +19,18 @@ namespace mw {
 	}
 
 	void loadAndLinkShadersFromFile(GLint programObject, std::string vShader, std::string fShader) {
-		std::ifstream inFile(vShader);
-		std::stringstream stream;
-		stream << inFile.rdbuf();
-		vShader = stream.str();
-		stream.str("");
-		inFile = std::ifstream(fShader);
-		stream << inFile.rdbuf();
-		fShader = stream.str();
+		{
+			std::ifstream inFile(vShader);
+			std::stringstream stream;
+			stream << inFile.rdbuf();
+			vShader = stream.str();
+		}
+		{
+			std::ifstream inFile(fShader);
+			std::stringstream stream;
+			stream << inFile.rdbuf();
+			fShader = stream.str();
+		}
 
 		loadShader(programObject, GL_VERTEX_SHADER, vShader.c_str());
 		loadShader(programObject, GL_FRAGMENT_SHADER, fShader.c_str());
@@ -52,9 +55,10 @@ namespace mw {
 		}
 	}
 
-	Shader::Shader() {
-		programObjectId_ = 0;
-		location_ = 0;
+	Shader::Shader() :
+		location_(0),
+		programObjectId_(0) {
+
 	}
 
 	Shader::~Shader() {
