@@ -94,15 +94,18 @@ namespace mw {
 
 	bool Shader::loadAndLinkFromFile(std::string vShaderFile, std::string fShaderFile) {
 		if (programObjectId_ == 0) {
-			std::ifstream inFile(vShaderFile);
-			std::stringstream stream;
-			stream << inFile.rdbuf();
-			vShaderFile = stream.str();
-			stream.str("");
-			inFile = std::ifstream(fShaderFile);
-			stream << inFile.rdbuf();
-			fShaderFile = stream.str();
-
+			{
+				std::ifstream inFile(vShaderFile);
+				std::stringstream stream;
+				stream << inFile.rdbuf();
+				vShaderFile = stream.str();
+			}
+			{
+				std::ifstream inFile(fShaderFile);
+				std::stringstream stream;
+				stream << inFile.rdbuf();
+				fShaderFile = stream.str();
+			}
 			return loadAndLink(vShaderFile, fShaderFile);
 		}
 		return false;
