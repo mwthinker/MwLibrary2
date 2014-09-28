@@ -33,7 +33,7 @@ namespace mw {
 				1, 1};
 
 			// Use the program object
-			auto& shader = Shader::getDefaultShader();
+			auto shader = Shader::getDefaultShader();
 			shader->glUseProgram();
 			mw::glUniform1f(shader->getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
 

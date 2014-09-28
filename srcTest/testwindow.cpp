@@ -27,7 +27,7 @@ namespace {
 				(sprite.getX() + sprite.getWidth()) / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight()};
 
 			// Use the program object
-			auto& program = mw::Shader::getDefaultShader();
+			auto program = mw::Shader::getDefaultShader();
 			program->glUseProgram();
 			mw::glUniform1f(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
 
