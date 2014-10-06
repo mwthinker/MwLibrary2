@@ -19,6 +19,14 @@ namespace mw {
 		}
 	}
 
+	void VertexBufferObject::bindBufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const {
+		if (vboId_ != 0) {
+			mw::glBindBuffer(target_, vboId_);
+			mw::glBufferSubData(target_, offset, size, data);
+			mw::glBindBuffer(target_, 0);
+		}
+	}
+
 	void VertexBufferObject::bindBuffer() const {
 		if (vboId_ != 0) {
 			mw::glBindBuffer(target_, vboId_);

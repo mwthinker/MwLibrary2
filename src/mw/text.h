@@ -74,6 +74,10 @@ namespace mw {
 		// point at origo, in OpenGl coordinate space.
 		void draw() const;
 
+		inline const mw::Texture& getTexture() const {
+			return texture_;
+		}
+
 	private:
 		void loadText(std::string str);
 		void drawText() const;
