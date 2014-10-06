@@ -12,6 +12,9 @@
 
 namespace mw {
 
+	extern Matrix44 model_;
+	extern Matrix44 proj_;
+
 // Function checkGlError() prints all opengl errors during debug mode.
 #if _DEBUG
 

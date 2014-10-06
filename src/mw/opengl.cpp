@@ -8,6 +8,9 @@
 
 namespace mw {
 
+	Matrix44 model_(I_44);
+	Matrix44 proj_(I_44);
+
 #if MW_OPENGLES2
 
 	void _checkGlError(const char *file, int line) {
