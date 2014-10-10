@@ -42,17 +42,17 @@ namespace mw {
 	// Return the ortho projection matrix.
 	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top, float near_ = -1, float far_ = 1);
 
-	// Return the translation matrix.
-	Matrix33 getTranslateMatrix33(float x, float y);
+	// Translate the matrix in the xy-plane.
+	void translate2D(mw::Matrix44& matrix, float x, float y);
+	
+	// Rotate the matrix in the xy-plane.
+	void rotate2D(mw::Matrix44& matrix, float angle);
 
-	// Return the rotation matrix.
-	Matrix33 getRotateMatrix33(float angle);
+	// Scale the matrix in the xy-plane.
+	void scale2D(mw::Matrix44& matrix, float sx, float sy);
 
-	// Return the scale matrix.
-	Matrix33 getScaleMatrix33(float x, float y);
-
-	// Return the ortho projection matrix.
-	Matrix33 getOrthoProjectionMatrix33(float left, float right, float bottom, float top);
+	// Defines the 2d orthongonal projection matrix.
+	void ortho2D(mw::Matrix44& matrix, float left, float right, float bottom, float top);
 
 #if MW_OPENGLES2
 
