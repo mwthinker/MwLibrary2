@@ -11,7 +11,7 @@
 
 namespace mw {
 	
-	void Text::drawText() const {
+	void Text::drawText(float x, float y) const {
 		if (texture_.isValid()) {
 			texture_.bindTexture();
 #if MW_OPENGLES2
@@ -20,10 +20,10 @@ namespace mw {
 
 			// Lower left corner is in ORIGO.
 			GLfloat aVertices[] = {
-				0, 0,
-				getWidth(), 0,
-				0, getHeight(),
-				getWidth(), getHeight()};
+				x, y,
+				x + getWidth(), y,
+				x, getHeight() + y,
+				x + getWidth(), getHeight() + y};
 
 			// Map the sprite out from the texture.
 			GLfloat aTexCoord[] = {
@@ -53,16 +53,16 @@ namespace mw {
 			glNormal3f(0, 0, 1);
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
-			glVertex2f(0, 0);
+			glVertex2f(x, y);
 
 			glTexCoord2f(1, 0);
-			glVertex2f(getWidth(), 0);
+			glVertex2f(x + getWidth(), y);
 
 			glTexCoord2f(1, 1);
-			glVertex2f(getWidth(), getHeight());
+			glVertex2f(x + getWidth(), y + getHeight());
 
 			glTexCoord2f(0, 1);
-			glVertex2f(0, getHeight());
+			glVertex2f(x, y + getHeight());
 			glEnd();
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_BLEND);
@@ -105,10 +105,10 @@ namespace mw {
 		}
 	}
 
-	void Text::draw() const {
+	void Text::draw(float x, float y) const {
 		if (font_.getTtfFont()) {
 			if (text_.size() > 0) {
-				drawText();
+				drawText(x, y);
 			}
 		}
 	}

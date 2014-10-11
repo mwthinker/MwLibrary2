@@ -71,8 +71,8 @@ namespace mw {
 		}
 
 		// The text is drawn, in the square [width, height] (i.e. in pixelsize) with the lower left 
-		// point at origo, in OpenGl coordinate space.
-		void draw() const;
+		// point at (x,y), in OpenGl coordinate space.
+		void draw(float x=0, float y=0) const;
 
 		inline const mw::Texture& getTexture() const {
 			return texture_;
@@ -80,7 +80,7 @@ namespace mw {
 
 	private:
 		void loadText(std::string str);
-		void drawText() const;
+		void drawText(float x, float y) const;
 
 		mw::Texture texture_;
 
