@@ -135,10 +135,11 @@ namespace mw {
 	}
 
 	void ortho2D(mw::Matrix44& matrix, float left, float right, float bottom, float top) {
-		matrix = mw::Matrix44(2 / (right - left), 0, -(right + left) / (right - left), 0,
-							  0, 2 / (top - bottom), -(top + bottom) / (top - bottom), 0,
-							  0, 0, 1, 0,
-							  0, 0, 0, 1);
+		matrix = mw::Matrix44(
+			2 / (right - left), 0, 0, -(right + left) / (right - left),
+			0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom),
+			0, 0, 1, 0,
+			0, 0, 0, 1);
 	}
 
 #if MW_OPENGLES2
