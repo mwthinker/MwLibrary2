@@ -94,9 +94,11 @@ namespace mw {
 
 	Window::~Window() {
 		if (window_ != nullptr) {
+#ifdef MW_OPENGLES2
 			// Clean up the shader.
 			Shader::setDefaultShader(mw::Shader());
-			
+#endif //MW_OPENGLES2
+
 			// Clean up Gl context and the window.
 			SDL_GL_DeleteContext(glContext_);
 			SDL_DestroyWindow(window_);

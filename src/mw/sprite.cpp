@@ -93,7 +93,6 @@ namespace mw {
 			glEnable(GL_BLEND);
 			glEnable(GL_TEXTURE_2D);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glNormal3f(0, 0, 1);
 			glBegin(GL_QUADS);
 			glTexCoord2f(x_/ texture_.getWidth(), y_ / texture_.getHeight());
 			glVertex2f(-0.5, -0.5);

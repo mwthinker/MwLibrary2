@@ -54,7 +54,6 @@ namespace mw {
 			glEnable(GL_BLEND);
 			glEnable(GL_TEXTURE_2D);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glNormal3f(0, 0, 1);
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
 			glVertex2f(x, y);
