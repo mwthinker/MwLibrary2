@@ -57,37 +57,48 @@ namespace mw {
 
 	Shader::Shader() :
 		location_(0),
-		programObjectId_(0) {
+		programObjectId_(0),
+		shaderData_(std::make_shared<ShaderData>()) {
 
 	}
 
-	Shader::~Shader() {
+	Shader::ShaderData::ShaderData() :
+		location_(0),
+		programObjectId_(0) {
+		
+	}
+
+	Shader::ShaderData::~ShaderData() {
 		glDeleteProgram(programObjectId_);
 	}
 
 	void Shader::bindAttribute(std::string attribute) {
-		assert(programObjectId_ == 0);
-		attributes_[attribute] = location_;
+		if (programObjectId_ == 0) {
+			shaderData_->attributes_[attribute] = location_;
+		}
 	}
 
 	int Shader::getAttributeLocation(std::string attribute) const {
-		auto it = attributes_.find(attribute);
-		if (it != attributes_.end()) {
+		auto it = shaderData_->attributes_.find(attribute);
+		if (it != shaderData_->attributes_.end()) {
 			return it->second;
 		}
 		return -1;
 	}
 
-	int Shader::getUniformLocation(std::string uniform) {
+	int Shader::getUniformLocation(std::string uniform) const {
 		if (programObjectId_ != 0) {
-			unsigned int size = uniforms_.size();
+			auto it = shaderData_->uniforms_.find(uniform);
 
-			int& loc = uniforms_[uniform];
-
-			if (uniforms_.size() > size) {
-				loc = mw::glGetUniformLocation(programObjectId_, uniform.c_str());
+			if (it != shaderData_->uniforms_.end()) {
+				return it->second;
+			} else {
+				int loc = mw::glGetUniformLocation(programObjectId_, uniform.c_str());
+				if (loc != -1) {
+					shaderData_->uniforms_[uniform] = loc;
+				}
+				return loc;
 			}
-			return loc;
 		}
 		return -1;
 	}
@@ -114,6 +125,7 @@ namespace mw {
 	bool Shader::loadAndLink(std::string vShader, std::string fShader) {
 		if (programObjectId_ == 0) {
 			programObjectId_ = mw::glCreateProgram();
+			shaderData_->programObjectId_ = programObjectId_;
 			if (programObjectId_ == 0) {
 				return false;
 			}
@@ -122,7 +134,7 @@ namespace mw {
 			loadShader(programObjectId_, GL_FRAGMENT_SHADER, fShader.c_str());
 
 			// Bind all attributes.
-			for (auto& pair : attributes_) {
+			for (auto& pair : shaderData_->attributes_) {
 				mw::glBindAttribLocation(programObjectId_, location_, pair.first.c_str());
 				pair.second = location_++;
 			}
@@ -158,13 +170,13 @@ namespace mw {
 		}
 	}
 
-	ShaderPtr Shader::defaultShader = nullptr;
+	Shader Shader::defaultShader;
 
-	ShaderPtr Shader::getDefaultShader() {
+	const Shader& Shader::getDefaultShader() {
 		return defaultShader;
 	}
 
-	void Shader::setDefaultShader(const ShaderPtr& shader) {
+	void Shader::setDefaultShader(const Shader& shader) {
 		defaultShader = shader;
 	}
 

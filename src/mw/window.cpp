@@ -78,10 +78,10 @@ namespace mw {
 		glContext_ = SDL_GL_CreateContext(window_);
 #ifdef MW_OPENGLES2
 		initGLES2();
-		auto shader = std::make_shared<Shader>();
-		shader->bindAttribute(SHADER_A_VEC4_POSITION);
-		shader->bindAttribute(SHADER_A_VEC2_TEXCOORD);
-		shader->loadAndLink(SHADER_VER, SHADER_FRAG);
+		mw::Shader shader;
+		shader.bindAttribute(SHADER_A_VEC4_POSITION);
+		shader.bindAttribute(SHADER_A_VEC2_TEXCOORD);
+		shader.loadAndLink(SHADER_VER, SHADER_FRAG);
 		Shader::setDefaultShader(shader);
 #endif //MW_OPENGLES2
 		if (nbrOfInstances < 1) {
@@ -94,6 +94,10 @@ namespace mw {
 
 	Window::~Window() {
 		if (window_ != nullptr) {
+			// Clean up the shader.
+			Shader::setDefaultShader(mw::Shader());
+			
+			// Clean up Gl context and the window.
 			SDL_GL_DeleteContext(glContext_);
 			SDL_DestroyWindow(window_);
 		}

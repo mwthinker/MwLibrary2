@@ -33,15 +33,19 @@ namespace mw {
 				1, 1};
 
 			// Use the program object
-			auto shader = Shader::getDefaultShader();
-			shader->glUseProgram();
-			mw::glUniform1f(shader->getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
+			// Use the program object
+			auto& shader = Shader::getDefaultShader();
+			shader.glUseProgram();
+			mw::glUniform1f(shader.getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
+
+			int aVerIndex = shader.getAttributeLocation(SHADER_A_VEC4_POSITION);
+			int aTexIndex = shader.getAttributeLocation(SHADER_A_VEC2_TEXCOORD);
 
 			// Load the vertex data
-			mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_A_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
-			mw::glVertexAttribPointer(shader->getAttributeLocation(SHADER_A_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
-			mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_A_VEC4_POSITION));
-			mw::glEnableVertexAttribArray(shader->getAttributeLocation(SHADER_A_VEC2_TEXCOORD));
+			mw::glEnableVertexAttribArray(aVerIndex);
+			mw::glVertexAttribPointer(aVerIndex, 2, GL_FLOAT, GL_FALSE, 0, aVertices);
+			mw::glEnableVertexAttribArray(aTexIndex);
+			mw::glVertexAttribPointer(aTexIndex, 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
 
 			// Upload the attributes and draw the sprite.
 			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

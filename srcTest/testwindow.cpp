@@ -27,15 +27,15 @@ namespace {
 				(sprite.getX() + sprite.getWidth()) / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight()};
 
 			// Use the program object
-			auto program = mw::Shader::getDefaultShader();
-			program->glUseProgram();
-			mw::glUniform1f(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
+			auto& shader = mw::Shader::getDefaultShader();
+			shader.glUseProgram();
+			mw::glUniform1f(shader.getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
 
 			// Load the vertex data.
-			mw::glVertexAttribPointer(program->getAttributeLocation(mw::SHADER_A_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
-			mw::glVertexAttribPointer(program->getAttributeLocation(mw::SHADER_A_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
-			mw::glEnableVertexAttribArray(program->getAttributeLocation(mw::SHADER_A_VEC4_POSITION));
-			mw::glEnableVertexAttribArray(program->getAttributeLocation(mw::SHADER_A_VEC2_TEXCOORD));
+			mw::glVertexAttribPointer(shader.getAttributeLocation(mw::SHADER_A_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
+			mw::glVertexAttribPointer(shader.getAttributeLocation(mw::SHADER_A_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
+			mw::glEnableVertexAttribArray(shader.getAttributeLocation(mw::SHADER_A_VEC4_POSITION));
+			mw::glEnableVertexAttribArray(shader.getAttributeLocation(mw::SHADER_A_VEC2_TEXCOORD));
 
 			// Upload the attributes and draw the sprite.
 			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -76,13 +76,13 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300
 void TestWindow::update(Uint32 msDeltaTime) {
 #if MW_OPENGLES2
 	// Update model matrix.
-	auto shader = mw::Shader::getDefaultShader();
-	shader->glUseProgram();
+	const mw::Shader& shader = mw::Shader::getDefaultShader();
+	shader.glUseProgram();
 	mw::Matrix44 m = mw::getTranslateMatrix44((float) x_, (float) y_);
-	mw::glUniformMatrix4fv(shader->getUniformLocation(mw::SHADER_U_MAT4_MODEL), 1, false, m.data());
-	mw::glUniform4f(shader->getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 1, 1, 1);
+	mw::glUniformMatrix4fv(shader.getUniformLocation(mw::SHADER_U_MAT4_MODEL), 1, false, m.data());
+	mw::glUniform4f(shader.getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 1, 1, 1);
 	drawFunction(sprite_);
-	mw::glUniform4f(shader->getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 0, 0, 1);
+	mw::glUniform4f(shader.getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 0, 0, 1);
 	text_.draw();
 #else // MW_OPENGLES2
 	// Update model matrix.
@@ -137,11 +137,11 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 void TestWindow::resize(int w, int h) {
 #if MW_OPENGLES2
 	mw::glViewport(0, 0, w, h);
-	auto shader = mw::Shader::getDefaultShader();
-	shader->glUseProgram();
+	auto& shader = mw::Shader::getDefaultShader();
+	shader.glUseProgram();
 	mw::Matrix44 ortho = mw::getOrthoProjectionMatrix44(0, (float) w, 0, (float) h);
 	// Update projection and model matrix.
-	mw::glUniformMatrix4fv(mw::Shader::getDefaultShader()->getUniformLocation(mw::SHADER_U_MAT4_PROJ), 1, false, ortho.data());	
+	mw::glUniformMatrix4fv(shader.getUniformLocation(mw::SHADER_U_MAT4_PROJ), 1, false, ortho.data());	
 #else // MW_OPENGLES2
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);

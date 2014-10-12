@@ -14,14 +14,10 @@ namespace mw {
 
 	void loadAndLinkShadersFromFile(GLint programObject, std::string vShader, std::string fShader);
 
-	class Shader;
-	typedef std::shared_ptr<Shader> ShaderPtr;
-
 	class Shader {
 	public:
 		// Create a empty non linked shader.
 		Shader();
-		~Shader();
 
 		// Bind the attribute to the shader.
 		// Must be called before linking the shader in order for the attribute to
@@ -34,7 +30,7 @@ namespace mw {
 
 		// Return the gl memory location for the uniform.
 		// Return -1 on error.
-		int getUniformLocation(std::string uniform);
+		int getUniformLocation(std::string uniform) const;
 
 		// Load shaders from files. Is safe to call multiple times but only the 
 		// first successful is "used. Load and link the vertex shader and the 
@@ -53,19 +49,30 @@ namespace mw {
 		void glUseProgram() const;
 
 		// Get the default shader.
-		static ShaderPtr getDefaultShader();
+		static const Shader& getDefaultShader();
 
 		// Set the default shader.
-		static void setDefaultShader(const ShaderPtr& shader);
+		static void setDefaultShader(const Shader& shader);
 
 	private:
-		std::map<std::string, int> attributes_;
-		std::map<std::string, int> uniforms_;
+		struct ShaderData {
+			ShaderData();
+
+			~ShaderData();
+
+			std::map<std::string, int> attributes_;
+			std::map<std::string, int> uniforms_;
+			
+			int location_;
+			GLuint programObjectId_;
+		};
 
 		int location_;
 		GLuint programObjectId_;
 
-		static ShaderPtr defaultShader;
+		std::shared_ptr<ShaderData> shaderData_;
+
+		static Shader defaultShader;
 	};
 
 } // Namespace mw.
