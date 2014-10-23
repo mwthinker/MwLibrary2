@@ -65,6 +65,7 @@ namespace mw {
 			
 			int location_;
 			GLuint programObjectId_;
+			char windowInstance_;
 		};
 
 		int location_;

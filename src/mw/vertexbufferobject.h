@@ -44,6 +44,7 @@ namespace mw {
 			~Data();
 
 			GLuint vboId_;
+			char windowInstance_;
 		};
 
 		GLuint vboId_;

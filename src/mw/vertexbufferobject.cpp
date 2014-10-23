@@ -1,6 +1,7 @@
 #if MW_OPENGLES2
 #include "vertexbufferobject.h"
 #include "opengl.h"
+#include "window.h"
 
 namespace mw {
 
@@ -16,6 +17,7 @@ namespace mw {
 			mw::glBufferData(target, size, data, usage);
 			mw::glBindBuffer(target_, 0);
 			data_->vboId_ = vboId_;
+			data_->windowInstance_ = Window::getInstanceId();
 		}
 	}
 
@@ -37,11 +39,18 @@ namespace mw {
 		mw::glBindBuffer(target_, 0);
 	}
 
-	VertexBufferObject::Data::Data() : vboId_(0) {
+	VertexBufferObject::Data::Data() : 
+		vboId_(0),
+		windowInstance_(0) {
+
 	}
 
 	VertexBufferObject::Data::~Data() {
-		mw::glDeleteBuffers(1, &vboId_);
+		// Opengl buffer loaded? And the opengl context active?
+		if (vboId_ != 0 && windowInstance_ == Window::getInstanceId()) {
+			// Is called if the buffer is valid and therefore need to be cleaned up.
+			mw::glDeleteBuffers(1, &vboId_);
+		}
 	}
 
 } // Namespace mw.

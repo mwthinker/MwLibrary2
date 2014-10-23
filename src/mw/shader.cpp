@@ -1,6 +1,7 @@
 #if MW_OPENGLES2
 #include "shader.h"
 #include "opengl.h"
+#include "window.h"
 
 #include <fstream>
 #include <sstream>
@@ -64,12 +65,17 @@ namespace mw {
 
 	Shader::ShaderData::ShaderData() :
 		location_(0),
-		programObjectId_(0) {
+		programObjectId_(0),
+		windowInstance_(0) {
 		
 	}
 
 	Shader::ShaderData::~ShaderData() {
-		glDeleteProgram(programObjectId_);
+		// Opengl program loaded? And the opengl context active?
+		if (programObjectId_ != 0 && windowInstance_ == Window::getInstanceId()) {
+			// Is called if the program is valid and therefore need to be cleaned up.
+			mw::glDeleteProgram(programObjectId_);
+		}
 	}
 
 	void Shader::bindAttribute(std::string attribute) {
@@ -124,8 +130,10 @@ namespace mw {
 
 	bool Shader::loadAndLink(std::string vShader, std::string fShader) {
 		if (programObjectId_ == 0) {
+
 			programObjectId_ = mw::glCreateProgram();
 			shaderData_->programObjectId_ = programObjectId_;
+			shaderData_->windowInstance_ = Window::getInstanceId();
 			if (programObjectId_ == 0) {
 				return false;
 			}
