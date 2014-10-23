@@ -1,5 +1,6 @@
 #include "texture.h"
 #include "opengl.h"
+#include "window.h"
 
 #include <SDL_image.h>
 
@@ -87,9 +88,11 @@ namespace mw {
 			if (imageData_->preLoadSurface_ != nullptr) {
 				imageData_->loadImageToGraphic();
 				texture_ = imageData_->texture_;
+				imageData_->windowInstance_ = Window::getInstanceId();
 			} else {
 				texture_ = imageData_->texture_;
 				glBindTexture(GL_TEXTURE_2D, texture_);
+				imageData_->windowInstance_ = Window::getInstanceId();
 			}
 		} else {
 			if (texture_ != 0) {
@@ -100,11 +103,11 @@ namespace mw {
 	}
 	
 	Texture::ImageData::ImageData(std::function<void()> filter) :
-		preLoadSurface_(0), texture_(0), filter_(filter) {
+		preLoadSurface_(0), texture_(0), filter_(filter), windowInstance_(0) {
 	}
 
 	Texture::ImageData::ImageData(SDL_Surface* surface, std::function<void()> filter) :
-		preLoadSurface_(surface), texture_(0), filter_(filter) {
+		preLoadSurface_(surface), texture_(0), filter_(filter), windowInstance_(0) {
 	}
 
 	void Texture::ImageData::loadImageToGraphic() const {
@@ -123,7 +126,8 @@ namespace mw {
 	}
 
 	Texture::ImageData::~ImageData() {
-		if (texture_ != 0) {
+		// Opengl texture? And the opengl context active?
+		if (texture_ != 0 && windowInstance_ == Window::getInstanceId()) {
 			// Is called if the opengl texture is valid and therefore need to be cleaned up.
 			glDeleteTextures(1, &texture_);
 		}

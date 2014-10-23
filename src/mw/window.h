@@ -50,6 +50,11 @@ namespace mw {
 		// I.e. the loop in startLoop() will be made to stop and startloop() will return.
 		void quit();
 
+		// Return the number, first instance of an active window return 1 next 2, etc.
+		inline static char getInstanceId() {
+			return nbrCurrentInstance;
+		}
+
 	private:
 		// Is called by the loop. The frequency in which this function is called is fixed
 		// by the vertical frequency of the monitor (VSYNC). The time between two calls can vary,
@@ -70,7 +75,7 @@ namespace mw {
 
 		void setupOpenGlContext();
 		
-		static int nbrOfInstances;
+		static int nbrCurrentInstance;
 		static void initOpenGl();
 	};
 

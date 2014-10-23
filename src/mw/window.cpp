@@ -11,10 +11,10 @@
 
 namespace mw {
 
-	int Window::nbrOfInstances = 0;
+	int Window::nbrCurrentInstance = 0;
 
 	void Window::initOpenGl() {
-		if (nbrOfInstances < 1) {
+		if (nbrCurrentInstance < 1) {
 			SDL_GL_SetSwapInterval(1);
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 #ifdef MW_OPENGLES2
@@ -71,7 +71,7 @@ namespace mw {
 		height_ = height;
 
 		setupOpenGlContext();
-		++nbrOfInstances;
+		++nbrCurrentInstance;
 	}
 
 	void Window::setupOpenGlContext() {
@@ -84,7 +84,7 @@ namespace mw {
 		shader.loadAndLink(SHADER_VER, SHADER_FRAG);
 		Shader::setDefaultShader(shader);
 #endif //MW_OPENGLES2
-		if (nbrOfInstances < 1) {
+		if (nbrCurrentInstance < 1) {
 			std::printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
 			std::printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 		}
@@ -94,6 +94,9 @@ namespace mw {
 
 	Window::~Window() {
 		if (window_ != nullptr) {
+			// In order to signal the the current gl context is not active.
+			++nbrCurrentInstance;
+
 #ifdef MW_OPENGLES2
 			// Clean up the shader.
 			Shader::setDefaultShader(mw::Shader());
