@@ -108,7 +108,7 @@ namespace mw {
 		}
 	}
 
-	void Window::startLoop() {
+	void Window::startLoop(Uint32 delta) {
 		if (!quit_) {
 			SDL_GL_MakeCurrent(window_, glContext_);
 		}
@@ -120,8 +120,13 @@ namespace mw {
 
 			Uint32 currentTime = SDL_GetTicks();
 			Uint32 deltaTime = currentTime - time_;
-			time_ = currentTime;
-			update(deltaTime);
+			if (deltaTime >= delta) {
+				// Only update the screen at choosen intervall.
+				// Solve the problem where the SDL_GetTicks is imprecise 
+				// under some delta on some plattforms.
+				time_ = currentTime;
+				update(deltaTime);
+			}
 
 			SDL_GL_SwapWindow(window_);
 		}

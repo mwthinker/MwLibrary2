@@ -22,8 +22,8 @@ namespace mw {
 
 		// Starts a loop which handles all inputs and graphics in the windows. It will not 
 		// return until the loop is ended. Is closed when the windows is closed, i.e. a 
-		// call to the protected function quit().
-		void startLoop();
+		// call to the protected function quit(). The delta is the smallest frame time used.
+		void startLoop(Uint32 delta = 10);
 
 		// The id for the windows. Is tha same as calling SDL_GetWindowID.
 		Uint32 getId() const;
@@ -46,11 +46,12 @@ namespace mw {
 
 		void getSize(int& width, int& height);
 
-		// Makes the program to quit as soon as current frame is finished.
+		// Make the program to quit as soon as the current frame is finished.
 		// I.e. the loop in startLoop() will be made to stop and startloop() will return.
 		void quit();
 
-		// Return the number, first instance of an active window return 1 next 2, etc.
+		// Return the number, first instance of an active window return 1 next 3, etc.
+		// Each evan number represent that the last widow with the odd number was closed.
 		inline static char getInstanceId() {
 			return nbrCurrentInstance;
 		}
