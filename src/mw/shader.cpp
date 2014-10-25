@@ -10,50 +10,17 @@
 
 namespace mw {
 
-	GLuint loadShader(GLuint program, GLenum type, const GLchar* shaderSrc) {
-		GLuint shader;
-		shader = mw::glCreateShader(type);
-		mw::glShaderSource(shader, 1, &shaderSrc, NULL);
-		mw::glCompileShader(shader);
-		mw::glAttachShader(program, shader);
-		return shader;
-	}
+	namespace {
 
-	void loadAndLinkShadersFromFile(GLint programObject, std::string vShader, std::string fShader) {
-		{
-			std::ifstream inFile(vShader);
-			std::stringstream stream;
-			stream << inFile.rdbuf();
-			vShader = stream.str();
-		}
-		{
-			std::ifstream inFile(fShader);
-			std::stringstream stream;
-			stream << inFile.rdbuf();
-			fShader = stream.str();
+		GLuint loadShader(GLuint program, GLenum type, const GLchar* shaderSrc) {
+			GLuint shader;
+			shader = mw::glCreateShader(type);
+			mw::glShaderSource(shader, 1, &shaderSrc, NULL);
+			mw::glCompileShader(shader);
+			mw::glAttachShader(program, shader);
+			return shader;
 		}
 
-		loadShader(programObject, GL_VERTEX_SHADER, vShader.c_str());
-		loadShader(programObject, GL_FRAGMENT_SHADER, fShader.c_str());
-
-		mw::glLinkProgram(programObject);
-
-		GLint linked;
-		mw::glGetProgramiv(programObject, GL_LINK_STATUS, &linked);
-		if (!linked) {
-			GLint infoLen = 0;
-			mw::glGetProgramiv(programObject, GL_INFO_LOG_LENGTH, &infoLen);
-			if (infoLen > 1) {
-				char message[256];
-				GLsizei size;
-				mw::glGetProgramInfoLog(programObject, sizeof(message), &size, message);
-				std::string str;
-				str.append(message, message + size);
-				std::cerr << "Error linking program: " << str << "\n";
-			}
-			mw::glDeleteProgram(programObject);
-			exit(1);
-		}
 	}
 
 	Shader::Shader() :
@@ -67,7 +34,7 @@ namespace mw {
 		location_(0),
 		programObjectId_(0),
 		windowInstance_(0) {
-		
+
 	}
 
 	Shader::ShaderData::~ShaderData() {
@@ -111,12 +78,12 @@ namespace mw {
 
 	bool Shader::loadAndLinkFromFile(std::string vShaderFile, std::string fShaderFile) {
 		if (programObjectId_ == 0) {
-			{
-				std::ifstream inFile(vShaderFile);
-				std::stringstream stream;
-				stream << inFile.rdbuf();
-				vShaderFile = stream.str();
-			}
+				{
+					std::ifstream inFile(vShaderFile);
+					std::stringstream stream;
+					stream << inFile.rdbuf();
+					vShaderFile = stream.str();
+				}
 			{
 				std::ifstream inFile(fShaderFile);
 				std::stringstream stream;

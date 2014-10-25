@@ -8,11 +8,7 @@
 #include <string>
 #include <map>
 
-namespace mw {
-
-	GLuint loadShader(GLuint program, GLenum type, const GLchar* shaderSrc);
-
-	void loadAndLinkShadersFromFile(GLint programObject, std::string vShader, std::string fShader);
+namespace mw {	
 
 	class Shader {
 	public:
