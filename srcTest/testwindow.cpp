@@ -61,12 +61,19 @@ namespace {
 
 }
 
-TestWindow::TestWindow(mw::Sprite sprite, int x, int y) : mw::Window(-1, -1, 300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
+TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
+	: mw::Window(-1, -1, 300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
+	
 	focus_ = true;
 	mw::Font font("Ubuntu-B.ttf", 60);
 	text_ = mw::Text("hej", font);
 #if MW_OPENGLES2
 	mw::glClearColor(0, 0, 0, 1);
+	shader_.bindAttribute("aPos");
+	shader_.bindAttribute("aTex");
+	shader_.bindAttribute("aIsTex");
+	shader_.bindAttribute("aColor");
+	shader_.loadAndLinkFromFile("board.ver.glsl", "board.fra.glsl");
 #else // MW_OPENGLES2
 	glClearColor(0, 0, 0, 1);
 #endif // MW_OPENGLES2
