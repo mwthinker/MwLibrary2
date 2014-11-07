@@ -97,7 +97,7 @@ namespace mw {
 				mw::glGetShaderInfoLog(shader, sizeof(message), &size, message);
 				std::string str;
 				str.append(message, message + size);
-				std::cerr << "\nError loading shader: " << str << std::endl;
+				std::cerr << "\n" << shaderSrc << ", error loading shader: " << str << std::endl;
 			}
 #endif // _DEBUG
 			return shader;
@@ -160,12 +160,12 @@ namespace mw {
 
 	bool Shader::loadAndLinkFromFile(std::string vShaderFile, std::string fShaderFile) {
 		if (programObjectId_ == 0) {
-				{
-					std::ifstream inFile(vShaderFile);
-					std::stringstream stream;
-					stream << inFile.rdbuf();
-					vShaderFile = stream.str();
-				}
+			{
+				std::ifstream inFile(vShaderFile);
+				std::stringstream stream;
+				stream << inFile.rdbuf();
+				vShaderFile = stream.str();
+			}
 			{
 				std::ifstream inFile(fShaderFile);
 				std::stringstream stream;

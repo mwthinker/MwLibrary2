@@ -37,7 +37,7 @@ namespace mw {
 	Matrix44 getScaleMatrix44(float x, float y, float z = 1);
 
 	// Return the ortho projection matrix.
-	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top, float near_ = -1, float far_ = 1);
+	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top, float near = -1, float far = 1);
 
 	// Translate the matrix in the xy-plane.
 	void translate2D(mw::Matrix44& matrix, float x, float y);

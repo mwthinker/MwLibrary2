@@ -105,11 +105,11 @@ namespace mw {
 			0, 0, 0, 1);
 	}
 
-	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top, float near_, float far_) {
+	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top, float near, float far) {
 		return mw::Matrix44(
 			2 / (right - left), 0, 0, -(right + left) / (right - left),
 			0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom),
-			0, 0, -2 / (far_ - near_), -(far_ + near_) / (far_ - near_),
+			0, 0, -2 / (far - near), -(far + near) / (far - near),
 			0, 0, 0, 1);
 	}
 
