@@ -105,12 +105,24 @@ namespace mw {
 			0, 0, 0, 1);
 	}
 
-	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top, float _near, float _far) { // _far and _near called due to macro conflict in Windows.
+	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top,
+		float nearVal, float farVal) {
+
 		return mw::Matrix44(
 			2 / (right - left), 0, 0, -(right + left) / (right - left),
 			0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom),
-			0, 0, -2 / (_far - _near), -(_far + _near) / (_far - _near),
+			0, 0, -2 / (farVal - nearVal), -(farVal + nearVal) / (farVal - nearVal),
 			0, 0, 0, 1);
+	}
+
+	mw::Matrix44 getFrustrumProjectionMatrix44(float left, float right,
+		float bottom, float top,
+		float nearVal, float farVal) {
+
+		return mw::Matrix44(2 * nearVal / (right - left), 0, (right + left) / (right - left), 0,
+			0, 2 * nearVal / (top - bottom), (top + bottom) / (top - bottom), 0,
+			0, 0, -(farVal + nearVal) / (farVal - nearVal), -2 * farVal * nearVal / (farVal - nearVal),
+			0, 0, -1, 0);
 	}
 
 	// Translate the matrix in the xy-plane.
