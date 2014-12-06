@@ -53,6 +53,8 @@ set(SOURCES
 	src/mw/text.h
 	src/mw/texture.cpp
 	src/mw/texture.h
+	src/mw/textureatlas.cpp
+	src/mw/textureatlas.h
 	src/mw/vertexbufferobject.cpp
 	src/mw/vertexbufferobject.h
 	src/mw/window.cpp
