@@ -2,10 +2,10 @@
 #define MW_DEFAULTSHADER_H
 #if MW_OPENGLES2
 
-#include <mw/opengl.h>
-#include <mw/matrix.h>
-#include <mw/shader.h>
-#include <mw/color.h>
+#include "opengl.h"
+#include "matrix.h"
+#include "shader.h"
+#include "color.h"
 
 namespace mw {
 
@@ -56,7 +56,6 @@ namespace mw {
 		friend class Window;
 
 		DefaultShader();
-		DefaultShader(std::string vShader, std::string fShader);
 
 		void glUseProgram() const;
 
@@ -77,10 +76,13 @@ namespace mw {
 		void setGlColorU(const mw::Color& color) const;
 		void setGlTextureU(bool texture) const;
 
-		static const DefaultShader& getCurrent();
+		static const DefaultShader& get();
 
 	private:
-		mw::Shader shader_;
+		DefaultShader(std::string vShader, std::string fShader);
+
+		// Is ok, outside constness is preserved.
+		mutable mw::Shader shader_;
 		
 		int aPosIndex_;
 		int aTexIndex_;

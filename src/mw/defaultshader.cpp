@@ -16,10 +16,10 @@ namespace mw {
 		uIsTexIndex_ = -1;
 	}
 
-	DefaultShader::DefaultShader(std::string vShaderFile, std::string fShaderFile) {
+	DefaultShader::DefaultShader(std::string vShader, std::string fShader) {
 		shader_.bindAttribute("aPos");
 		shader_.bindAttribute("aTex");
-		shader_.loadAndLink(vShaderFile, fShaderFile);
+		shader_.loadAndLink(vShader, fShader);
 		
 		shader_.glUseProgram();
 
@@ -37,6 +37,9 @@ namespace mw {
 	}
 
 	void DefaultShader::glUseProgram() const {
+		if (!shader_.isLinked()) {
+			shader_ = defaultShader.shader_;
+		}
 		shader_.glUseProgram();
 	}
 
@@ -90,7 +93,7 @@ namespace mw {
 
 	DefaultShader DefaultShader::defaultShader;
 
-	const DefaultShader& DefaultShader::getCurrent() {
+	const DefaultShader& DefaultShader::get() {
 		return defaultShader;
 	}
 

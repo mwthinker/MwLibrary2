@@ -10,7 +10,8 @@ namespace mw {
 	Sprite::Sprite() {
 	}
 
-	Sprite::Sprite(std::string image, std::function<void()> filter) : texture_(image, filter) {
+	Sprite::Sprite(std::string image, std::function<void()> filter) : 
+		texture_(image, filter) {
 		x_ = 0;
 		y_ = 0;
 		dx_ = (float) texture_.getWidth();
@@ -72,8 +73,8 @@ namespace mw {
 				x_ / texture_.getWidth(), (y_ + dy_) / texture_.getHeight(),
 				(x_ + dx_) / texture_.getWidth(), (y_ + dy_) / texture_.getHeight()};
 
-			// Use the program object
-			const DefaultShader& shader = DefaultShader::getCurrent();
+			// Use the program object.
+			const DefaultShader& shader = DefaultShader::get();
 			shader.glUseProgram();
 			shader.setGlTextureU(true);
 

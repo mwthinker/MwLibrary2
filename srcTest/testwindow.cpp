@@ -25,7 +25,7 @@ void TestWindow::update(Uint32 msDeltaTime) {
 	mw::Matrix44 m2 = m * mw::getScaleMatrix44(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44(0.5, 0.5);
 #if MW_OPENGLES2
 	// Update model matrix.
-	const mw::DefaultShader& shader = mw::DefaultShader::getCurrent();
+	const mw::DefaultShader& shader = mw::DefaultShader::get();
 	shader.glUseProgram();
 	shader.setGlModelMatrixU(m);
 	shader.setGlColorU(1, 1, 1);	
@@ -89,7 +89,7 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 void TestWindow::resize(int w, int h) {
 #if MW_OPENGLES2
 	mw::glViewport(0, 0, w, h);
-	const mw::DefaultShader& shader = mw::DefaultShader::getCurrent();
+	const mw::DefaultShader& shader = mw::DefaultShader::get();
 	shader.glUseProgram();
 	shader.setGlProjectionMatrixU(mw::getOrthoProjectionMatrix44(0, (float) w, 0, (float) h));
 #else // MW_OPENGLES2

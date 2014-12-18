@@ -12,7 +12,7 @@ namespace mw {
 
 	class Shader {
 	public:
-		// Create a empty non linked shader.
+		// Create an empty non linked shader.
 		Shader();
 
 		// Bind the attribute to the shader.
@@ -42,7 +42,12 @@ namespace mw {
 
 		// Uses the current gl program. I.e. a call to glUseProgram.
 		// Does nothing if the program is not loaded.
-		void glUseProgram() const;		
+		void glUseProgram() const;
+
+		// Return if the shader program is linked.
+		inline bool isLinked() const {
+			return programObjectId_ != 0;
+		}
 
 	private:
 		struct ShaderData {

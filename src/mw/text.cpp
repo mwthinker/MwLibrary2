@@ -34,7 +34,7 @@ namespace mw {
 
 			// Use the program object
 			// Use the program object
-			const DefaultShader& shader = DefaultShader::getCurrent();
+			const DefaultShader& shader = DefaultShader::get();
 			shader.glUseProgram();
 			shader.setGlTextureU(true);
 
