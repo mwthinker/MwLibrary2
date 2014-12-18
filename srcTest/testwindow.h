@@ -4,8 +4,6 @@
 #include <mw/window.h>
 #include <mw/sprite.h>
 #include <mw/text.h>
-#include <mw/matrix.h>
-#include <mw/shader.h>
 
 class TestWindow : public mw::Window {
 public:
@@ -22,9 +20,6 @@ private:
 	mw::Sprite sprite_;
 	int x_, y_;
 	mw::Text text_;
-#if MW_OPENGLES2
-	mw::Shader shader_;
-#endif // MW_OPENGLES2
 };
 
 #endif // TESTWINDOW_H

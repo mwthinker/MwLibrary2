@@ -1,6 +1,6 @@
 #include "sprite.h"
 #include "opengl.h"
-#include "shader.h"
+#include "defaultshader.h"
 
 #include <string>
 #include <functional>
@@ -52,14 +52,14 @@ namespace mw {
 	}
 
 	void Sprite::draw() const {
-		texture_.bindTexture();
 		if (texture_.isValid()) {
+			texture_.bindTexture();
 #if MW_OPENGLES2
 			mw::glEnable(GL_BLEND);
 			mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			// Centered square in ORIGO.
-			GLfloat aVertices[] = {
+			GLfloat aPosCoords[] = {
 				-0.5f, -0.5f,
 				0.5f, -0.5f,
 				-0.5f, 0.5f,
@@ -73,18 +73,13 @@ namespace mw {
 				(x_ + dx_) / texture_.getWidth(), (y_ + dy_) / texture_.getHeight()};
 
 			// Use the program object
-			auto& shader = Shader::getDefaultShader();
+			const DefaultShader& shader = DefaultShader::getCurrent();
 			shader.glUseProgram();
-			mw::glUniform1f(shader.getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
+			shader.setGlTextureU(true);
 
-			int aVerIndex = shader.getAttributeLocation(SHADER_A_VEC4_POSITION);
-			int aTexIndex = shader.getAttributeLocation(SHADER_A_VEC2_TEXCOORD);
-
-			// Load the vertex data
-			mw::glEnableVertexAttribArray(aVerIndex);
-			mw::glVertexAttribPointer(aVerIndex, 2, GL_FLOAT, GL_FALSE, 0, aVertices);
-			mw::glEnableVertexAttribArray(aTexIndex);
-			mw::glVertexAttribPointer(aTexIndex, 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
+			// Set the vertex pointer.
+			shader.setGlPosA(2, aPosCoords);
+			shader.setGlTexA(2, aTexCoord);
 
 			// Upload the attributes and draw the sprite.
 			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

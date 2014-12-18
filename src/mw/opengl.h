@@ -57,57 +57,7 @@ namespace mw {
 	// Defines the 2d orthongonal projection matrix.
 	void ortho2D(mw::Matrix44& matrix, float left, float right, float bottom, float top);
 
-#if MW_OPENGLES2
-
-	static const std::string SHADER_A_VEC4_POSITION = "aPosition";
-	static const std::string SHADER_A_VEC2_TEXCOORD = "aTexCoord";
-	
-	static const std::string SHADER_U_MAT4_MODEL = "uModelMatrix";
-	static const std::string SHADER_U_MAT4_PROJ = "uProjectionMatrix";
-	static const std::string SHADER_U_VEC4_COLOR = "uColor";
-	static const std::string SHADER_U_FLOAT_TEXTURE = "uIsTexture";
-	
-	static const std::string SHADER_VER =
-		"#version 100\n"
-		""
-		"precision mediump float;\n"
-		""
-		"uniform mat4 uModelMatrix;\n"
-		"uniform mat4 uProjectionMatrix;\n"
-		"uniform float uIsTexture;\n"
-		""
-		"attribute vec4 aPosition;\n"
-		"attribute vec2 aTexCoord;\n"
-		""
-		"varying vec2 vTexCoord;\n"
-		""
-		"void main() {"
-		"	gl_Position = uProjectionMatrix * uModelMatrix * aPosition;"
-		"	if (uIsTexture > 0.5) {"
-		"		vTexCoord = aTexCoord;"
-		"	}"
-		"}";
-
-	static const std::string SHADER_FRAG =
-		"#version 100\n"
-		""
-		"precision mediump float;\n"
-		""
-		"uniform sampler2D uTexture;\n"
-		"uniform vec4 uColor;\n"
-		"uniform float uIsTexture;\n"
-		""
-		"varying vec2 vTexCoord;\n"
-		""
-		"void main() {"
-		""
-		"	if (uIsTexture < 0.5) {"
-		"		gl_FragColor = uColor;"
-		"	} else {"
-		"		vec4 tex = texture2D(uTexture, vTexCoord); "
-		"		gl_FragColor = vec4(uColor.x * tex.x, uColor.y * tex.y, uColor.z * tex.z, uColor.a * tex.a);"
-		"	}"
-		"}";
+#if MW_OPENGLES2	
 
 #define FUNC_POINTER_DEC(ret,func,params) extern ret (KHRONOS_APIENTRY *func) params;
 	FUNC_POINTER_DEC(void, glActiveTexture, (GLenum texture))

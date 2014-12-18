@@ -24,6 +24,8 @@ endif ()
 set(SOURCES
 	src/mw/color.cpp
 	src/mw/color.h
+	src/mw/defaultshader.cpp
+	src/mw/defaultshader.h
 	src/mw/exception.h
 	src/mw/font.cpp
 	src/mw/font.h

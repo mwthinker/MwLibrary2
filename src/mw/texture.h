@@ -44,7 +44,7 @@ namespace mw {
 			return height_;
 		}
 
-		// Return true if the image is loaded correctly. It may however not be loaded
+		// Return true if the image is loaded correctly. It may however not been loaded
 		// to graphic memory despite the result of this function.
 		bool isValid() const {
 			return valid_;

@@ -42,13 +42,7 @@ namespace mw {
 
 		// Uses the current gl program. I.e. a call to glUseProgram.
 		// Does nothing if the program is not loaded.
-		void glUseProgram() const;
-
-		// Get the default shader.
-		static const Shader& getDefaultShader();
-
-		// Set the default shader.
-		static void setDefaultShader(const Shader& shader);
+		void glUseProgram() const;		
 
 	private:
 		struct ShaderData {
@@ -68,8 +62,6 @@ namespace mw {
 		GLuint programObjectId_;
 
 		std::shared_ptr<ShaderData> shaderData_;
-
-		static Shader defaultShader;
 	};
 
 } // Namespace mw.

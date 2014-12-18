@@ -4,62 +4,7 @@
 #include <mw/color.h>
 #include <mw/window.h>
 #include <mw/matrix.h>
-#include <mw/shader.h>
-
-namespace {
-
-	void drawFunction(mw::Sprite& sprite) {
-		const mw::Texture& texture = sprite.getTexture();
-		if (texture.isValid()) {
-			sprite.bindTexture();
-
-#if MW_OPENGLES2
-			GLfloat aVertices[] = {
-				0, 0,
-				sprite.getWidth(), 0,
-				0, sprite.getHeight(),
-				sprite.getWidth(), sprite.getHeight()};
-
-			GLfloat aTexCoord[] = {
-				sprite.getX() / texture.getWidth(), sprite.getY() / texture.getHeight(),
-				(sprite.getX() + sprite.getWidth()) / texture.getWidth(), sprite.getY() / texture.getHeight(),
-				sprite.getX() / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight(),
-				(sprite.getX() + sprite.getWidth()) / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight()};
-
-			// Use the program object
-			auto& shader = mw::Shader::getDefaultShader();
-			shader.glUseProgram();
-			mw::glUniform1f(shader.getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
-
-			// Load the vertex data.
-			mw::glVertexAttribPointer(shader.getAttributeLocation(mw::SHADER_A_VEC4_POSITION), 2, GL_FLOAT, GL_FALSE, 0, aVertices);
-			mw::glVertexAttribPointer(shader.getAttributeLocation(mw::SHADER_A_VEC2_TEXCOORD), 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
-			mw::glEnableVertexAttribArray(shader.getAttributeLocation(mw::SHADER_A_VEC4_POSITION));
-			mw::glEnableVertexAttribArray(shader.getAttributeLocation(mw::SHADER_A_VEC2_TEXCOORD));
-
-			// Upload the attributes and draw the sprite.
-			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-#else // MW_OPENGLES2
-			glEnable(GL_TEXTURE_2D);
-			glBegin(GL_QUADS);
-			glTexCoord2f(sprite.getX() / texture.getWidth(), sprite.getY() / texture.getHeight());
-			glVertex2f(0, 0);
-
-			glTexCoord2f((sprite.getX() + sprite.getWidth()) / texture.getWidth(), sprite.getY() / texture.getHeight());
-			glVertex2f(sprite.getWidth(), 0);
-
-			glTexCoord2f((sprite.getX() + sprite.getWidth()) / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight());
-			glVertex2f(sprite.getWidth(), sprite.getHeight());
-
-			glTexCoord2f(sprite.getX() / texture.getWidth(), (sprite.getY() + sprite.getHeight()) / texture.getHeight());
-			glVertex2f(0, sprite.getHeight());
-			glEnd();
-			glDisable(GL_TEXTURE_2D);
-#endif // MW_OPENGLES2
-		}
-	}
-
-}
+#include <mw/defaultshader.h>
 
 TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
 	: mw::Window(-1, -1, 300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
@@ -69,11 +14,6 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
 	text_ = mw::Text("hej", font);
 #if MW_OPENGLES2
 	mw::glClearColor(0, 0, 0, 1);
-	shader_.bindAttribute("aPos");
-	shader_.bindAttribute("aTex");
-	shader_.bindAttribute("aIsTex");
-	shader_.bindAttribute("aColor");
-	shader_.loadAndLinkFromFile("board.ver.glsl", "board.fra.glsl");
 #else // MW_OPENGLES2
 	glClearColor(0, 0, 0, 1);
 #endif // MW_OPENGLES2
@@ -81,23 +21,28 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
 }
 
 void TestWindow::update(Uint32 msDeltaTime) {
+	mw::Matrix44 m = mw::getTranslateMatrix44((float) x_, (float) y_);
+	mw::Matrix44 m2 = m * mw::getScaleMatrix44(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44(0.5, 0.5);
 #if MW_OPENGLES2
 	// Update model matrix.
-	const mw::Shader& shader = mw::Shader::getDefaultShader();
+	const mw::DefaultShader& shader = mw::DefaultShader::getCurrent();
 	shader.glUseProgram();
-	mw::Matrix44 m = mw::getTranslateMatrix44((float) x_, (float) y_);
-	mw::glUniformMatrix4fv(shader.getUniformLocation(mw::SHADER_U_MAT4_MODEL), 1, false, m.data());
-	mw::glUniform4f(shader.getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 1, 1, 1);
-	drawFunction(sprite_);
-	mw::glUniform4f(shader.getUniformLocation(mw::SHADER_U_VEC4_COLOR), 1, 0, 0, 1);
+	shader.setGlModelMatrixU(m);
+	shader.setGlColorU(1, 1, 1);	
+	shader.setGlModelMatrixU(m2);
+	sprite_.draw();
+	shader.setGlColorU(1, 0, 0);
+	shader.setGlModelMatrixU(m);
 	text_.draw();
 #else // MW_OPENGLES2
 	// Update model matrix.
 	glLoadIdentity();
-	glTranslated(x_, y_, 0);
-	glColor4d(1, 1, 1, 1);
-	drawFunction(sprite_);
+	glMultMatrixf(m2.data());
+	glColor3f(1, 1, 1);
+	sprite_.draw();
 	glColor3d(1, 0, 0);
+	glLoadIdentity();
+	glMultMatrixf(m.data());
 	text_.draw();
 #endif // MW_OPENGLES2
 }
@@ -144,11 +89,9 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 void TestWindow::resize(int w, int h) {
 #if MW_OPENGLES2
 	mw::glViewport(0, 0, w, h);
-	auto& shader = mw::Shader::getDefaultShader();
+	const mw::DefaultShader& shader = mw::DefaultShader::getCurrent();
 	shader.glUseProgram();
-	mw::Matrix44 ortho = mw::getOrthoProjectionMatrix44(0, (float) w, 0, (float) h);
-	// Update projection and model matrix.
-	mw::glUniformMatrix4fv(shader.getUniformLocation(mw::SHADER_U_MAT4_PROJ), 1, false, ortho.data());	
+	shader.setGlProjectionMatrixU(mw::getOrthoProjectionMatrix44(0, (float) w, 0, (float) h));
 #else // MW_OPENGLES2
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);

@@ -3,8 +3,8 @@
 #include "sprite.h"
 
 #if MW_OPENGLES2
-#include "shader.h"
 #include "matrix.h"
+#include "defaultshader.h"
 #endif // MW_OPENGLES2
 
 #include <SDL_image.h>
@@ -78,11 +78,9 @@ namespace mw {
 		glContext_ = SDL_GL_CreateContext(window_);
 #ifdef MW_OPENGLES2
 		initGLES2();
-		mw::Shader shader;
-		shader.bindAttribute(SHADER_A_VEC4_POSITION);
-		shader.bindAttribute(SHADER_A_VEC2_TEXCOORD);
-		shader.loadAndLink(SHADER_VER, SHADER_FRAG);
-		Shader::setDefaultShader(shader);
+
+		DefaultShader::defaultShader = DefaultShader(DEFAULT_SHADER_VER, DEFAULT_SHADER_FRAG);
+		
 #endif //MW_OPENGLES2
 		if (nbrCurrentInstance < 1) {
 			std::printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
@@ -94,13 +92,13 @@ namespace mw {
 
 	Window::~Window() {
 		if (window_ != nullptr) {
+#ifdef MW_OPENGLES2
+			// Remove default shader.
+			DefaultShader::defaultShader = DefaultShader();
+#endif //MW_OPENGLES2
+
 			// In order to signal the the current gl context is not active.
 			++nbrCurrentInstance;
-
-#ifdef MW_OPENGLES2
-			// Clean up the shader.
-			Shader::setDefaultShader(mw::Shader());
-#endif //MW_OPENGLES2
 
 			// Clean up Gl context and the window.
 			SDL_GL_DeleteContext(glContext_);

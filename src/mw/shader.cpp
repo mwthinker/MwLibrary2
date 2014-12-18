@@ -227,16 +227,6 @@ namespace mw {
 		}
 	}
 
-	Shader Shader::defaultShader;
-
-	const Shader& Shader::getDefaultShader() {
-		return defaultShader;
-	}
-
-	void Shader::setDefaultShader(const Shader& shader) {
-		defaultShader = shader;
-	}
-
 } // Namespace mw.
 
 #endif // MW_OPENGLES2

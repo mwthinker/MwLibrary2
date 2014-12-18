@@ -3,7 +3,7 @@
 #include "initttf.h"
 #include "font.h"
 #include "sprite.h"
-#include "shader.h"
+#include "defaultshader.h"
 
 #include <SDL_ttf.h>
 
@@ -19,7 +19,7 @@ namespace mw {
 			mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			// Lower left corner is in ORIGO.
-			GLfloat aVertices[] = {
+			GLfloat aPosCoords[] = {
 				x, y,
 				x + getWidth(), y,
 				x, getHeight() + y,
@@ -34,22 +34,18 @@ namespace mw {
 
 			// Use the program object
 			// Use the program object
-			auto& shader = Shader::getDefaultShader();
+			const DefaultShader& shader = DefaultShader::getCurrent();
 			shader.glUseProgram();
-			mw::glUniform1f(shader.getUniformLocation(mw::SHADER_U_FLOAT_TEXTURE), 1);
+			shader.setGlTextureU(true);
 
-			int aVerIndex = shader.getAttributeLocation(SHADER_A_VEC4_POSITION);
-			int aTexIndex = shader.getAttributeLocation(SHADER_A_VEC2_TEXCOORD);
-
-			// Load the vertex data
-			mw::glEnableVertexAttribArray(aVerIndex);
-			mw::glVertexAttribPointer(aVerIndex, 2, GL_FLOAT, GL_FALSE, 0, aVertices);
-			mw::glEnableVertexAttribArray(aTexIndex);
-			mw::glVertexAttribPointer(aTexIndex, 2, GL_FLOAT, GL_FALSE, 0, aTexCoord);
+			// Set the vertex pointer.
+			shader.setGlPosA(2, aPosCoords);
+			shader.setGlTexA(2, aTexCoord);
 
 			// Upload the attributes and draw the sprite.
 			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 			mw::glDisable(GL_BLEND);
+
 #else // MW_OPENGLES2
 			glEnable(GL_BLEND);
 			glEnable(GL_TEXTURE_2D);
