@@ -37,9 +37,6 @@ namespace mw {
 	}
 
 	void DefaultShader::glUseProgram() const {
-		if (!shader_.isLinked()) {
-			shader_ = defaultShader.shader_;
-		}
 		shader_.glUseProgram();
 	}
 

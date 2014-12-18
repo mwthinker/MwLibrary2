@@ -81,8 +81,7 @@ namespace mw {
 	private:
 		DefaultShader(std::string vShader, std::string fShader);
 
-		// Is ok, outside constness is preserved.
-		mutable mw::Shader shader_;
+		mw::Shader shader_;
 		
 		int aPosIndex_;
 		int aTexIndex_;
