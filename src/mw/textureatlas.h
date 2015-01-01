@@ -3,8 +3,10 @@
 
 #include "opengl.h"
 #include "texture.h"
+#include "sprite.h"
 
 #include <string>
+#include <memory>
 #include <map>
 
 namespace mw {
@@ -14,51 +16,58 @@ namespace mw {
 		// Empty texture. Does nothing.
 		TextureAtlas();
 
-		TextureAtlas(int width, int height);
+		TextureAtlas(int width, int height, std::function<void()> filter = []() {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		});
 
-		void add(std::string filename) {
-			SDL_Surface* surface = IMG_Load(filename.c_str());
-			if (surface != 0) {
-				images_[filename] = surface;
-			} else {
-				//std::cerr << "\nImage " << filename << " failed to load: " << IMG_GetError() << std::endl;
-			}
-		}
+		Sprite add(std::string filename, std::string uniqueKey = "");
 
 		// Add the image to the texture atlas. Return true if sucsessfull, 
 		// else it return false.
-		bool add(SDL_Surface* image);
+		Sprite add(SDL_Surface* image);
+
+		inline const Texture& getTexture() const {
+			return texture_;
+		}
 
 	private:
+		static void uploadSdlSurfaceToTexture(SDL_Surface* image, SDL_Rect dstRec, Texture& texture);
+
 		class Node {
 		public:
 			// Create a new root node with plane, dimension defined by width and height, and 
 			// a first image added at the top left corner of the defined plane.
 			// Return the node containing the image if sucsessfull, else null
 			// is returned.
-			static Node* createRoot(int width, int height, SDL_Surface* image);
+			static std::shared_ptr<Node> createRoot(std::shared_ptr<Node>& root, int width, int height, SDL_Surface* image);
 
 			// Insert an image on the plane, dimensions defined by the root node.
 			// Should only be called by the root node.
 			// Return the node containing the image if sucsessfull, else null
 			// is returned.
-			Node* insert(SDL_Surface* image);
+			std::shared_ptr<Node> insert(SDL_Surface* image);
+
+			Node(int x, int y, int w, int h);
+
+			// Return the coordinate for the node. (x,y) represents the
+			// up-left coordinate of the rectangle.
+			inline SDL_Rect getRect() const {
+				return rect_;
+			}			
 
 		private:
-			Node(int size, int x, int y, int w, int h);
-
-			Node* insert(int currentDepth, SDL_Surface* image);
+			std::shared_ptr<Node> insert(int currentDepth, SDL_Surface* image);
 
 			SDL_Surface* image_;
-			Node* left_;
-			Node* right_;
-			int x_, y_;
-			int w_, h_;
-			int size_;
+			std::shared_ptr<Node> left_;
+			std::shared_ptr<Node> right_;
+			SDL_Rect rect_;
 		};
 
-		std::map<std::string, SDL_Surface*> images_;
-		Node* root_;
+		Texture texture_;
+		std::map<std::string, Sprite> images_;
+		std::shared_ptr<Node> root_;
 		int width_, height_;
 	};
 

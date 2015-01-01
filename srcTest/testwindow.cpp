@@ -7,7 +7,7 @@
 #include <mw/defaultshader.h>
 
 TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
-	: mw::Window(-1, -1, 300, 300, true, "Test"), sprite_(sprite), x_(x), y_(y) {
+	: mw::Window(-1, -1, 512, 512, true, "Test"), sprite_(sprite), x_(x), y_(y) {
 	
 	focus_ = true;
 	mw::Font font("Ubuntu-B.ttf", 60);

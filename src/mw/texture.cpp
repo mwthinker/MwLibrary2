@@ -11,22 +11,6 @@ namespace mw {
 
 	namespace {
 
-		template <int pitch>
-		struct Data {
-			char color[pitch];
-		};
-
-		template <int pixelSize>
-		void invert(SDL_Surface* surface) {
-			for (int i = 0; i < surface->h / 2; ++i) {
-				for (int j = 0; j < surface->w; ++j) {
-					Data<pixelSize>* startElement = (Data<pixelSize>*) surface->pixels + i * surface->w + j;
-					Data<pixelSize>* endElement = (Data<pixelSize>*) surface->pixels + (surface->h - i - 1) * surface->w + j;
-					std::swap(*startElement, *endElement);
-				}
-			}
-		}
-
 		// Return an opengl texture from the surface provided. Return 0 if the
 		// operation failed.
 		GLuint sdlGlLoadTexture(SDL_Surface* surface) {
@@ -35,14 +19,32 @@ namespace mw {
 			int mode = GL_RGB;
 			if (surface->format->BytesPerPixel == 4) {
 				mode = GL_RGBA;
-				invert<4>(surface);
+				helper::invert<4>(surface);
 			} else {
-				invert<3>(surface);
+				helper::invert<3>(surface);
 			}
 
 			glBindTexture(GL_TEXTURE_2D, textureId);
 			glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
 			return textureId;
+		}
+
+		SDL_Surface* createSurface(int w, int h) {
+			// SDL interprets each pixel as a 32-bit number, so our masks must depend
+			// on the endianness (byte order) of the machine.
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+			Uint32 rmask = 0xff000000;
+			Uint32 gmask = 0x00ff0000;
+			Uint32 bmask = 0x0000ff00;
+			Uint32 amask = 0x000000ff;
+#else
+			Uint32 rmask = 0x000000ff;
+			Uint32 gmask = 0x0000ff00;
+			Uint32 bmask = 0x00ff0000;
+			Uint32 amask = 0xff000000;
+#endif
+
+			return SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
 		}
 	}
 
@@ -80,6 +82,24 @@ namespace mw {
 		valid_(true),
 		imageData_(std::make_shared<ImageData>(surface, filter)) {
 
+	}
+
+	Texture::Texture(int width, int height, std::function<void()> filter) :
+		firstCallBind_(true),
+		texture_(0),
+		width_(0), height_(0),
+		valid_(false),
+		imageData_(std::make_shared<ImageData>(filter)) {
+
+		imageData_->preLoadSurface_ = createSurface(width, height);
+		if (imageData_->preLoadSurface_ != 0) {
+			width_ = imageData_->preLoadSurface_->w;
+			height_ = imageData_->preLoadSurface_->h;
+			valid_ = true;
+		} else {
+			std::cerr << "\nEmpty image failed to be created: " << IMG_GetError() << std::endl;
+			valid_ = false;
+		}
 	}
 
 	void Texture::bindTexture() const {

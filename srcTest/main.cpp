@@ -26,6 +26,9 @@ void testLoadTextureAtlas() {
 	atlas.add(c);
 	atlas.add(d);
 
+	TestWindow w(atlas.getTexture(), 0, 0);
+	w.startLoop();
+
 	SDL_FreeSurface(a);
 	SDL_FreeSurface(b);
 	SDL_FreeSurface(c);
@@ -37,7 +40,7 @@ void testLoadTextureAtlas() {
 int main(int argc, char** argv) {
 	testLoadTextureAtlas();
 
-	// Testing starting 3 window.
+	// Testing starting 2 window.
 	{
 		mw::Sprite sprite("tetris.bmp");
 		TestWindow w(sprite, 50, 50);
@@ -46,10 +49,6 @@ int main(int argc, char** argv) {
 	{
 		mw::Sprite sprite("tetris.bmp");
 		TestWindow w(sprite);
-		w.startLoop();
-	}
-	{		
-		TestWindow w;
 		w.startLoop();
 	}
 	

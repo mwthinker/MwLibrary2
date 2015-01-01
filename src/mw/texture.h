@@ -8,11 +8,34 @@
 #include <string>
 #include <memory>
 #include <functional>
+#include <algorithm>
 
 namespace mw {
 
+	namespace helper {
+
+		template <int pitch>
+		struct Data {
+			char color[pitch];
+		};
+
+		template <int pixelSize>
+		void invert(SDL_Surface* surface) {
+			for (int i = 0; i < surface->h / 2; ++i) {
+				for (int j = 0; j < surface->w; ++j) {
+					Data<pixelSize>* startElement = (Data<pixelSize>*) surface->pixels + i * surface->w + j;
+					Data<pixelSize>* endElement = (Data<pixelSize>*) surface->pixels + (surface->h - i - 1) * surface->w + j;
+					std::swap(*startElement, *endElement);
+				}
+			}
+		}
+
+	}
+
 	class Texture {
 	public:
+		friend class TextureAtlas;
+
 		// Empty texture. Does nothing.
 		Texture();
 
@@ -26,6 +49,12 @@ namespace mw {
 		// The texture object takes over the ownership of the surface and is responsible of deallocation.
 		// Not safe to use surface outside this class after calling the constuctor.
 		explicit Texture(SDL_Surface* surface, std::function<void()> filter = []() {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		});
+
+		// Create a empty texture.
+		Texture(int width, int height, std::function<void()> filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
