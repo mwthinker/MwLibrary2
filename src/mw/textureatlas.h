@@ -13,13 +13,13 @@ namespace mw {
 
 	class TextureAtlas {
 	public:
-		// Empty texture. Does nothing.
-		TextureAtlas();
-
 		TextureAtlas(int width, int height, std::function<void()> filter = []() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
+		
+		TextureAtlas(const TextureAtlas&) = delete;
+		TextureAtlas& operator=(const TextureAtlas&) = delete;
 
 		Sprite add(std::string filename, std::string uniqueKey = "");
 

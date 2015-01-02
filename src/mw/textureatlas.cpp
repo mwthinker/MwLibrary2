@@ -95,9 +95,6 @@ namespace mw {
 		}
 	}
 
-	TextureAtlas::TextureAtlas() : root_(0), width_(0), height_(0) {
-	}
-
 	TextureAtlas::TextureAtlas(int width, int height, std::function<void()> filter) : root_(0), width_(width), height_(width) {
 		texture_ = Texture(width, height, filter);
 	}
