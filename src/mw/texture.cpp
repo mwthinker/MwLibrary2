@@ -20,7 +20,7 @@ namespace mw {
 
 		}
 		
-		void invert(SDL_Surface* surface) {
+		void flipVertical(SDL_Surface* surface) {
 			assert(surface->format->BytesPerPixel == 4 || surface->format->BytesPerPixel == 3);
 			if (surface->format->BytesPerPixel == 4) {
 				for (int i = 0; i < surface->h / 2; ++i) {
@@ -164,7 +164,7 @@ namespace mw {
 	void Texture::ImageData::loadImageToGraphic() const {
 		// Current surface is valid?
 		if (preLoadSurface_ != 0) {
-			helper::invert(preLoadSurface_); // SDL and opengl uses different orientations.
+			helper::flipVertical(preLoadSurface_); // SDL and opengl uses different orientations.
 			texture_ = sdlGlLoadTexture(preLoadSurface_); // Load to texture.
 			SDL_FreeSurface(preLoadSurface_);
 			preLoadSurface_ = nullptr;

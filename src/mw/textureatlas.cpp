@@ -10,7 +10,7 @@ namespace mw {
 			image = SDL_ConvertSurface(image, texture.imageData_->preLoadSurface_->format, 0);
 			SDL_BlitSurface(image, 0, texture.imageData_->preLoadSurface_, &dstRec);
 		} else { // In graphic memory.
-			helper::invert(image);
+			helper::flipVertical(image);
 			SDL_Surface* surface = helper::createSurface(image->w, image->h);
 			SDL_BlitSurface(image, 0, surface, &image->clip_rect);
 			texture.bindTexture();
@@ -33,18 +33,18 @@ namespace mw {
 		}
 	}
 
-	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::createRoot(std::shared_ptr<Node>& root, int width, int height, SDL_Surface* image) {
+	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::createRoot(std::shared_ptr<Node>& root, int width, int height, SDL_Surface* image, int border) {
 		// Image doesn't fit?
 		if (image->w > width || image->h > height) {
 			// Image to large!
 			return 0;
 		}
 		root = std::make_shared<Node>(0, 0, width, height);
-		return root->insert(image);;
+		return root->insert(image, border);
 	}
 
-	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(SDL_Surface* image) {
-		return insert(0, image);
+	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(SDL_Surface* image, int border) {
+		return insert(0, image, border);
 	}
 
 	TextureAtlas::Node::Node(int x, int y, int w, int h) : image_(0) {
@@ -54,39 +54,39 @@ namespace mw {
 		rect_.h = h;
 	}
 
-	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(int currentDepth, SDL_Surface* image) {
+	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(int currentDepth, SDL_Surface* image, int border) {
 		// Is not a leaf!
 		if (left_ != 0 && right_ != 0) {
-			auto node = left_->insert(currentDepth + 1, image);
+			auto node = left_->insert(currentDepth + 1, image, border);
 			if (node != 0) {
 				// Image inserted.
 				return node;
 			}
 			// Image didn't fit, try the other node.
-			return right_->insert(currentDepth + 1, image);
+			return right_->insert(currentDepth + 1, image, border);
 		} else {
 			if (image_ != 0) {
 				// Node is already filled!
 				return 0;
 			}
 			
-			if (image->w > rect_.w || image->h > rect_.h) {
+			if (image->w + 2 * border > rect_.w || image->h + 2 * border > rect_.h) {
 				// Image to large!
 				return 0;
 			}
 
 			// Fits perfectly?
-			if (image->w == rect_.w && image->h == rect_.h) {
+			if (image->w + 2 * border == rect_.w && image->h + 2 * border == rect_.h) {
 				image_ = image;
 			}
 
 			// Must split the node in half.
 			if (currentDepth % 2 == 0) { // Split vertical.
-				left_ = std::make_shared<Node>(rect_.x, rect_.y, rect_.w, image->h); // Up.
-				right_ = std::make_shared<Node>(rect_.x, rect_.y + image->h, rect_.w, rect_.h - image->h); // Down.
+				left_ = std::make_shared<Node>(rect_.x, rect_.y, rect_.w, image->h + 2 * border); // Up.
+				right_ = std::make_shared<Node>(rect_.x, rect_.y + image->h + 2 * border, rect_.w, rect_.h - image->h - 2 * border); // Down.
 			} else { // Split horizontal.
-				left_ = std::make_shared<Node>(rect_.x, rect_.y, image->w, rect_.h); // Left.
-				right_ = std::make_shared<Node>(rect_.x + image->w, rect_.y, rect_.w - image->w, rect_.h); // Right.
+				left_ = std::make_shared<Node>(rect_.x, rect_.y, image->w + 2 * border, rect_.h); // Left.
+				right_ = std::make_shared<Node>(rect_.x + image->w + 2 * border, rect_.y, rect_.w - image->w - 2 * border, rect_.h); // Right.
 			}
 
 			// Insert the image in the left node.
@@ -99,7 +99,7 @@ namespace mw {
 		texture_ = Texture(width, height, filter);
 	}
 
-	Sprite TextureAtlas::add(std::string filename, std::string uniqueKey) {
+	Sprite TextureAtlas::add(std::string filename, int border, std::string uniqueKey) {
 		int size = images_.size();
 		Sprite& sprite = images_[filename + uniqueKey];
 
@@ -117,17 +117,21 @@ namespace mw {
 		return Sprite();
 	}
 
-	Sprite TextureAtlas::add(SDL_Surface* image, std::string uniqueKey) {
+	Sprite TextureAtlas::add(SDL_Surface* image, int border, std::string uniqueKey) {
 		std::shared_ptr<Node> node;
 		if (texture_.isValid()) {
 			if (root_ == 0) {
-				node = Node::createRoot(root_, width_, height_, image);
+				node = Node::createRoot(root_, width_, height_, image, border);
 			} else {
-				node = root_->insert(image);
+				node = root_->insert(image, border);
 			}
 		}
 		if (node != 0) {
 			SDL_Rect rect = node->getRect();
+			rect.w -= 2 * border;
+			rect.h -= 2 * border;
+			rect.x += border;
+			rect.y += border;
 			uploadSdlSurfaceToTexture(image, rect, texture_);
 			Sprite& sprite = images_[uniqueKey];
 			sprite = Sprite(texture_, (float) rect.x, (float) (texture_.getHeight() - rect.y), (float) rect.w, (float) rect.h);

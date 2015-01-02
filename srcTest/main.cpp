@@ -21,12 +21,12 @@ void testLoadTextureAtlas() {
 
 	mw::TextureAtlas atlas(512, 512);
 
-	atlas.add("tetris.bmp");
-	atlas.add("cross.png");
-	atlas.add(a);
-	atlas.add(b);
-	atlas.add(c);
-	atlas.add(d);
+	atlas.add("tetris.bmp", 1);
+	atlas.add("cross.png", 1);
+	atlas.add(a, 1);
+	atlas.add(b, 1);
+	atlas.add(c, 1);
+	atlas.add(d, 1);
 
 	TestWindow w(atlas.getTexture(), 0, 0);
 	w.startLoop();
@@ -52,22 +52,22 @@ void testLoadTextureAtlas2() {
 		++nbr;
 		switch (nbr) {
 			case 1:
-				atlas.add("tetris.bmp");
+				atlas.add("tetris.bmp", 1);
 				break;
 			case 2:
-				atlas.add("cross.png");
+				atlas.add("cross.png", 1);
 				break;
 			case 3:
-				atlas.add(a);
+				atlas.add(a, 1);
 				break;
 			case 4:
-				atlas.add(b);
+				atlas.add(b, 1);
 				break;
 			case 5:
-				atlas.add(c);
+				atlas.add(c, 1);
 				break;
 			case 6:
-				atlas.add(d);
+				atlas.add(d, 1);
 				break;
 		}
 	};

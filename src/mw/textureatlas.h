@@ -21,11 +21,11 @@ namespace mw {
 		TextureAtlas(const TextureAtlas&) = delete;
 		TextureAtlas& operator=(const TextureAtlas&) = delete;
 
-		Sprite add(std::string filename, std::string uniqueKey = "");
+		Sprite add(std::string filename, int border=0, std::string uniqueKey = "");
 
 		// Add the image to the texture atlas. Return true if sucsessfull, 
 		// else it return false.
-		Sprite add(SDL_Surface* image, std::string uniqueKey = "");
+		Sprite add(SDL_Surface* image, int border=0, std::string uniqueKey = "");
 
 		inline const Texture& getTexture() const {
 			return texture_;
@@ -36,30 +36,39 @@ namespace mw {
 	private:
 		static void uploadSdlSurfaceToTexture(SDL_Surface* image, SDL_Rect dstRec, Texture& texture);
 
+		class Surface {
+			int borderSize_;
+			SDL_Surface* image_;
+
+			SDL_Surface* getSdlSurface() const {
+				return image_;
+			}
+		};
+
 		class Node {
 		public:
 			// Create a new root node with plane, dimension defined by width and height, and 
 			// a first image added at the top left corner of the defined plane.
 			// Return the node containing the image if sucsessfull, else null
 			// is returned.
-			static std::shared_ptr<Node> createRoot(std::shared_ptr<Node>& root, int width, int height, SDL_Surface* image);
+			static std::shared_ptr<Node> createRoot(std::shared_ptr<Node>& root, int width, int height, SDL_Surface* image, int border);
 
 			// Insert an image on the plane, dimensions defined by the root node.
 			// Should only be called by the root node.
 			// Return the node containing the image if sucsessfull, else null
 			// is returned.
-			std::shared_ptr<Node> insert(SDL_Surface* image);
+			std::shared_ptr<Node> insert(SDL_Surface* image, int border);
 
 			Node(int x, int y, int w, int h);
 
 			// Return the coordinate for the node. (x,y) represents the
-			// up-left coordinate of the rectangle.
+			// up-left coordinate of the rectangle. Including the border.
 			inline SDL_Rect getRect() const {
 				return rect_;
 			}
 
 		private:
-			std::shared_ptr<Node> insert(int currentDepth, SDL_Surface* image);
+			std::shared_ptr<Node> insert(int currentDepth, SDL_Surface* image, int border);
 
 			SDL_Surface* image_;
 			std::shared_ptr<Node> left_;

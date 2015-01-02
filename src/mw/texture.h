@@ -15,7 +15,7 @@ namespace mw {
 	namespace helper {
 
 		// Assumes that the surface is in RGBA.		
-		void invert(SDL_Surface* surface);
+		void flipVertical(SDL_Surface* surface);
 
 		SDL_Surface* createSurface(int w, int h);
 
