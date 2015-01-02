@@ -7,7 +7,7 @@
 
 namespace mw {
 
-	Sprite::Sprite() {
+	Sprite::Sprite() : x_(0), y_(0), dx_(0), dy_(0) {
 	}
 
 	Sprite::Sprite(std::string image, std::function<void()> filter) : 

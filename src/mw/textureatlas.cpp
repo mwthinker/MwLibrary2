@@ -10,23 +10,27 @@ namespace mw {
 			image = SDL_ConvertSurface(image, texture.imageData_->preLoadSurface_->format, 0);
 			SDL_BlitSurface(image, 0, texture.imageData_->preLoadSurface_, &dstRec);
 		} else { // In graphic memory.
-			image = SDL_ConvertSurface(image, texture.imageData_->preLoadSurface_->format, 0);
-			helper::invert<4>(image);
+			helper::invert(image);
+			SDL_Surface* surface = helper::createSurface(image->w, image->h);
+			SDL_BlitSurface(image, 0, surface, &image->clip_rect);
+
 #if MW_OPENGLES2
+			texture.bindTexture();
 			mw::glTexSubImage2D(GL_TEXTURE_2D, 0,
-				dstRec.x, texture.height_ - dstRec.y - 1, // Sdl uses upp-left, opengl uses down-left.
-				dstRec.w, dstRec.h,
+				dstRec.x, texture.height_ - image->h - dstRec.y, // Sdl uses upp-left, opengl uses down-left.
+				image->w, image->h,
 				GL_RGBA,
 				GL_UNSIGNED_BYTE,
-				image->pixels);
+				surface->pixels);
 #else // MW_OPENGLES2
 			glTexSubImage2D(GL_TEXTURE_2D, 0,
-				dstRec.x, texture.height_ - dstRec.y - 1, // Sdl uses upp-left, opengl uses down-left.
-				dstRec.w, dstRec.h,
+				dstRec.x, texture.height_ - image->h - dstRec.y, // Sdl uses upp-left, opengl uses down-left.
+				image->w, image->h,
 				GL_RGBA,
 				GL_UNSIGNED_BYTE,
-				image->pixels);
+				surface->pixels);
 #endif // MW_OPENGLES2
+			SDL_FreeSurface(surface);
 		}
 	}
 
@@ -108,16 +112,16 @@ namespace mw {
 			if (image != 0) {
 				sprite = add(image);
 				SDL_FreeSurface(image);
+				return sprite;
 			} else {
 				images_.erase(filename + uniqueKey);
 				std::cerr << "\nImage " << filename << " failed to load: " << IMG_GetError() << std::endl;
 			}
 		}
-
-		return sprite;
+		return Sprite();
 	}
 
-	Sprite TextureAtlas::add(SDL_Surface* image) {
+	Sprite TextureAtlas::add(SDL_Surface* image, std::string uniqueKey) {
 		std::shared_ptr<Node> node;
 		if (texture_.isValid()) {
 			if (root_ == 0) {
@@ -129,7 +133,17 @@ namespace mw {
 		if (node != 0) {
 			SDL_Rect rect = node->getRect();
 			uploadSdlSurfaceToTexture(image, rect, texture_);
-			return Sprite(texture_, (float) rect.x, (float) (texture_.getHeight() - rect.y), (float) rect.w, (float) rect.h);
+			Sprite& sprite = images_[uniqueKey];
+			sprite = Sprite(texture_, (float) rect.x, (float) (texture_.getHeight() - rect.y), (float) rect.w, (float) rect.h);
+			return sprite;
+		}
+		return Sprite();
+	}
+
+	Sprite TextureAtlas::get(std::string key) const {
+		auto it = images_.find(key);
+		if (it != images_.end()) {
+			return it->second;
 		}
 		return Sprite();
 	}

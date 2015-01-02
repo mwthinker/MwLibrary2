@@ -6,27 +6,39 @@
 
 #include <iostream>
 #include <algorithm>
+#include <tuple>
+#include <cassert>
 
 namespace mw {
 
-	namespace {
+	namespace helper {
 
-		// Return an opengl texture from the surface provided. Return 0 if the
-		// operation failed.
-		GLuint sdlGlLoadTexture(SDL_Surface* surface) {
-			GLuint textureId = 0;
-			glGenTextures(1, &textureId);
-			int mode = GL_RGB;
+		namespace {
+
+			typedef std::tuple<Uint8, Uint8, Uint8> Pixel3;
+			typedef std::tuple<Uint8, Uint8, Uint8, Uint8> Pixel4;
+
+		}
+		
+		void invert(SDL_Surface* surface) {
+			assert(surface->format->BytesPerPixel == 4 || surface->format->BytesPerPixel == 3);
 			if (surface->format->BytesPerPixel == 4) {
-				mode = GL_RGBA;
-				helper::invert<4>(surface);
+				for (int i = 0; i < surface->h / 2; ++i) {
+					for (int j = 0; j < surface->w; ++j) {
+						Pixel4* startElement = (Pixel4*) surface->pixels + i * surface->w + j;
+						Pixel4* endElement = (Pixel4*) surface->pixels + (surface->h - i - 1) * surface->w + j;
+						std::swap(*startElement, *endElement);
+					}
+				}
 			} else {
-				helper::invert<3>(surface);
+				for (int i = 0; i < surface->h / 2; ++i) {
+					for (int j = 0; j < surface->w; ++j) {
+						Pixel3* startElement = (Pixel3*) surface->pixels + i * surface->w + j;
+						Pixel3* endElement = (Pixel3*) surface->pixels + (surface->h - i - 1) * surface->w + j;
+						std::swap(*startElement, *endElement);
+					}
+				}
 			}
-
-			glBindTexture(GL_TEXTURE_2D, textureId);
-			glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
-			return textureId;
 		}
 
 		SDL_Surface* createSurface(int w, int h) {
@@ -45,6 +57,25 @@ namespace mw {
 #endif
 
 			return SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
+		}
+
+	}
+
+	namespace {
+
+		// Return an opengl texture from the surface provided. Return 0 if the
+		// operation failed.
+		GLuint sdlGlLoadTexture(SDL_Surface* surface) {
+			GLuint textureId = 0;
+			glGenTextures(1, &textureId);
+			glBindTexture(GL_TEXTURE_2D, textureId);
+			int mode = GL_RGB;
+			if (surface->format->BytesPerPixel == 4) {
+				mode = GL_RGBA;
+			}
+
+			glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
+			return textureId;
 		}
 	}
 
@@ -91,7 +122,7 @@ namespace mw {
 		valid_(false),
 		imageData_(std::make_shared<ImageData>(filter)) {
 
-		imageData_->preLoadSurface_ = createSurface(width, height);
+		imageData_->preLoadSurface_ = helper::createSurface(width, height);
 		if (imageData_->preLoadSurface_ != 0) {
 			width_ = imageData_->preLoadSurface_->w;
 			height_ = imageData_->preLoadSurface_->h;
@@ -133,8 +164,8 @@ namespace mw {
 	void Texture::ImageData::loadImageToGraphic() const {
 		// Current surface is valid?
 		if (preLoadSurface_ != 0) {
-			// Load to texture.
-			texture_ = sdlGlLoadTexture(preLoadSurface_);
+			helper::invert(preLoadSurface_); // SDL and opengl uses different orientations.
+			texture_ = sdlGlLoadTexture(preLoadSurface_); // Load to texture.
 			SDL_FreeSurface(preLoadSurface_);
 			preLoadSurface_ = nullptr;
 

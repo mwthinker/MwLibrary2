@@ -25,11 +25,13 @@ namespace mw {
 
 		// Add the image to the texture atlas. Return true if sucsessfull, 
 		// else it return false.
-		Sprite add(SDL_Surface* image);
+		Sprite add(SDL_Surface* image, std::string uniqueKey = "");
 
 		inline const Texture& getTexture() const {
 			return texture_;
 		}
+
+		Sprite get(std::string key) const;
 
 	private:
 		static void uploadSdlSurfaceToTexture(SDL_Surface* image, SDL_Rect dstRec, Texture& texture);
@@ -54,7 +56,7 @@ namespace mw {
 			// up-left coordinate of the rectangle.
 			inline SDL_Rect getRect() const {
 				return rect_;
-			}			
+			}
 
 		private:
 			std::shared_ptr<Node> insert(int currentDepth, SDL_Surface* image);

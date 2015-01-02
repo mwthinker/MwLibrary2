@@ -76,6 +76,11 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 			break;
 		case SDL_KEYDOWN:
 			switch (windowEvent.key.keysym.sym) {
+				case SDLK_SPACE:
+					if (func_) {
+						func_();
+					}
+					break;
 				case SDLK_ESCAPE:
 					if (focus_) {
 						quit();

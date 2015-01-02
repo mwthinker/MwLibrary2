@@ -16,11 +16,13 @@ SDL_Surface* createSurface(int w, int h, char r, char g, char b) {
 void testLoadTextureAtlas() {
 	SDL_Surface* a = createSurface(200, 100, (char) 255, 0, 0); // Red block.
 	SDL_Surface* b = createSurface(100, 200, 0, (char) 255, 0); // Green block.
-	SDL_Surface* c = createSurface(300, 300, 0, 0, (char) 255); // Blue block.
+	SDL_Surface* c = createSurface(200, 200, 0, 0, (char) 255); // Blue block.
 	SDL_Surface* d = createSurface(30, 30, (char) 255, (char) 255, (char) 255); // White block.
 
 	mw::TextureAtlas atlas(512, 512);
 
+	atlas.add("tetris.bmp");
+	atlas.add("cross.png");
 	atlas.add(a);
 	atlas.add(b);
 	atlas.add(c);
@@ -34,21 +36,62 @@ void testLoadTextureAtlas() {
 	SDL_FreeSurface(c);
 	SDL_FreeSurface(d);
 
-	std::cout << "\n testLoadTextureAtlas sucsessfully!\n";
+	std::cout << "\ntestLoadTextureAtlas() sucsessfully!\n";
+}
+
+void testLoadTextureAtlas2() {
+	SDL_Surface* a = createSurface(200, 100, (char) 255, 0, 0); // Red block.
+	SDL_Surface* b = createSurface(100, 200, 0, (char) 255, 0); // Green block.
+	SDL_Surface* c = createSurface(200, 200, 0, 0, (char) 255); // Blue block.
+	SDL_Surface* d = createSurface(30, 30, (char) 255, (char) 255, (char) 255); // White block.
+
+	mw::TextureAtlas atlas(512, 512);
+	int nbr = 0;;
+	
+	std::function<void()> func = [&]() {
+		++nbr;
+		switch (nbr) {
+			case 1:
+				atlas.add("tetris.bmp");
+				break;
+			case 2:
+				atlas.add("cross.png");
+				break;
+			case 3:
+				atlas.add(a);
+				break;
+			case 4:
+				atlas.add(b);
+				break;
+			case 5:
+				atlas.add(c);
+				break;
+			case 6:
+				atlas.add(d);
+				break;
+		}
+	};
+
+
+	TestWindow w(atlas.getTexture(), 0, 0);
+	w.setSpaceFunction(func);
+	w.startLoop();
+
+	SDL_FreeSurface(a);
+	SDL_FreeSurface(b);
+	SDL_FreeSurface(c);
+	SDL_FreeSurface(d);
+
+	std::cout << "\ntestLoadTextureAtlas2() sucsessfully!\n";
 }
 
 int main(int argc, char** argv) {
 	testLoadTextureAtlas();
-
-	// Testing starting 2 window.
+	testLoadTextureAtlas2();
+	
 	{
 		mw::Sprite sprite("tetris.bmp");
 		TestWindow w(sprite, 50, 50);
-		w.startLoop();
-	}
-	{
-		mw::Sprite sprite("tetris.bmp");
-		TestWindow w(sprite);
 		w.startLoop();
 	}
 	

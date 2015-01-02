@@ -5,6 +5,8 @@
 #include <mw/sprite.h>
 #include <mw/text.h>
 
+#include <functional>
+
 class TestWindow : public mw::Window {
 public:
 	TestWindow(mw::Sprite sprite = mw::Sprite(), int x = 0, int y = 0);
@@ -13,6 +15,11 @@ public:
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
 
+	// Excecute the function when space bar is pressed.
+	inline void setSpaceFunction(const std::function<void()> func) {
+		func_ = func;
+	}
+
 private:
 	void resize(int w, int h);
 
@@ -20,6 +27,7 @@ private:
 	mw::Sprite sprite_;
 	int x_, y_;
 	mw::Text text_;
+	std::function<void()> func_;
 };
 
 #endif // TESTWINDOW_H
