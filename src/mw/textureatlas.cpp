@@ -33,7 +33,9 @@ namespace mw {
 		}
 	}
 
-	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::createRoot(std::shared_ptr<Node>& root, int width, int height, SDL_Surface* image, int border) {
+	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::createRoot(std::shared_ptr<Node>& root,
+		int width, int height, SDL_Surface* image, int border) {
+		
 		// Image doesn't fit?
 		if (image->w > width || image->h > height) {
 			// Image to large!
@@ -43,10 +45,6 @@ namespace mw {
 		return root->insert(image, border);
 	}
 
-	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(SDL_Surface* image, int border) {
-		return insert(0, image, border);
-	}
-
 	TextureAtlas::Node::Node(int x, int y, int w, int h) : image_(0) {
 		rect_.x = x;
 		rect_.y = y;
@@ -54,16 +52,16 @@ namespace mw {
 		rect_.h = h;
 	}
 
-	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(int currentDepth, SDL_Surface* image, int border) {
+	std::shared_ptr<TextureAtlas::Node> TextureAtlas::Node::insert(SDL_Surface* image, int border) {
 		// Is not a leaf!
 		if (left_ != 0 && right_ != 0) {
-			auto node = left_->insert(currentDepth + 1, image, border);
+			auto node = left_->insert(image, border);
 			if (node != 0) {
 				// Image inserted.
 				return node;
 			}
 			// Image didn't fit, try the other node.
-			return right_->insert(currentDepth + 1, image, border);
+			return right_->insert(image, border);
 		} else {
 			if (image_ != 0) {
 				// Node is already filled!
@@ -78,24 +76,33 @@ namespace mw {
 			// Fits perfectly?
 			if (image->w + 2 * border == rect_.w && image->h + 2 * border == rect_.h) {
 				image_ = image;
+				return shared_from_this();
 			}
 
-			// Must split the node in half.
-			if (currentDepth % 2 == 0) { // Split vertical.
-				left_ = std::make_shared<Node>(rect_.x, rect_.y, rect_.w, image->h + 2 * border); // Up.
-				right_ = std::make_shared<Node>(rect_.x, rect_.y + image->h + 2 * border, rect_.w, rect_.h - image->h - 2 * border); // Down.
+			// Split the node in half.
+			if (rect_.w - image->w < rect_.h - image->h) { // Split vertical.
+				left_ = std::make_shared<Node>(rect_.x, rect_.y,
+					rect_.w, image->h + 2 * border); // Up.
+
+				right_ = std::make_shared<Node>(rect_.x, rect_.y + image->h + 2 * border,
+					rect_.w, rect_.h - image->h - 2 * border); // Down.
+			
 			} else { // Split horizontal.
-				left_ = std::make_shared<Node>(rect_.x, rect_.y, image->w + 2 * border, rect_.h); // Left.
-				right_ = std::make_shared<Node>(rect_.x + image->w + 2 * border, rect_.y, rect_.w - image->w - 2 * border, rect_.h); // Right.
+				left_ = std::make_shared<Node>(rect_.x, rect_.y,
+					image->w + 2 * border, rect_.h); // Left.
+				
+				right_ = std::make_shared<Node>(rect_.x + image->w + 2 * border, rect_.y,
+					rect_.w - image->w - 2 * border, rect_.h); // Right.
 			}
 
 			// Insert the image in the left node.
-			left_->image_ = image;
-			return left_;
+			return left_->insert(image, border);
 		}
 	}
 
-	TextureAtlas::TextureAtlas(int width, int height, std::function<void()> filter) : root_(0), width_(width), height_(width) {
+	TextureAtlas::TextureAtlas(int width, int height, std::function<void()> filter)
+		: root_(0), width_(width), height_(width) {
+
 		texture_ = Texture(width, height, filter);
 	}
 
@@ -134,7 +141,9 @@ namespace mw {
 			rect.y += border;
 			uploadSdlSurfaceToTexture(image, rect, texture_);
 			Sprite& sprite = images_[uniqueKey];
-			sprite = Sprite(texture_, (float) rect.x, (float) (texture_.getHeight() - rect.y), (float) rect.w, (float) rect.h);
+			sprite = Sprite(texture_, (float) rect.x, (float) (texture_.getHeight() - rect.y - image->h),
+				(float) image->w, (float) image->h);
+
 			return sprite;
 		}
 		return Sprite();

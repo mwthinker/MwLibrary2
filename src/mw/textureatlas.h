@@ -11,6 +11,7 @@
 
 namespace mw {
 
+	// The packing algortihm is from http://www.blackpawn.com/texts/lightmaps/default.html.
 	class TextureAtlas {
 	public:
 		TextureAtlas(int width, int height, std::function<void()> filter = []() {
@@ -36,16 +37,7 @@ namespace mw {
 	private:
 		static void uploadSdlSurfaceToTexture(SDL_Surface* image, SDL_Rect dstRec, Texture& texture);
 
-		class Surface {
-			int borderSize_;
-			SDL_Surface* image_;
-
-			SDL_Surface* getSdlSurface() const {
-				return image_;
-			}
-		};
-
-		class Node {
+		class Node : public std::enable_shared_from_this<Node> {
 		public:
 			// Create a new root node with plane, dimension defined by width and height, and 
 			// a first image added at the top left corner of the defined plane.
@@ -68,8 +60,6 @@ namespace mw {
 			}
 
 		private:
-			std::shared_ptr<Node> insert(int currentDepth, SDL_Surface* image, int border);
-
 			SDL_Surface* image_;
 			std::shared_ptr<Node> left_;
 			std::shared_ptr<Node> right_;

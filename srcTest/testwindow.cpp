@@ -23,14 +23,17 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
 void TestWindow::update(Uint32 msDeltaTime) {
 	mw::Matrix44 m = mw::getTranslateMatrix44((float) x_, (float) y_);
 	mw::Matrix44 m2 = m * mw::getScaleMatrix44(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44(0.5, 0.5);
+	mw::Matrix44 m3 = m *  mw::getTranslateMatrix44(getWidth() * 0.5f, getHeight() * 0.5f) * mw::getScaleMatrix44(sprite2_.getWidth(), sprite2_.getHeight());
 #if MW_OPENGLES2
 	// Update model matrix.
 	const mw::DefaultShader& shader = mw::DefaultShader::get();
 	shader.glUseProgram();
-	shader.setGlModelMatrixU(m);
-	shader.setGlColorU(1, 1, 1);	
+	shader.setGlColorU(1, 1, 1);
 	shader.setGlModelMatrixU(m2);
 	sprite_.draw();
+	shader.setGlColorU(1, 1, 1);
+	shader.setGlModelMatrixU(m3);
+	sprite2_.draw();
 	shader.setGlColorU(1, 0, 0);
 	shader.setGlModelMatrixU(m);
 	text_.draw();
@@ -40,6 +43,9 @@ void TestWindow::update(Uint32 msDeltaTime) {
 	glMultMatrixf(m2.data());
 	glColor3f(1, 1, 1);
 	sprite_.draw();
+	glLoadIdentity();
+	glMultMatrixf(m3.data());
+	sprite2_.draw();
 	glColor3d(1, 0, 0);
 	glLoadIdentity();
 	glMultMatrixf(m.data());

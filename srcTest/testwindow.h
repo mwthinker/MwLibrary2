@@ -20,11 +20,17 @@ public:
 		func_ = func;
 	}
 
+	inline void setCenteredSprite(const mw::Sprite& sprite) {
+		sprite2_ = sprite;
+	}
+
 private:
 	void resize(int w, int h);
 
 	bool focus_;
 	mw::Sprite sprite_;
+	mw::Sprite sprite2_;
+
 	int x_, y_;
 	mw::Text text_;
 	std::function<void()> func_;

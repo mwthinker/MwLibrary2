@@ -13,6 +13,7 @@ SDL_Surface* createSurface(int w, int h, char r, char g, char b) {
 	return s;
 }
 
+// Test to load directly to ram memory.
 void testLoadTextureAtlas() {
 	SDL_Surface* a = createSurface(200, 100, (char) 255, 0, 0); // Red block.
 	SDL_Surface* b = createSurface(100, 200, 0, (char) 255, 0); // Green block.
@@ -39,41 +40,50 @@ void testLoadTextureAtlas() {
 	std::cout << "\ntestLoadTextureAtlas() sucsessfully!\n";
 }
 
+// Test to load directly to graphic memory. And draw the total texture and the newly added sprite.
 void testLoadTextureAtlas2() {
 	SDL_Surface* a = createSurface(200, 100, (char) 255, 0, 0); // Red block.
 	SDL_Surface* b = createSurface(100, 200, 0, (char) 255, 0); // Green block.
 	SDL_Surface* c = createSurface(200, 200, 0, 0, (char) 255); // Blue block.
 	SDL_Surface* d = createSurface(30, 30, (char) 255, (char) 255, (char) 255); // White block.
-
+		
 	mw::TextureAtlas atlas(512, 512);
-	int nbr = 0;;
-	
+	TestWindow w(atlas.getTexture(), 0, 0);
+	int nbr = 0;
 	std::function<void()> func = [&]() {
 		++nbr;
+		mw::Sprite sprite;
 		switch (nbr) {
 			case 1:
-				atlas.add("tetris.bmp", 1);
+				sprite = atlas.add("tetris.bmp", 1);
 				break;
 			case 2:
-				atlas.add("cross.png", 1);
+				sprite = atlas.add("cross.png", 1);
 				break;
 			case 3:
-				atlas.add(a, 1);
+				sprite = atlas.add(a, 1);
 				break;
 			case 4:
-				atlas.add(b, 1);
+				sprite = atlas.add(b, 1);
 				break;
 			case 5:
-				atlas.add(c, 1);
+				sprite = atlas.add(c, 1);
 				break;
 			case 6:
-				atlas.add(d, 1);
+				sprite = atlas.add(d, 1);
 				break;
+			default:
+			{
+				sprite = atlas.add(d, 1);
+				break;
+			}
 		}
+		if (!sprite.getTexture().isValid()) {
+			std::cout << "\nNumber " << nbr << " failed to be inserted!\n";
+		}
+		w.setCenteredSprite(sprite);
 	};
-
-
-	TestWindow w(atlas.getTexture(), 0, 0);
+	
 	w.setSpaceFunction(func);
 	w.startLoop();
 
