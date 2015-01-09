@@ -53,12 +53,12 @@ namespace mw {
 	}
 
 	void DefaultShader::setGlTexA(GLint size, const GLvoid* data) const {
-		mw::glVertexAttribPointer(aTexIndex_, 2, GL_FLOAT, GL_FALSE, 0, data);
+		mw::glVertexAttribPointer(aTexIndex_, size, GL_FLOAT, GL_FALSE, 0, data);
 		mw::glEnableVertexAttribArray(aTexIndex_);
 	}
 
 	void DefaultShader::setGlTexA(GLint size, GLsizei stride, const GLvoid* data) const {
-		mw::glVertexAttribPointer(aTexIndex_, 2, GL_FLOAT, GL_FALSE, stride, data);
+		mw::glVertexAttribPointer(aTexIndex_, size, GL_FLOAT, GL_FALSE, stride, data);
 		mw::glEnableVertexAttribArray(aTexIndex_);
 	}	
 
