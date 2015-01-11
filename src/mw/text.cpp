@@ -19,14 +19,14 @@ namespace mw {
 			mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			// Lower left corner is in ORIGO.
-			GLfloat aPosCoords[] = {
+			GLfloat aPos[] = {
 				x, y,
 				x + getWidth(), y,
 				x, getHeight() + y,
 				x + getWidth(), getHeight() + y};
 
 			// Map the sprite out from the texture.
-			GLfloat aTexCoord[] = {
+			GLfloat aTex[] = {
 				0, 0,
 				1, 0,
 				0, 1,
@@ -39,8 +39,8 @@ namespace mw {
 			shader.setGlTextureU(true);
 
 			// Set the vertex pointer.
-			shader.setGlPosA(2, aPosCoords);
-			shader.setGlTexA(2, aTexCoord);
+			shader.setGlPosA(2, aPos);
+			shader.setGlTexA(2, aTex);
 
 			// Upload the attributes and draw the sprite.
 			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

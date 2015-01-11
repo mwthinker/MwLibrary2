@@ -14,19 +14,17 @@ namespace mw {
 	int Window::nbrCurrentInstance = 0;
 
 	void Window::initOpenGl() {
-		if (nbrCurrentInstance < 1) {
-			SDL_GL_SetSwapInterval(1);
-			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetSwapInterval(1);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 #ifdef MW_OPENGLES2
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-			if (SDL_GL_LoadLibrary(0) != 0) {
-				std::printf("\n Failed to load OpenGl ES 2\n");
-				std::exit(1);
-			}
-#endif
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+		if (SDL_GL_LoadLibrary(0) != 0) {
+			std::printf("\n Failed to load OpenGl ES 2\n");
+			std::exit(1);
 		}
+#endif
 	}
 
 	Window::Window(int x, int y, int width, int height, bool resizeable, std::string title, std::string icon, bool borderless) {
@@ -82,10 +80,8 @@ namespace mw {
 		DefaultShader::defaultShader = DefaultShader(DEFAULT_SHADER_VER, DEFAULT_SHADER_FRAG);
 		
 #endif //MW_OPENGLES2
-		if (nbrCurrentInstance < 1) {
-			std::printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
-			std::printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
-		}
+		std::printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+		std::printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 		glClear(GL_COLOR_BUFFER_BIT);
 		checkGlError();
 	}
@@ -102,6 +98,9 @@ namespace mw {
 
 			// Clean up Gl context and the window.
 			SDL_GL_DeleteContext(glContext_);
+#ifdef MW_OPENGLES2
+			SDL_GL_UnloadLibrary();
+#endif //MW_OPENGLES2
 			SDL_DestroyWindow(window_);
 		}
 	}

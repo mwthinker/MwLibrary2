@@ -57,7 +57,7 @@ namespace mw {
 	// Defines the 2d orthongonal projection matrix.
 	void ortho2D(mw::Matrix44& matrix, float left, float right, float bottom, float top);
 
-#if MW_OPENGLES2	
+#if MW_OPENGLES2
 
 #define FUNC_POINTER_DEC(ret,func,params) extern ret (KHRONOS_APIENTRY *func) params;
 	FUNC_POINTER_DEC(void, glActiveTexture, (GLenum texture))

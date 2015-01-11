@@ -60,14 +60,14 @@ namespace mw {
 			mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			// Centered square in ORIGO.
-			GLfloat aPosCoords[] = {
+			GLfloat aPos[] = {
 				-0.5f, -0.5f,
 				0.5f, -0.5f,
 				-0.5f, 0.5f,
 				0.5f, 0.5f};
 
 			// Map the sprite out from the texture.
-			GLfloat aTexCoord[] = {
+			GLfloat aTex[] = {
 				x_ / texture_.getWidth(), y_ / texture_.getHeight(),
 				(x_ + dx_) / texture_.getWidth(), y_ / texture_.getHeight(),
 				x_ / texture_.getWidth(), (y_ + dy_) / texture_.getHeight(),
@@ -79,8 +79,8 @@ namespace mw {
 			shader.setGlTextureU(true);
 
 			// Set the vertex pointer.
-			shader.setGlPosA(2, aPosCoords);
-			shader.setGlTexA(2, aTexCoord);
+			shader.setGlPosA(2, aPos);
+			shader.setGlTexA(2, aTex);
 
 			// Upload the attributes and draw the sprite.
 			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

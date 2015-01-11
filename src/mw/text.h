@@ -8,7 +8,6 @@
 #include <SDL_ttf.h>
 
 #include <string>
-#include <memory>
 
 namespace mw {
 
