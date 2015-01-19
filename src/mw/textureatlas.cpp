@@ -119,9 +119,10 @@ namespace mw {
 			} else {
 				images_.erase(filename + uniqueKey);
 				std::cerr << "\nImage " << filename << " failed to load: " << IMG_GetError() << std::endl;
+				return Sprite();
 			}
 		}
-		return Sprite();
+		return sprite;
 	}
 
 	Sprite TextureAtlas::add(SDL_Surface* image, int border, std::string uniqueKey) {

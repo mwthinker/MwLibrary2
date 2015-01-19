@@ -43,24 +43,24 @@ namespace mw {
 	// Vertex buffer Attributes. ---------------------------
 
 	void DefaultShader::setGlPosA(GLint size, const GLvoid* data) const {
-		mw::glVertexAttribPointer(aPosIndex_, size, GL_FLOAT, GL_FALSE, 0, data);
 		mw::glEnableVertexAttribArray(aPosIndex_);
+		mw::glVertexAttribPointer(aPosIndex_, size, GL_FLOAT, GL_FALSE, 0, data);
 	}
 
 	void DefaultShader::setGlPosA(GLint size, GLsizei stride, const GLvoid* data) const {
-		mw::glVertexAttribPointer(aPosIndex_, size, GL_FLOAT, GL_FALSE, stride, data);
 		mw::glEnableVertexAttribArray(aPosIndex_);
+		mw::glVertexAttribPointer(aPosIndex_, size, GL_FLOAT, GL_FALSE, stride, data);
 	}
 
 	void DefaultShader::setGlTexA(GLint size, const GLvoid* data) const {
-		mw::glVertexAttribPointer(aTexIndex_, size, GL_FLOAT, GL_FALSE, 0, data);
 		mw::glEnableVertexAttribArray(aTexIndex_);
+		mw::glVertexAttribPointer(aTexIndex_, size, GL_FLOAT, GL_FALSE, 0, data);
 	}
 
 	void DefaultShader::setGlTexA(GLint size, GLsizei stride, const GLvoid* data) const {
-		mw::glVertexAttribPointer(aTexIndex_, size, GL_FLOAT, GL_FALSE, stride, data);
 		mw::glEnableVertexAttribArray(aTexIndex_);
-	}	
+		mw::glVertexAttribPointer(aTexIndex_, size, GL_FLOAT, GL_FALSE, stride, data);
+	}
 
 	// Uniforms. -------------------------------------------
 
