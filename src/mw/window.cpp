@@ -21,10 +21,10 @@ namespace mw {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 		if (SDL_GL_LoadLibrary(0) != 0) {
-			std::printf("\n Failed to load OpenGl ES 2\n");
+			std::printf("\nSDL_GL_LoadLibrary failed: %s\n Failed to load OpenGl ES 2\n", SDL_GetError());
 			std::exit(1);
 		}
-#endif
+#endif // MW_OPENGLES2
 	}
 
 	Window::Window(int x, int y, int width, int height, bool resizeable, std::string title, std::string icon, bool borderless) {
@@ -79,7 +79,7 @@ namespace mw {
 
 		DefaultShader::defaultShader = DefaultShader(DEFAULT_SHADER_VER, DEFAULT_SHADER_FRAG);
 		
-#endif //MW_OPENGLES2
+#endif // MW_OPENGLES2
 		std::printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
 		std::printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -91,7 +91,7 @@ namespace mw {
 #ifdef MW_OPENGLES2
 			// Remove default shader.
 			DefaultShader::defaultShader = DefaultShader();
-#endif //MW_OPENGLES2
+#endif // MW_OPENGLES2
 
 			// In order to signal the the current gl context is not active.
 			++nbrCurrentInstance;
@@ -100,7 +100,7 @@ namespace mw {
 			SDL_GL_DeleteContext(glContext_);
 #ifdef MW_OPENGLES2
 			SDL_GL_UnloadLibrary();
-#endif //MW_OPENGLES2
+#endif // MW_OPENGLES2
 			SDL_DestroyWindow(window_);
 		}
 	}
