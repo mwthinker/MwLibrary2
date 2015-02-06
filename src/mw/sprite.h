@@ -34,7 +34,7 @@ namespace mw {
 		void setTexture(const Texture& texture);
 
 		// Set a texture to the sprite. The sprite represents the square of the texture,
-		// defined by (x,y) in the lower left postion with (dx,dy) = (width,height). 
+		// defined by (x,y) in the lower left postion with (dx,dy) = (width,height).
 		void setTexture(const Texture& texture, float x, float y, float dx, float dy);
 
 		// Return the sprite texture.
@@ -45,9 +45,6 @@ namespace mw {
 		inline void bindTexture() const {
 			texture_.bindTexture();
 		}
-
-		// The image is drawn, x = [-0.5,0.5] and y = [-0.5,0.5].
-		void draw() const;
 
 		// Return the lower left x position of the image drawn.
 		inline float getX() const {

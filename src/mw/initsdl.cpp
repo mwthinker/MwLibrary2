@@ -14,9 +14,9 @@ namespace mw {
 	}
 
 	InitSdl::~InitSdl() {
-		--nbrOfInstances;
+		//--nbrOfInstances;
 		if (nbrOfInstances < 1) {
-			SDL_Quit();
+			//SDL_Quit();
 		}
 	}
 

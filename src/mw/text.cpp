@@ -3,73 +3,12 @@
 #include "initttf.h"
 #include "font.h"
 #include "sprite.h"
-#include "defaultshader.h"
 
 #include <SDL_ttf.h>
 
 #include <string>
 
 namespace mw {
-	
-	void Text::drawText(float x, float y) const {
-		if (texture_.isValid()) {
-			texture_.bindTexture();
-#if MW_OPENGLES2
-			mw::glEnable(GL_BLEND);
-			mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			// Lower left corner is in ORIGO.
-			GLfloat aPos[] = {
-				x, y,
-				x + getWidth(), y,
-				x, getHeight() + y,
-				x + getWidth(), getHeight() + y};
-
-			// Map the sprite out from the texture.
-			GLfloat aTex[] = {
-				0, 0,
-				1, 0,
-				0, 1,
-				1, 1};
-
-			// Use the program object
-			// Use the program object
-			const DefaultShader& shader = DefaultShader::get();
-			shader.glUseProgram();
-			shader.setGlTextureU(true);
-
-			// Set the vertex pointer.
-			shader.setGlPosA(2, aPos);
-			shader.setGlTexA(2, aTex);
-
-			// Upload the attributes and draw the sprite.
-			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			mw::glDisable(GL_BLEND);
-
-#else // MW_OPENGLES2
-			glEnable(GL_BLEND);
-			glEnable(GL_TEXTURE_2D);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glBegin(GL_QUADS);
-			glTexCoord2f(0, 0);
-			glVertex2f(x, y);
-
-			glTexCoord2f(1, 0);
-			glVertex2f(x + getWidth(), y);
-
-			glTexCoord2f(1, 1);
-			glVertex2f(x + getWidth(), y + getHeight());
-
-			glTexCoord2f(0, 1);
-			glVertex2f(x, y + getHeight());
-			glEnd();
-			glDisable(GL_TEXTURE_2D);
-			glDisable(GL_BLEND);
-#endif // MW_OPENGLES2
-			checkGlError();
-		}
-	}
-
 
 	Text::Text() : characterSize_(0), width_(0), height_(0) {
 		setText("");
@@ -101,14 +40,6 @@ namespace mw {
 			text_ = text; // = "" is the same.
 			width_ = 0;
 			height_ = 0;
-		}
-	}
-
-	void Text::draw(float x, float y) const {
-		if (font_.getTtfFont()) {
-			if (text_.size() > 0) {
-				drawText(x, y);
-			}
 		}
 	}
 

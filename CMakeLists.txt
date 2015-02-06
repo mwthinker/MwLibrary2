@@ -24,8 +24,6 @@ endif ()
 set(SOURCES
 	src/mw/color.cpp
 	src/mw/color.h
-	src/mw/defaultshader.cpp
-	src/mw/defaultshader.h
 	src/mw/exception.h
 	src/mw/font.cpp
 	src/mw/font.h
@@ -62,6 +60,8 @@ set(SOURCES
 )
 
 set(SOURCES_TEST
+	srcTest/testshader.cpp
+	srcTest/testshader.h
 	srcTest/main.cpp
 	srcTest/testwindow.cpp
 	srcTest/testwindow.h

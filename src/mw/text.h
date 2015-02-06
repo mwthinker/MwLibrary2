@@ -19,11 +19,11 @@ namespace mw {
 		// Create a Text object with the text and font provided.
 		// The character size for the text is the same as the font.
 		Text(std::string text, const Font& font);
-		
+
 		// Create a Text object with the text,font and characte size provided.
-		// The text texture is created in size provided by the font but then 
+		// The text texture is created in size provided by the font but then
 		// scaled to match the provided character size.
-		Text(std::string text, const Font& font, float characterSize);		
+		Text(std::string text, const Font& font, float characterSize);
 
 		void setText(std::string text);
 
@@ -31,8 +31,8 @@ namespace mw {
 			return text_;
 		}
 
-		// Set the character size. The text texture is created in size 
-		// provided by the font but then scaled to match the 
+		// Set the character size. The text texture is created in size
+		// provided by the font but then scaled to match the
 		// provided character size.
 		inline void setCharacterSize(float characterSize) {
 			characterSize_ = characterSize;
@@ -69,10 +69,6 @@ namespace mw {
 			return font_;
 		}
 
-		// The text is drawn, in the square [width, height] (i.e. in pixelsize) with the lower left 
-		// point at (x,y), in OpenGl coordinate space.
-		void draw(float x=0, float y=0) const;
-
 		inline const mw::Texture& getTexture() const {
 			return texture_;
 		}
@@ -81,12 +77,12 @@ namespace mw {
 		void loadText(std::string str);
 		void drawText(float x, float y) const;
 
+        Font font_;
 		mw::Texture texture_;
 
 		std::string text_;
 		float characterSize_;
 		float width_, height_;
-		Font font_;
 	};
 
 } // Namespace mw

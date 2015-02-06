@@ -1,6 +1,8 @@
 #ifndef TESTWINDOW_H
 #define TESTWINDOW_H
 
+#include "testshader.h"
+
 #include <mw/window.h>
 #include <mw/sprite.h>
 #include <mw/text.h>
@@ -15,7 +17,7 @@ public:
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
 
-	// Excecute the function when space bar is pressed.
+	// Execute the function when space bar is pressed.
 	inline void setSpaceFunction(const std::function<void()> func) {
 		func_ = func;
 	}
@@ -34,6 +36,9 @@ private:
 	int x_, y_;
 	mw::Text text_;
 	std::function<void()> func_;
+#if MW_OPENGLES2
+	TestShader shader_;
+#endif // MW_OPENGLES2
 };
 
 #endif // TESTWINDOW_H

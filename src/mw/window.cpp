@@ -4,7 +4,6 @@
 
 #if MW_OPENGLES2
 #include "matrix.h"
-#include "defaultshader.h"
 #endif // MW_OPENGLES2
 
 #include <SDL_image.h>
@@ -76,9 +75,6 @@ namespace mw {
 		glContext_ = SDL_GL_CreateContext(window_);
 #ifdef MW_OPENGLES2
 		initGLES2();
-
-		DefaultShader::defaultShader = DefaultShader(DEFAULT_SHADER_VER, DEFAULT_SHADER_FRAG);
-		
 #endif // MW_OPENGLES2
 		std::printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
 		std::printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
@@ -88,11 +84,6 @@ namespace mw {
 
 	Window::~Window() {
 		if (window_ != nullptr) {
-#ifdef MW_OPENGLES2
-			// Remove default shader.
-			DefaultShader::defaultShader = DefaultShader();
-#endif // MW_OPENGLES2
-
 			// In order to signal the the current gl context is not active.
 			++nbrCurrentInstance;
 
@@ -118,9 +109,9 @@ namespace mw {
 			Uint32 currentTime = SDL_GetTicks();
 			Uint32 deltaTime = currentTime - time_;
 			if (deltaTime >= delta) {
-				// Only update the screen at choosen intervall.
-				// Solve the problem where the SDL_GetTicks is imprecise 
-				// under some delta on some plattforms.
+				// Only update the screen at chosen interval.
+				// Solve the problem where the SDL_GetTicks is imprecise
+				// under some delta on some platforms.
 				time_ = currentTime;
 				update(deltaTime);
 			}
