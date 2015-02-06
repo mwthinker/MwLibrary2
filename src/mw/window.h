@@ -77,7 +77,6 @@ namespace mw {
 		void setupOpenGlContext();
 		
 		static int nbrCurrentInstance;
-		static void initOpenGl();
 	};
 
 } // Namespace mw.

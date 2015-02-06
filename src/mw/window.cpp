@@ -8,23 +8,11 @@
 
 #include <SDL_image.h>
 
+#include <iostream>
+
 namespace mw {
 
 	int Window::nbrCurrentInstance = 0;
-
-	void Window::initOpenGl() {
-		SDL_GL_SetSwapInterval(1);
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-#ifdef MW_OPENGLES2
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-		if (SDL_GL_LoadLibrary(0) != 0) {
-			std::printf("\nSDL_GL_LoadLibrary failed: %s\n Failed to load OpenGl ES 2\n", SDL_GetError());
-			std::exit(1);
-		}
-#endif // MW_OPENGLES2
-	}
 
 	Window::Window(int x, int y, int width, int height, bool resizeable, std::string title, std::string icon, bool borderless) {
 		// Create an application window with the following settings:
@@ -37,8 +25,6 @@ namespace mw {
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
-		initOpenGl();
-
 		if (x < 0) {
 			x = SDL_WINDOWPOS_UNDEFINED;
 		}
@@ -46,6 +32,16 @@ namespace mw {
 			y = SDL_WINDOWPOS_UNDEFINED;
 		}
 
+#ifdef MW_OPENGLES2
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+		if (SDL_GL_LoadLibrary(0) != 0) {
+			std::cout << "\nSDL_GL_LoadLibrary failed: " << SDL_GetError() << "\nFailed to load OpenGl ES 2" << std::endl;
+			std::exit(1);
+		}
+#endif // MW_OPENGLES2
+		
 		window_ = SDL_CreateWindow(
 			title.c_str(),
 			x,
@@ -55,7 +51,8 @@ namespace mw {
 			flags);
 
 		if (window_ == 0) {
-			throw Exception(SDL_GetError());
+			std::cout << "\nSDL_CreateWindow failed: " << SDL_GetError() << std::endl;
+			std::exit(1);
 		}
 
 		SDL_Surface* surface = IMG_Load(icon.c_str());
@@ -73,11 +70,16 @@ namespace mw {
 
 	void Window::setupOpenGlContext() {
 		glContext_ = SDL_GL_CreateContext(window_);
+		if (SDL_GL_SetSwapInterval(1) < 0) {
+			std::cout << "Warning: Unable to set VSync! SDL Error: " << SDL_GetError() << std::endl;
+		}
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
 #ifdef MW_OPENGLES2
 		initGLES2();
 #endif // MW_OPENGLES2
-		std::printf("\nGL_VERSION: %s", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
-		std::printf("\nGL_SHADING_LANGUAGE_VERSION: %s\n\n", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+		std::cout << "\nGL_VERSION: " << reinterpret_cast<const char *>(glGetString(GL_VERSION)) << std::endl;
+		std::cout << "GL_SHADING_LANGUAGE_VERSION: " << reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)) << std::endl;
 		glClear(GL_COLOR_BUFFER_BIT);
 		checkGlError();
 	}
@@ -97,9 +99,6 @@ namespace mw {
 	}
 
 	void Window::startLoop(Uint32 delta) {
-		if (!quit_) {
-			SDL_GL_MakeCurrent(window_, glContext_);
-		}
 		while (!quit_) {
 			SDL_Event eventSDL;
 			while (SDL_PollEvent(&eventSDL)) {

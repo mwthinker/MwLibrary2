@@ -2,21 +2,23 @@
 
 #include <SDL.h>
 
+#include <iostream>
+
 namespace mw {
 
 	InitSdl::InitSdl() {
 		if (nbrOfInstances < 1) {
 			if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) ) {
-				//printf( "Unable to init SDL: %s\n", SDL_GetError() );
+				std::cout << "Unable to init SDL: \n" << SDL_GetError() << std::endl;
 			}
 		}
 		++nbrOfInstances;
 	}
 
 	InitSdl::~InitSdl() {
-		//--nbrOfInstances;
+		--nbrOfInstances;
 		if (nbrOfInstances < 1) {
-			//SDL_Quit();
+			SDL_Quit();
 		}
 	}
 
