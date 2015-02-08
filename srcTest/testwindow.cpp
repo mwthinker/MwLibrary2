@@ -84,18 +84,17 @@ namespace {
 
 #if MW_OPENGLES2
 void draw(const TestShader& shader, const mw::Text& text, float x = 0, float y = 0) {
-		const mw::Texture& texture = text.getTexture();
-		if (texture.isValid()) {
-			texture.bindTexture();
+		if (text.isValid()) {
+			text.bindTexture();
 			mw::glEnable(GL_BLEND);
 			mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			// Lower left corner is in ORIGO.
 			GLfloat aPos[] = {
 				x, y,
-				x + texture.getWidth(), y,
-				x, texture.getHeight() + y,
-				x + texture.getWidth(), texture.getHeight() + y};
+				x + text.getWidth(), y,
+				x, text.getHeight() + y,
+				x + text.getWidth(), text.getHeight() + y};
 
 			// Map the sprite out from the texture.
 			GLfloat aTex[] = {
@@ -120,9 +119,8 @@ void draw(const TestShader& shader, const mw::Text& text, float x = 0, float y =
 	}
 #else // MW_OPENGLES2
     void draw(const mw::Text& text, float x = 0, float y = 0) {
-		const mw::Texture& texture = text.getTexture();
-		if (texture.isValid()) {
-			texture.bindTexture();
+		if (text.isValid()) {
+			text.bindTexture();
 			glEnable(GL_BLEND);
 			glEnable(GL_TEXTURE_2D);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -131,13 +129,13 @@ void draw(const TestShader& shader, const mw::Text& text, float x = 0, float y =
 			glVertex2f(x, y);
 
 			glTexCoord2f(1, 0);
-			glVertex2f(x + texture.getWidth(), y);
+			glVertex2f(x + text.getWidth(), y);
 
 			glTexCoord2f(1, 1);
-			glVertex2f(x + texture.getWidth(), y + texture.getHeight());
+			glVertex2f(x + text.getWidth(), y + text.getHeight());
 
 			glTexCoord2f(0, 1);
-			glVertex2f(x, y + texture.getHeight());
+			glVertex2f(x, y + text.getHeight());
 			glEnd();
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_BLEND);

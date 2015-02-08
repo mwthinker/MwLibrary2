@@ -22,7 +22,6 @@ endif ()
 
 # Source files.
 set(SOURCES
-	src/mw/color.cpp
 	src/mw/color.h
 	src/mw/exception.h
 	src/mw/font.cpp

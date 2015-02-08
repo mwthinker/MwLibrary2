@@ -5,18 +5,24 @@
 
 namespace mw {
 
-	Font::Font() : fontData_(std::make_shared<FontData>()) {
+	Font::Font() :
+	    fontData_(std::make_shared<FontData>()),
+	    characterSize_(0) {
 	}
 
-	Font::Font(std::string filename, int characterSize) : fontData_(std::make_shared<FontData>()) {
-		characterSize_ = characterSize;
+	Font::Font(std::string filename, int characterSize) :
+	    fontData_(std::make_shared<FontData>()),
+	    characterSize_(0) {
+
 		TTF_Font* font = TTF_OpenFont(filename.c_str(), characterSize);
 
 		if (font) {
 			fontData_->font_ = font;
+			characterSize_ = characterSize;
+			TTF_SetFontHinting(font, TTF_HINTING_LIGHT);
 		} else {
-			std::cerr << "Error font" << std::endl;
+			std::cerr << "Error font: " << TTF_GetError() << std::endl;
 		}
 	}
-	
+
 } // Namespace mw.

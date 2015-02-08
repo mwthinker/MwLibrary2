@@ -4,6 +4,7 @@
 #include "initttf.h"
 
 #include <SDL_ttf.h>
+
 #include <string>
 #include <memory>
 
@@ -14,7 +15,7 @@ namespace mw {
 		// Creates a empty font.
 		Font();
 
-		// Loads a font located in file named (filename). 
+		// Loads a font located in file named (filename).
 		// Higher character size demands higher memory usage.
 		Font(std::string filename, int characterSize);
 
