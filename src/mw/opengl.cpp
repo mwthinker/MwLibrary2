@@ -1,5 +1,7 @@
 #include "opengl.h"
 
+#include <SDL.h>
+
 #include <iostream>
 #include <string>
 
