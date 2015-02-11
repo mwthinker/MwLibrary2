@@ -1,10 +1,7 @@
 #include "opengl.h"
-#include "matrix.h"
 
-#include <SDL.h>
-
-#include <cmath>
 #include <iostream>
+#include <string>
 
 namespace mw {
 
@@ -33,7 +30,7 @@ namespace mw {
 					error = "INVALID_FRAMEBUFFER_OPERATION";
 					break;
 			}
-			
+
 			std::cerr << "GL_" << error.c_str() << " - " << file << ":" << line << std::endl;
 			err = glGetError();
 		}
@@ -77,82 +74,6 @@ namespace mw {
 	}
 
 #endif // MW_OPENGLES2
-
-	Matrix44 getTranslateMatrix44(float x, float y, float z) {
-		return mw::Matrix44(
-			1, 0, 0, x,
-			0, 1, 0, y,
-			0, 0, 1, z,
-			0, 0, 0, 1);
-	}
-
-	Matrix44 getRotateMatrix44(float angle, float x, float y, float z) {
-		float s = std::sin(angle);
-		float c = std::cos(angle);
-
-		return mw::Matrix44(
-			x*x*(1 - c) + c, x*y*(1 - c) - z*s, x*z*(1 - c) + y*s, 0,
-			y*x*(1 - c) + z*s, y*y*(1 - c) + c, y*z*(1 - c) - x*s, 0,
-			z*x*(1 - c) - y*s, y*z*(1 - c) + x*s, z*z*(1 - c) + c, 0,
-			0, 0, 0, 1);
-	}
-
-	Matrix44 getScaleMatrix44(float x, float y, float z) {
-		return mw::Matrix44(
-			x, 0, 0, 0,
-			0, y, 0, 0,
-			0, 0, z, 0,
-			0, 0, 0, 1);
-	}
-
-	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top,
-		float nearVal, float farVal) {
-
-		return mw::Matrix44(
-			2 / (right - left), 0, 0, -(right + left) / (right - left),
-			0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom),
-			0, 0, -2 / (farVal - nearVal), -(farVal + nearVal) / (farVal - nearVal),
-			0, 0, 0, 1);
-	}
-
-	mw::Matrix44 getFrustrumProjectionMatrix44(float left, float right,
-		float bottom, float top,
-		float nearVal, float farVal) {
-
-		return mw::Matrix44(2 * nearVal / (right - left), 0, (right + left) / (right - left), 0,
-			0, 2 * nearVal / (top - bottom), (top + bottom) / (top - bottom), 0,
-			0, 0, -(farVal + nearVal) / (farVal - nearVal), -2 * farVal * nearVal / (farVal - nearVal),
-			0, 0, -1, 0);
-	}
-
-	// Translate the matrix in the xy-plane.
-	void translate2D(mw::Matrix44& matrix, float x, float y) {
-		matrix(0, 3) += x;
-		matrix(1, 3) += y;
-	}
-	
-	void rotate2D(mw::Matrix44& matrix, float angle) {
-		float s = std::sin(angle);
-		float c = std::cos(angle);
-
-		matrix(0, 0) = matrix(0, 0) *  c + matrix(0, 1) * s;
-		matrix(0, 1) = matrix(0, 0) * -s + matrix(0, 1) * c;
-		matrix(1, 0) = matrix(1, 0) *  c + matrix(1, 1) * s;
-		matrix(1, 1) = matrix(1, 0) * -s + matrix(1, 1) * c;
-	}
-
-	void scale2D(mw::Matrix44& matrix, float sx, float sy) {
-		matrix(0, 0) *= sx;
-		matrix(1, 1) *= sy;
-	}
-
-	void ortho2D(mw::Matrix44& matrix, float left, float right, float bottom, float top) {
-		matrix = mw::Matrix44(
-			2 / (right - left), 0, 0, -(right + left) / (right - left),
-			0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom),
-			0, 0, 1, 0,
-			0, 0, 0, 1);
-	}
 
 #if MW_OPENGLES2
 

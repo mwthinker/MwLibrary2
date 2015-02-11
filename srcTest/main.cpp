@@ -3,6 +3,7 @@
 #include <mw/sprite.h>
 #include <mw/sound.h>
 #include <mw/textureatlas.h>
+#include <mw/matrix.h>
 
 #include <iostream>
 #include <cassert>
@@ -46,7 +47,7 @@ void testLoadTextureAtlas2() {
 	SDL_Surface* b = createSurface(100, 200, 0, (char) 255, 0); // Green block.
 	SDL_Surface* c = createSurface(200, 200, 0, 0, (char) 255); // Blue block.
 	SDL_Surface* d = createSurface(30, 30, (char) 255, (char) 255, (char) 255); // White block.
-		
+
 	mw::TextureAtlas atlas(512, 512);
 	TestWindow w(atlas.getTexture(), 0, 0);
 	int nbr = 0;
@@ -83,7 +84,7 @@ void testLoadTextureAtlas2() {
 		}
 		w.setCenteredSprite(sprite);
 	};
-	
+
 	w.setSpaceFunction(func);
 	w.startLoop();
 
@@ -95,19 +96,65 @@ void testLoadTextureAtlas2() {
 	std::cout << "\ntestLoadTextureAtlas2() sucsessfully!\n";
 }
 
+bool equal(float a, float b) {
+    return std::abs(a - b) < 0.01f;
+}
+
+bool equal(const mw::Matrix44& a, const mw::Matrix44& b) {
+    for (int i = 0; i < 16; ++i) {
+        if (!equal(a[i], b[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void print(const mw::Matrix44& m) {
+    std::cout << "\nMatrix\n";
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            std::cout << m(i, j) << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+void testMatrix() {
+    mw::Matrix44 m(1,     3.1f, 7.2f, 3.9f,
+                   9.1f,  1.3f, 2.f,  0.1f,
+                   0.3f,  0.9f, 11.f, 12.f,
+                   12.f,  0.4f, 0.5f, 5.f);
+
+    assert(equal(m, m));
+    auto m2 = mw::I_44 + m;
+    assert(!equal(m, m2));
+
+    // Test rotation!
+    m2 = m;
+    mw::rotate2D(m2, 0.3f);
+    assert(equal(m * mw::getRotateMatrix44(0.3f, 0, 0, 1), m2));
+
+    // Test translation!
+    m2 = m;
+    mw::translate2D(m2, 2.f, 3.f);
+    assert(equal(m * mw::getTranslateMatrix44(2.f, 3.f), m2));
+
+    // Test scaling!
+    m2 = m;
+    mw::scale2D(m2, 2.f, 3.f);
+    assert(equal(m * mw::getScaleMatrix44(2.f, 3.f, 1), m2));
+
+    std::cout << "\ntestMatrix() sucsessfully!\n";
+}
+
 int main(int argc, char** argv) {
+    testMatrix();
 	testLoadTextureAtlas();
 	testLoadTextureAtlas2();
-	
-	{
-		mw::Sprite sprite("tetris.bmp");
-		TestWindow w(sprite, 50, 50);
-		w.startLoop();
-	}
-	
+
 	mw::Sound sound("test.wav");
 	sound.setVolume(0.5f);
-	sound.play();	
+	sound.play();
 
 	return 0;
 }

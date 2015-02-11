@@ -2,11 +2,10 @@
 #define MATRIX_H
 
 #include <array>
-#include <cmath>
 
 namespace mw {
 
-	// An 4x4 matrix saved internally saved as an column-major order.
+	// A 4x4 matrix saved internally saved as an column-major order.
 	class Matrix44 {
 	public:
 		// An empty matrix with undefined values.
@@ -67,6 +66,14 @@ namespace mw {
 			return data_.end();
 		}
 
+		inline std::array<float, 16>::const_iterator begin() const {
+			return data_.cbegin();
+		}
+
+		inline std::array<float, 16>::const_iterator end() const {
+			return data_.cend();
+		}
+
 		Matrix44 transpose() const;
 
 		Matrix44 inverse() const;
@@ -86,6 +93,36 @@ namespace mw {
 							   0, 1, 0, 0,
 							   0, 0, 1, 0,
 							   0, 0, 0, 1);
+
+    	// Return the translation matrix.
+	Matrix44 getTranslateMatrix44(float x, float y, float z = 0);
+
+	// Return the rotation matrix.
+	Matrix44 getRotateMatrix44(float angle, float x, float y, float z);
+
+	// Return the scale matrix.
+	Matrix44 getScaleMatrix44(float x, float y, float z = 1);
+
+	// Return the orthogonal projection matrix.
+	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top,
+		float nearVal = -1, float farVal = 1);
+
+	// Return the orthogonal projection matrix.
+	Matrix44 getFrustrumProjectionMatrix44(float left, float right,
+		float bottom, float top,
+		float nearVal = -1, float farVal = 1);
+
+	// Translate the matrix in the xy-plane.
+	void translate2D(Matrix44& matrix, float x, float y);
+
+	// Rotate the matrix in the xy-plane.
+	void rotate2D(Matrix44& matrix, float angle);
+
+	// Scale the matrix in the xy-plane.
+	void scale2D(Matrix44& matrix, float sx, float sy);
+
+	// Defines the 2d orthogonal projection matrix.
+	void ortho2D(Matrix44& matrix, float left, float right, float bottom, float top);
 
 } // Namespace mw.
 

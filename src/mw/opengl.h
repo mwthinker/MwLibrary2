@@ -1,21 +1,18 @@
 #ifndef MW_OPENGL_H
 #define MW_OPENGL_H
 
-#include "matrix.h"
-
 #if MW_OPENGLES2
 #include <SDL_opengles2.h>
-#include <string>
 #else // MW_OPENGLES2
 #include <SDL_opengl.h>
 #endif // MW_OPENGLES2
 
 namespace mw {
 
-// Function checkGlError() prints all opengl errors during debug mode.
+// Function checkGlError() prints all OpenGL errors during debug mode.
 #if _DEBUG
 
-	// Print all opengl errors.
+	// Print all OpenGL errors.
 	// Call check_gl_error instead if the error checking only should be in debug mode.
 	void _checkGlError(const char* file, int line);
 
@@ -26,36 +23,6 @@ namespace mw {
 
 #define checkGlError() _empty()
 #endif // _DEBUG
-
-	// Return the translation matrix.
-	Matrix44 getTranslateMatrix44(float x, float y, float z = 0);
-
-	// Return the rotation matrix.
-	Matrix44 getRotateMatrix44(float angle, float x, float y, float z);
-
-	// Return the scale matrix.
-	Matrix44 getScaleMatrix44(float x, float y, float z = 1);
-
-	// Return the ortho projection matrix.
-	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top,
-		float nearVal = -1, float farVal = 1);
-
-	// Return the ortho projection matrix.
-	mw::Matrix44 getFrustrumProjectionMatrix44(float left, float right,
-		float bottom, float top,
-		float nearVal = -1, float farVal = 1);
-
-	// Translate the matrix in the xy-plane.
-	void translate2D(mw::Matrix44& matrix, float x, float y);
-	
-	// Rotate the matrix in the xy-plane.
-	void rotate2D(mw::Matrix44& matrix, float angle);
-
-	// Scale the matrix in the xy-plane.
-	void scale2D(mw::Matrix44& matrix, float sx, float sy);
-
-	// Defines the 2d orthongonal projection matrix.
-	void ortho2D(mw::Matrix44& matrix, float left, float right, float bottom, float top);
 
 #if MW_OPENGLES2
 

@@ -10,7 +10,7 @@ namespace mw {
 	    characterSize_(0) {
 	}
 
-	Font::Font(std::string filename, int characterSize) :
+	Font::Font(const std::string& filename, int characterSize) :
 	    fontData_(std::make_shared<FontData>()),
 	    characterSize_(0) {
 

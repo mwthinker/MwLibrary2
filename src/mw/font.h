@@ -12,18 +12,18 @@ namespace mw {
 
 	class Font : public InitTtf {
 	public:
-		// Creates a empty font.
+		// Creates an empty font.
 		Font();
 
-		// Loads a font located in file named (filename).
+		// Load the font located in the file named (filename).
 		// Higher character size demands higher memory usage.
-		Font(std::string filename, int characterSize);
+		Font(const std::string& filename, int characterSize);
 
 		inline int getCharacterSize() const {
 			return characterSize_;
 		}
 
-		// Use with care! Returns a pointer to the font data.
+		// Use with care! Return a pointer to the font data.
 		inline TTF_Font* getTtfFont() const {
 			return fontData_->font_;
 		}

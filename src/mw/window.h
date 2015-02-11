@@ -6,12 +6,11 @@
 #include <SDL.h>
 
 #include <string>
-#include <list>
 
 namespace mw {
 
-	// Creates a window and handles input, etc. The graphic is rendered using opengl.
-	// The opengl view port is whole window size and the model view is the same size as 
+	// Creates a window and handles input, etc. The graphic is rendered using OpenGL.
+	// The OpenGL view port is whole window size and the model view is the same size as
 	// the window and origo is on the left down side.
 	class Window : public InitSdl {
 	public:
@@ -20,8 +19,8 @@ namespace mw {
 
 		virtual ~Window();
 
-		// Starts a loop which handles all inputs and graphics in the windows. It will not 
-		// return until the loop is ended. Is closed when the windows is closed, i.e. a 
+		// Starts a loop which handles all inputs and graphics in the windows. It will not
+		// return until the loop is ended. Is closed when the windows is closed, i.e. a
 		// call to the protected function quit(). The delta is the smallest frame time used.
 		void startLoop(Uint32 delta = 10);
 
@@ -51,7 +50,7 @@ namespace mw {
 		void quit();
 
 		// Return the number, first instance of an active window return 1 next 3, etc.
-		// Each evan number represent that the last widow with the odd number was closed.
+		// Each even number represent that the last widow with the odd number was closed.
 		inline static char getInstanceId() {
 			return nbrCurrentInstance;
 		}
@@ -75,7 +74,7 @@ namespace mw {
 		SDL_GLContext glContext_;
 
 		void setupOpenGlContext();
-		
+
 		static int nbrCurrentInstance;
 	};
 
