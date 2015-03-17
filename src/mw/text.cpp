@@ -39,7 +39,8 @@ namespace mw {
 		if (font_.getTtfFont()) {
 			if (str.size() > 0) {
 				SDL_Color color = {255, 255, 255, 255};
-				SDL_Surface* surface = TTF_RenderUTF8_Blended(font_.getTtfFont(), str.c_str(), color);
+				SDL_Surface* surface = TTF_RenderUTF8_Blended_Wrapped(font_.getTtfFont(), str.c_str(), color, 500);
+				
 				// No error?
 				if (surface != 0) {
                     // Texture takes ownership of surface.
