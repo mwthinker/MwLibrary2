@@ -1,6 +1,5 @@
 #ifndef TESTSHADER_H
 #define TESTSHADER_H
-#if MW_OPENGLES2
 
 #include <mw/opengl.h>
 #include <mw/matrix.h>
@@ -88,5 +87,4 @@ private:
     int uIsTexIndex_;
 };
 
-#endif // MW_OPENGLES2
 #endif // TESTSHADER_H

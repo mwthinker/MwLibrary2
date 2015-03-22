@@ -1,6 +1,7 @@
 #include "text.h"
 #include "font.h"
 #include "sprite.h"
+#include "opengl.h"
 
 #include <SDL_ttf.h>
 

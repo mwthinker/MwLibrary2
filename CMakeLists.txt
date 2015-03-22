@@ -8,17 +8,11 @@ if (MSVC)
 	
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -DWIN32)
 else ()
-	SET(CMAKE_CXX_FLAGS "-std=c++11")
+	set(CMAKE_CXX_FLAGS "-std=c++11")
+	set(CMAKE_BUILD_TYPE "Debug")
 endif ()
 
-if (NOT OpenGLES2_REMOVE_OPTION)
-	option(OpenGLES2 "OpenGLES2 is activated" OFF)
-endif ()
 option(MwLibrary2Test "MwLibrary2Test project is added" OFF)
-
-if (OpenGLES2)
-	add_definitions(-DMW_OPENGLES2)
-endif ()
 
 # Source files.
 set(SOURCES
@@ -55,56 +49,49 @@ set(SOURCES
 	src/mw/vertexbufferobject.cpp
 	src/mw/vertexbufferobject.h
 	src/mw/window.cpp
-	src/mw/window.h
-)
+	src/mw/window.h)
 
 set(SOURCES_TEST
 	srcTest/testshader.cpp
 	srcTest/testshader.h
 	srcTest/main.cpp
 	srcTest/testwindow.cpp
-	srcTest/testwindow.h
-)
+	srcTest/testwindow.h)
 # End of source files.
-
-if (NOT OpenGLES2)
-	find_package(OpenGL REQUIRED)
-endif ()
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_ttf REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(OpenGL REQUIRED)
 
 include_directories(
 	${SDL2_INCLUDE_DIR}
 	${SDL2_IMAGE_INCLUDE_DIR}
 	${SDL2_TTF_INCLUDE_DIR}
-	${SDL2_MIXER_INCLUDE_DIR}
-)
+	${SDL2_MIXER_INCLUDE_DIR}	
+	${GLEW_INCLUDE_DIRS})
 
 add_library(MwLibrary2 ${SOURCES})
 
-set(ALL_SDL_LIBRARIES
+set(ALL_MW_LIBRARIES
+	${GLEW_LIBRARIES}
+	${OPENGL_LIBRARIES}
 	${SDL2_LIBRARIES}
 	${SDL2_TTF_LIBRARIES}
 	${SDL2_MIXER_LIBRARIES}
-	${SDL2_IMAGE_LIBRARIES}
-)
+	${SDL2_IMAGE_LIBRARIES})
 
 if (MwLibrary2Test)
 	include_directories(src)
 	add_executable(MwLibrary2Test ${SOURCES_TEST})
-
-	if (MSVC)	
+	
+	if (MSVC)
 		set_target_properties(MwLibrary2Test PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:msvcrt")
 	endif (MSVC)
 	
-	if (OpenGLES2)
-		target_link_libraries(MwLibrary2Test MwLibrary2 ${ALL_SDL_LIBRARIES})
-	else ()
-		target_link_libraries(MwLibrary2Test MwLibrary2 ${ALL_SDL_LIBRARIES} ${OPENGL_LIBRARIES})
-	endif ()
+	target_link_libraries(MwLibrary2Test MwLibrary2 ${ALL_MW_LIBRARIES})
 	
 	file(COPY dataTest/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.
 endif (MwLibrary2Test)

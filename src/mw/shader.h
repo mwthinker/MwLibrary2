@@ -1,6 +1,5 @@
 #ifndef SHADER_H
 #define SHADER_H
-#if MW_OPENGLES2
 
 #include "opengl.h"
 
@@ -71,5 +70,4 @@ namespace mw {
 
 } // Namespace mw.
 
-#endif // MW_OPENGLES2
 #endif // SHADER_H

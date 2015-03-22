@@ -9,13 +9,15 @@
 
 namespace mw {
 
-	// Creates a window and handles input, etc. The graphic is rendered using OpenGL.
-	// The OpenGL view port is whole window size and the model view is the same size as
+	// Create a window which handle all user input. The graphic is rendered using OpenGL.
+	// The OpenGL view port is the whole window size and the model view is the same size as
 	// the window and origo is on the left down side.
 	class Window : public InitSdl {
 	public:
 		// Creates a window with size determined by width and height in pixels.
-		Window(int x, int y, int width, int height, bool resizeable, std::string title = "", std::string icon = "", bool borderless = false);
+		Window(const int majorGlVersion, const int minorGlVersion, const bool glProfileEs,
+			int x, int y, int width, int height, bool resizeable,
+			std::string title = "", std::string icon = "", bool borderless = false);
 
 		virtual ~Window();
 

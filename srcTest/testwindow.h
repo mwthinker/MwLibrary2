@@ -36,9 +36,9 @@ private:
 	int x_, y_;
 	mw::Text text_;
 	std::function<void()> func_;
-#if MW_OPENGLES2
+
 	TestShader shader_;
-#endif // MW_OPENGLES2
+
 };
 
 #endif // TESTWINDOW_H

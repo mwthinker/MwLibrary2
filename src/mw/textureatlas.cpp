@@ -14,21 +14,12 @@ namespace mw {
 			SDL_Surface* surface = helper::createSurface(image->w, image->h);
 			SDL_BlitSurface(image, 0, surface, &image->clip_rect);
 			texture.bindTexture();
-#if MW_OPENGLES2
-			mw::glTexSubImage2D(GL_TEXTURE_2D, 0,
-				dstRec.x, texture.height_ - image->h - dstRec.y, // Sdl uses upp-left, opengl uses down-left.
-				image->w, image->h,
-				GL_RGBA,
-				GL_UNSIGNED_BYTE,
-				surface->pixels);
-#else // MW_OPENGLES2
 			glTexSubImage2D(GL_TEXTURE_2D, 0,
 				dstRec.x, texture.height_ - image->h - dstRec.y, // Sdl uses upp-left, opengl uses down-left.
 				image->w, image->h,
 				GL_RGBA,
 				GL_UNSIGNED_BYTE,
 				surface->pixels);
-#endif // MW_OPENGLES2
 			SDL_FreeSurface(surface);
 		}
 	}

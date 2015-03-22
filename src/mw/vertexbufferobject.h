@@ -1,6 +1,5 @@
 #ifndef VERTEXBUFFEROBJECT_H
 #define VERTEXBUFFEROBJECT_H
-#if MW_OPENGLES2
 
 #include "opengl.h"
 
@@ -47,13 +46,12 @@ namespace mw {
 			char windowInstance_;
 		};
 
+		std::shared_ptr<Data> data_;
+		int size_;
 		GLuint vboId_;
 		GLenum target_;
-		int size_;
-		std::shared_ptr<Data> data_;
 	};
 
 } // Namespace mw.
 
-#endif // MW_OPENGLES2
 #endif // VERTEXBUFFEROBJECT_H

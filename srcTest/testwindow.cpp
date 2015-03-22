@@ -5,16 +5,17 @@
 #include <mw/color.h>
 #include <mw/window.h>
 #include <mw/matrix.h>
+#include <mw/opengl.h>
+#include <mw/sprite.h>
 
 namespace {
 
-#if MW_OPENGLES2
     void draw(const TestShader& shader, const mw::Sprite& sprite) {
         const mw::Texture& texture = sprite.getTexture();
 		if (texture.isValid()) {
 			texture.bindTexture();
-			mw::glEnable(GL_BLEND);
-			mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			// Centered square in ORIGO.
 			GLfloat aPos[] = {
@@ -44,50 +45,17 @@ namespace {
 			shader.setGlTexA(2, aTex);
 
 			// Upload the attributes and draw the sprite.
-			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			mw::glDisable(GL_BLEND);
-			mw::checkGlError();
-		}
-	}
-#else // MW_OPENGLES2
-    void draw(const mw::Sprite& sprite) {
-        const mw::Texture& texture = sprite.getTexture();
-		if (texture.isValid()) {
-			texture.bindTexture();
-			float x = sprite.getX();
-            float y = sprite.getY();
-            float dx = sprite.getWidth();
-            float dy = sprite.getHeight();
-			glEnable(GL_BLEND);
-			glEnable(GL_TEXTURE_2D);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glBegin(GL_QUADS);
-			glTexCoord2f(x/ texture.getWidth(), y / texture.getHeight());
-			glVertex2f(-0.5, -0.5);
-
-			glTexCoord2f((x + dx) / texture.getWidth(), y / texture.getHeight());
-			glVertex2f(0.5, -0.5);
-
-			glTexCoord2f((x + dx) / texture.getWidth(), (y + dy) / texture.getHeight());
-			glVertex2f(0.5, 0.5);
-
-			glTexCoord2f(x / texture.getWidth(), (y + dy) / texture.getHeight());
-			glVertex2f(-0.5, 0.5);
-			glEnd();
-			glDisable(GL_TEXTURE_2D);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 			glDisable(GL_BLEND);
-
 			mw::checkGlError();
 		}
 	}
-#endif // MW_OPENGLES2
 
-#if MW_OPENGLES2
-void draw(const TestShader& shader, const mw::Text& text, float x = 0, float y = 0) {
+	void draw(const TestShader& shader, const mw::Text& text, float x = 0, float y = 0) {
 		if (text.isValid()) {
 			text.bindTexture();
-			mw::glEnable(GL_BLEND);
-			mw::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			// Lower left corner is in ORIGO.
 			GLfloat aPos[] = {
@@ -112,56 +80,23 @@ void draw(const TestShader& shader, const mw::Text& text, float x = 0, float y =
 			shader.setGlTexA(2, aTex);
 
 			// Upload the attributes and draw the sprite.
-			mw::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			mw::glDisable(GL_BLEND);
-			mw::checkGlError();
-		}
-	}
-#else // MW_OPENGLES2
-    void draw(const mw::Text& text, float x = 0, float y = 0) {
-		if (text.isValid()) {
-			text.bindTexture();
-			glEnable(GL_BLEND);
-			glEnable(GL_TEXTURE_2D);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glBegin(GL_QUADS);
-			glTexCoord2f(0, 0);
-			glVertex2f(x, y);
-
-			glTexCoord2f(1, 0);
-			glVertex2f(x + text.getWidth(), y);
-
-			glTexCoord2f(1, 1);
-			glVertex2f(x + text.getWidth(), y + text.getHeight());
-
-			glTexCoord2f(0, 1);
-			glVertex2f(x, y + text.getHeight());
-			glEnd();
-			glDisable(GL_TEXTURE_2D);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 			glDisable(GL_BLEND);
 			mw::checkGlError();
 		}
 	}
-#endif // MW_OPENGLES2
 
 } // Anonymous namespace.
 
 TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
-	: mw::Window(-1, -1, 512, 512, true, "Test"), sprite_(sprite), x_(x), y_(y)
-	#if MW_OPENGLES2
-	,shader_(TEST_SHADER_VER, TEST_SHADER_FRAG)
-	#endif // MW_OPENGLES2
-	{
+	: mw::Window(2, 1, false, -1, -1, 512, 512, true, "Test"), sprite_(sprite), x_(x), y_(y),
+	shader_(TEST_SHADER_VER, TEST_SHADER_FRAG) {
 
 	focus_ = true;
 	mw::Font font("Ubuntu-B.ttf", 60);
 	text_ = mw::Text("hej", font);
-#if MW_OPENGLES2
     shader_.glUseProgram();
-	mw::glClearColor(0, 0, 0, 1);
-#else // MW_OPENGLES2
 	glClearColor(0, 0, 0, 1);
-#endif // MW_OPENGLES2
 	resize(getWidth(), getHeight());
 }
 
@@ -169,7 +104,6 @@ void TestWindow::update(Uint32 msDeltaTime) {
 	mw::Matrix44 m = mw::getTranslateMatrix44((float) x_, (float) y_);
 	mw::Matrix44 m2 = m * mw::getScaleMatrix44(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44(0.5, 0.5);
 	mw::Matrix44 m3 = m *  mw::getTranslateMatrix44(getWidth() * 0.5f, getHeight() * 0.5f) * mw::getScaleMatrix44(sprite2_.getWidth(), sprite2_.getHeight());
-#if MW_OPENGLES2
 	// Update model matrix.
 	shader_.glUseProgram();
 	shader_.setGlColorU(1, 1, 1);
@@ -181,20 +115,6 @@ void TestWindow::update(Uint32 msDeltaTime) {
 	shader_.setGlColorU(1, 0, 0);
 	shader_.setGlModelMatrixU(m);
 	draw(shader_, text_);
-#else // MW_OPENGLES2
-	// Update model matrix.
-	glLoadIdentity();
-	glMultMatrixf(m2.data());
-	glColor3f(1, 1, 1);
-	draw(sprite_);
-	glLoadIdentity();
-	glMultMatrixf(m3.data());
-	draw(sprite2_);
-	glColor3d(1, 0, 0);
-	glLoadIdentity();
-	glMultMatrixf(m.data());
-	draw(text_);
-#endif // MW_OPENGLES2
 }
 
 void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
@@ -242,14 +162,6 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 }
 
 void TestWindow::resize(int w, int h) {
-#if MW_OPENGLES2
-	mw::glViewport(0, 0, w, h);
-	shader_.setGlProjectionMatrixU(mw::getOrthoProjectionMatrix44(0, (float) w, 0, (float) h));
-#else // MW_OPENGLES2
 	glViewport(0, 0, w, h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, (float) w, 0, (float) h, -1, 1);
-	glMatrixMode(GL_MODELVIEW);
-#endif // MW_OPENGLES2
+	shader_.setGlProjectionMatrixU(mw::getOrthoProjectionMatrix44(0, (float) w, 0, (float) h));
 }
