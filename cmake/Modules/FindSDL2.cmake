@@ -36,6 +36,10 @@ set(SDL2_INCLUDE_DIRS ${SDL2_INCLUDE_DIR})
 
 include(FindPackageHandleStandardArgs)
 
-find_package_handle_standard_args(SDL2 DEFAULT_MSG SDL2_LIBRARY SDL2MAIN_LIBRARY SDL2_INCLUDE_DIR)
-
-mark_as_advanced(SDL2_INCLUDE_DIR SDL2_LIBRARY SDL2MAIN_LIBRARY)
+if (WIN32)
+	find_package_handle_standard_args(SDL2 DEFAULT_MSG SDL2_LIBRARY SDL2MAIN_LIBRARY SDL2_INCLUDE_DIR)
+	mark_as_advanced(SDL2_INCLUDE_DIR SDL2_LIBRARY SDL2MAIN_LIBRARY)
+else ()
+	find_package_handle_standard_args(SDL2 DEFAULT_MSG SDL2_LIBRARY SDL2_INCLUDE_DIR)
+	mark_as_advanced(SDL2_INCLUDE_DIR SDL2_LIBRARY)
+endif ()
