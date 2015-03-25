@@ -13,7 +13,7 @@ namespace mw {
 	Window::Window(const int majorGlVersion, const int minorGlVersion, const bool glProfileEs,
 		int x, int y, int width, int height, bool resizeable,
 		std::string title, std::string icon, bool borderless) {
-		
+
 		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 		if (resizeable) {
 			flags |= SDL_WINDOW_RESIZABLE;
@@ -34,15 +34,15 @@ namespace mw {
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 		} else {
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-		}		
+		}
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorGlVersion);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorGlVersion);
-		
+
 		if (SDL_GL_LoadLibrary(0) != 0) {
 			std::cerr << "\nSDL_GL_LoadLibrary failed: " << SDL_GetError() << "\nFailed to open gl version" << majorGlVersion << "." << minorGlVersion << std::endl;
 			std::exit(1);
-		}		
-		
+		}
+
 		window_ = SDL_CreateWindow(
 			title.c_str(),
 			x,
@@ -78,24 +78,25 @@ namespace mw {
 
 		std::cout << "\nGL_VERSION: " << reinterpret_cast<const char *>(glGetString(GL_VERSION)) << std::endl;
 		std::cout << "GL_SHADING_LANGUAGE_VERSION: " << reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)) << std::endl;
-		
+
 		GLenum error = glewInit();
 		if (GLEW_OK != error) {
 			// Problem: glewInit failed, something is seriously wrong.
 			std::cerr << "\nError: " << glewGetErrorString(error) << "\n";
 			std::exit(1);
 		}
-		
+
 		glClear(GL_COLOR_BUFFER_BIT);
 		checkGlError();
 	}
 
 	Window::~Window() {
 		if (window_ != nullptr) {
-			// In order to signal the the current gl context is not active.
+			// A passive way to signal the textures for knowing that the current
+			// OpenGL context is not active.
 			++nbrCurrentInstance;
 
-			// Clean up Gl context and the window.
+			// Clean up current OpenGL context and the window.
 			SDL_GL_DeleteContext(glContext_);
 			SDL_GL_UnloadLibrary();
 			SDL_DestroyWindow(window_);
@@ -175,3 +176,4 @@ namespace mw {
 	}
 
 } // Namespace mw.
+

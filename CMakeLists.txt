@@ -4,6 +4,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Mo
 if (NOT MSVC)
 	set(CMAKE_CXX_FLAGS "-std=c++11")
 	set(CMAKE_BUILD_TYPE "Debug")
+	add_definitions(-D_DEBUG)
 endif ()
 
 option(MwLibrary2Test "MwLibrary2Test project is added" OFF)
@@ -21,7 +22,7 @@ set(SOURCES
 	src/mw/joystick.cpp
 	src/mw/joystick.h
 	src/mw/matrix.cpp
-	src/mw/matrix.h	
+	src/mw/matrix.h
 	src/mw/music.cpp
 	src/mw/music.h
 	src/mw/opengl.cpp
@@ -64,7 +65,7 @@ include_directories(
 	${SDL2_INCLUDE_DIR}
 	${SDL2_IMAGE_INCLUDE_DIR}
 	${SDL2_TTF_INCLUDE_DIR}
-	${SDL2_MIXER_INCLUDE_DIR}	
+	${SDL2_MIXER_INCLUDE_DIR}
 	${GLEW_INCLUDE_DIRS})
 
 add_library(MwLibrary2 ${SOURCES})
@@ -80,12 +81,12 @@ set(ALL_MW_LIBRARIES
 if (MwLibrary2Test)
 	include_directories(src)
 	add_executable(MwLibrary2Test ${SOURCES_TEST})
-	
+
 	if (MSVC)
 		set_target_properties(MwLibrary2Test PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:msvcrt")
-	endif (MSVC)
-	
+	endif ()
+
 	target_link_libraries(MwLibrary2Test MwLibrary2 ${ALL_MW_LIBRARIES})
-	
+
 	file(COPY dataTest/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.
-endif (MwLibrary2Test)
+endif ()
