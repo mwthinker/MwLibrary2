@@ -100,7 +100,7 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
 	resize(getWidth(), getHeight());
 }
 
-void TestWindow::update(Uint32 msDeltaTime) {
+void TestWindow::update(std::chrono::high_resolution_clock::duration) {
 	mw::Matrix44 m = mw::getTranslateMatrix44((float) x_, (float) y_);
 	mw::Matrix44 m2 = m * mw::getScaleMatrix44(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44(0.5, 0.5);
 	mw::Matrix44 m3 = m *  mw::getTranslateMatrix44(getWidth() * 0.5f, getHeight() * 0.5f) * mw::getScaleMatrix44(sprite2_.getWidth(), sprite2_.getHeight());

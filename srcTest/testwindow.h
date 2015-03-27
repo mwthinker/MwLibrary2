@@ -13,10 +13,6 @@ class TestWindow : public mw::Window {
 public:
 	TestWindow(mw::Sprite sprite = mw::Sprite(), int x = 0, int y = 0);
 
-	void update(Uint32 msDeltaTime) override;
-
-	void eventUpdate(const SDL_Event& windowEvent) override;
-
 	// Execute the function when space bar is pressed.
 	inline void setSpaceFunction(const std::function<void()> func) {
 		func_ = func;
@@ -27,6 +23,10 @@ public:
 	}
 
 private:
+    void update(std::chrono::high_resolution_clock::duration) override;
+
+	void eventUpdate(const SDL_Event& windowEvent) override;
+
 	void resize(int w, int h);
 
 	bool focus_;

@@ -6,6 +6,7 @@
 #include <SDL.h>
 
 #include <string>
+#include <chrono>
 
 namespace mw {
 
@@ -21,61 +22,77 @@ namespace mw {
 
 		virtual ~Window();
 
-		// Starts a loop which handles all inputs and graphics in the windows. It will not
+		// Start the loop which handle all inputs and graphics in the windows. It will not
 		// return until the loop is ended. Is closed when the windows is closed, i.e. a
-		// call to the protected function quit(). The delta is the smallest frame time used.
-		void startLoop(Uint32 delta = 10);
+		// call to the function quit().
+		void startLoop();
 
-		// The id for the windows. Is tha same as calling SDL_GetWindowID.
-		Uint32 getId() const;
-
-		// Gets the window pointer. Use with care.
-		SDL_Window* getSdlWindow() const;
-
-		// Sets the program in full screen mode if true else in windows mode.
-		// If mode is not changed from current mode, isFullScreen(), nothing happens.
+		// Set the program to full screen mode or desktop mode.
+		// If mode is not changed from the current mode nothing happen.
 		void setFullScreen(bool fullScreen);
 
-		// Returns true if the program is in full screen mode.
-		bool isFullScreen() const;
+		// Return true if the program is in full screen mode.
+		inline bool isFullScreen() const {
+		    return (SDL_GetWindowFlags(window_) & SDL_WINDOW_FULLSCREEN_DESKTOP) > 0;
+		}
 
-		// Returns the current windows width in pixels.
-		int getWidth() const;
+		inline void getSize(int& width, int& height) const {
+		    SDL_GetWindowSize(window_, &width, &height);
+		}
 
-		// Returns the current windows height in pixels.
-		int getHeight() const;
+		// Return the current windows width in pixels.
+		inline int getWidth() const {
+            int w, h;
+            getSize(w, h);
+            return w;
+		}
 
-		void getSize(int& width, int& height);
+		// Return the current windows height in pixels.
+		inline int getHeight() const {
+            int w, h;
+            getSize(w, h);
+            return h;
+		}
 
 		// Make the program to quit as soon as the current frame is finished.
-		// I.e. the loop in startLoop() will be made to stop and startloop() will return.
-		void quit();
+		// I.e. the loop in startLoop() will be made to stop and startLoop() will return.
+		inline void quit() {
+		    quit_ = true;
+		}
+
+		// The id for the windows. Is the same as calling SDL_GetWindowID.
+		inline Uint32 getId() const {
+		    return SDL_GetWindowID(window_);
+		}
+
+		// Return the window pointer. Use with care.
+		inline SDL_Window* getSdlWindow() const {
+		    return window_;
+		}
 
 		// Return the number, first instance of an active window return 1 next 3, etc.
 		// Each even number represent that the last widow with the odd number was closed.
-		inline static char getInstanceId() {
+		inline static int getInstanceId() {
 			return nbrCurrentInstance;
 		}
 
 	private:
 		// Is called by the loop. The frequency in which this function is called is fixed
-		// by the vertical frequency of the monitor (VSYNC). The time between two calls can vary,
-		// but is displayed in parameter msDeltaTime in milliseconds.
-		virtual void update(Uint32 msDeltaTime);
+		// by the vertical frequency of the monitor (VSYNC).
+		inline virtual void update(std::chrono::high_resolution_clock::duration) {
+		}
 
 		// Is called by the loop. Is called when ever a SDL_EVENT occurs.
-		virtual void eventUpdate(const SDL_Event& windowEvent);
+		inline virtual void eventUpdate(const SDL_Event& windowEvent) {
+		}
 
-		bool quit_;
-
-		int width_, height_;
-		unsigned int time_;
-		bool borderless_;
+		void setupOpenGlContext();
 
 		SDL_Window* window_;
 		SDL_GLContext glContext_;
-
-		void setupOpenGlContext();
+		int width_, height_;
+		bool quit_;
+		bool borderless_;
 
 		static int nbrCurrentInstance;
 	};
@@ -83,3 +100,4 @@ namespace mw {
 } // Namespace mw.
 
 #endif // MW_WINDOW_H
+
