@@ -6,7 +6,6 @@
 #include <SDL.h>
 
 #include <string>
-#include <chrono>
 
 namespace mw {
 
@@ -79,7 +78,7 @@ namespace mw {
 	private:
 		// Is called by the loop. The frequency in which this function is called is fixed
 		// by the vertical frequency of the monitor (VSYNC).
-		inline virtual void update(std::chrono::high_resolution_clock::duration) {
+		inline virtual void update(double deltaTime) {
 		}
 
 		// Is called by the loop. Is called when ever a SDL_EVENT occurs.

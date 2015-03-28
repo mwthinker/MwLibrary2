@@ -5,6 +5,7 @@
 #include <SDL_image.h>
 
 #include <iostream>
+#include <chrono>
 
 namespace mw {
 
@@ -112,7 +113,8 @@ namespace mw {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
             auto currentTime = std::chrono::high_resolution_clock::now();
-            update(currentTime - time);
+			std::chrono::duration<double> delta = currentTime - time;
+			update(delta.count());
             time = currentTime;
 
             SDL_GL_SwapWindow(window_);

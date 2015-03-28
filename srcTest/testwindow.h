@@ -23,7 +23,7 @@ public:
 	}
 
 private:
-    void update(std::chrono::high_resolution_clock::duration) override;
+    void update(double deltaTime) override;
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
 
