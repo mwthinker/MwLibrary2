@@ -68,7 +68,7 @@ namespace mw {
 		}
 
         // Return the texture representing the text. The texture may be empty.
-		inline const mw::Texture& getTexture() const {
+		inline const Texture& getTexture() const {
 			return texture_;
 		}
 
@@ -86,7 +86,7 @@ namespace mw {
 		bool loadTextToTexture(std::string str);
 
         Font font_;
-		mw::Texture texture_;
+		Texture texture_;
 		std::string text_;
 		float characterSize_;
 	};

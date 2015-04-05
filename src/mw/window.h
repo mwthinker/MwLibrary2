@@ -14,7 +14,7 @@ namespace mw {
 	// the window and origo is on the left down side.
 	class Window : public InitSdl {
 	public:
-		// Creates a window with size determined by width and height in pixels.
+		// Create a window with size determined by width and height in pixels.
 		Window(const int majorGlVersion, const int minorGlVersion, const bool glProfileEs,
 			int x, int y, int width, int height, bool resizeable,
 			std::string title = "", std::string icon = "", bool borderless = false);

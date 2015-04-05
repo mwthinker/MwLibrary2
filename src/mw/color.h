@@ -1,8 +1,6 @@
 #ifndef MW_COLOR_H
 #define MW_COLOR_H
 
-#include "opengl.h"
-
 namespace mw {
 
 	// Holds RGBA-color needed to define the color in OpenGL.

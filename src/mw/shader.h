@@ -33,15 +33,19 @@ namespace mw {
 		// is successful else false.
 		bool loadAndLinkFromFile(std::string vShaderFile, std::string fShaderFile);
 
+		bool loadAndLinkFromFile(std::string vShaderFile, std::string gShaderFile, std::string fShaderFile);
+
 		// Load shaders string parameters "vShader" and "fShader". Is safe to 
 		// call multiple times but only the first successful is "used. Load and
 		// link the vertex shader and the fragment shader in the created program.
 		// Return true if the creation is successful else false.
 		bool loadAndLink(std::string vShader, std::string fShader);
 
+		bool loadAndLink(std::string vShader, std::string gShader, std::string fShader);
+
 		// Uses the current gl program. I.e. a call to glUseProgram.
 		// Does nothing if the program is not loaded.
-		void glUseProgram() const;
+		void useProgram() const;
 
 		// Return if the shader program is linked.
 		inline bool isLinked() const {
@@ -51,7 +55,6 @@ namespace mw {
 	private:
 		struct ShaderData {
 			ShaderData();
-
 			~ShaderData();
 
 			std::map<std::string, int> attributes_;
@@ -59,7 +62,7 @@ namespace mw {
 			
 			int location_;
 			GLuint programObjectId_;
-			char windowInstance_;
+			int windowInstance_;
 		};
 
 		int location_;

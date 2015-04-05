@@ -23,13 +23,13 @@ namespace mw {
 		Sprite(const Texture& texture);
 
 		// Create a sprite from a texture already existing.
-		Sprite(const Texture& texture, std::function<void(const mw::Sprite& sprite)> draw);
+		Sprite(const Texture& texture, std::function<void(const Sprite& sprite)> draw);
 
 		// Create a sprite from a texture already existing.
 		Sprite(const Texture& texture, float x, float y, float dx, float dy);
 
 		// Create a sprite from a texture already existing.
-		Sprite(const Texture& texture, std::function<void(const mw::Sprite& sprite)> draw, float x, float y, float dx, float dy);
+		Sprite(const Texture& texture, std::function<void(const Sprite& sprite)> draw, float x, float y, float dx, float dy);
 
 		void setTexture(const Texture& texture);
 

@@ -30,7 +30,7 @@ namespace mw {
             text_ = text;
 			if (!loadTextToTexture(text)) {
 			    // Texture loading failed.
-			    texture_ = mw::Texture();
+			    texture_ = Texture();
 			}
 		}
 	}

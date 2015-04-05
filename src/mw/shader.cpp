@@ -12,25 +12,18 @@ namespace mw {
 	namespace {		
 
 		GLuint loadShader(GLuint program, GLenum type, const GLchar* shaderSrc) {
-			mw::checkGlError();
 			GLuint shader= glCreateShader(type);
-			
-			glShaderSource(shader, 1, &shaderSrc, NULL);
-#if _DEBUG
-			mw::checkGlError();
-#endif // _DEBUG
+			glShaderSource(shader, 1, &shaderSrc, 0);
+			checkGlError();
 			glCompileShader(shader);
-#if _DEBUG
-			mw::checkGlError();
-#endif // _DEBUG
+			checkGlError();
 			glAttachShader(program, shader);
+			checkGlError();
 #if _DEBUG
-			mw::checkGlError();
 			GLint infoLen = 0;
-			
 			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
 			if (infoLen > 1) {
-				char message[256];
+				char message[256]; // A arbitrary value big enough to contain message.
 				GLsizei size;
 				glGetShaderInfoLog(shader, sizeof(message), &size, message);
 				std::string str;
@@ -96,7 +89,7 @@ namespace mw {
 		return -1;
 	}
 
-	bool Shader::loadAndLinkFromFile(std::string vShaderFile, std::string fShaderFile) {
+	bool Shader::loadAndLinkFromFile(std::string vShaderFile, std::string gShaderFile, std::string fShaderFile) {
 		if (programObjectId_ == 0) {
 			{
 				std::ifstream inFile(vShaderFile);
@@ -104,28 +97,41 @@ namespace mw {
 				stream << inFile.rdbuf();
 				vShaderFile = stream.str();
 			}
+			if (!gShaderFile.empty()) {
+				std::ifstream inFile(gShaderFile);
+				std::stringstream stream;
+				stream << inFile.rdbuf();
+				fShaderFile = stream.str();
+			}
 			{
 				std::ifstream inFile(fShaderFile);
 				std::stringstream stream;
 				stream << inFile.rdbuf();
 				fShaderFile = stream.str();
 			}
-			return loadAndLink(vShaderFile, fShaderFile);
+			return loadAndLink(vShaderFile, gShaderFile, fShaderFile);
 		}
 		return false;
 	}
 
-	bool Shader::loadAndLink(std::string vShader, std::string fShader) {
-		if (programObjectId_ == 0) {
+	bool Shader::loadAndLinkFromFile(std::string vShaderFile, std::string fShaderFile) {
+		return loadAndLinkFromFile(vShaderFile, "", fShaderFile);
+	}
 
+	bool Shader::loadAndLink(std::string vShader, std::string gShader, std::string fShader) {
+		if (programObjectId_ == 0) {
 			programObjectId_ = glCreateProgram();
 			shaderData_->programObjectId_ = programObjectId_;
 			shaderData_->windowInstance_ = Window::getInstanceId();
+			
 			if (programObjectId_ == 0) {
 				return false;
 			}
 
 			loadShader(programObjectId_, GL_VERTEX_SHADER, vShader.c_str());
+			if (!gShader.empty()) {
+				loadShader(programObjectId_, GL_GEOMETRY_SHADER, gShader.c_str());
+			}
 			loadShader(programObjectId_, GL_FRAGMENT_SHADER, fShader.c_str());
 
 			// Bind all attributes.
@@ -153,15 +159,19 @@ namespace mw {
 				return false;
 			}
 
-			glUseProgram();
+			useProgram();
 			return true;
 		}
 		return false;
 	}
 
-	void Shader::glUseProgram() const {
+	bool Shader::loadAndLink(std::string vShader, std::string fShader) {
+		return loadAndLink(vShader, "", fShader);
+	}
+
+	void Shader::useProgram() const {
 		if (programObjectId_ != 0) {
-			::glUseProgram(programObjectId_);
+			glUseProgram(programObjectId_);
 		}
 	}
 

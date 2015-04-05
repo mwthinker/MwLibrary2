@@ -43,7 +43,7 @@ namespace mw {
 			~Data();
 
 			GLuint vboId_;
-			char windowInstance_;
+			int windowInstance_;
 		};
 
 		std::shared_ptr<Data> data_;

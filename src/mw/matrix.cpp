@@ -35,7 +35,7 @@ namespace mw {
 	}
 
 	float Matrix44::determinant() const {
-		const mw::Matrix44& m = *this;
+		const Matrix44& m = *this;
 		return
 			m(0, 3)*m(1, 2)*m(2, 1)*m(3, 0) - m(0, 2)*m(1, 3)*m(2, 1)*m(3, 0) - m(0, 3)*m(1, 1)*m(2, 2)*m(3, 0) + m(0, 1)*m(1, 3)*m(2, 2)*m(3, 0) +
 			m(0, 2)*m(1, 1)*m(2, 3)*m(3, 0) - m(0, 1)*m(1, 2)*m(2, 3)*m(3, 0) - m(0, 3)*m(1, 2)*m(2, 0)*m(3, 1) + m(0, 2)*m(1, 3)*m(2, 0)*m(3, 1) +
@@ -45,9 +45,9 @@ namespace mw {
 			m(0, 2)*m(1, 0)*m(2, 1)*m(3, 3) - m(0, 0)*m(1, 2)*m(2, 1)*m(3, 3) - m(0, 1)*m(1, 0)*m(2, 2)*m(3, 3) + m(0, 0)*m(1, 1)*m(2, 2)*m(3, 3);
 	}
 
-	mw::Matrix44 Matrix44::inverse() const {
-		mw::Matrix44 tmp;
-		const mw::Matrix44& m = *this;
+	Matrix44 Matrix44::inverse() const {
+		Matrix44 tmp;
+		const Matrix44& m = *this;
 		float scale = 1.f / determinant();
 		tmp(0, 0) = scale*(m(1, 2)*m(2, 3)*m(3, 1) - m(1, 3)*m(2, 2)*m(3, 1) + m(1, 3)*m(2, 1)*m(3, 2) - m(1, 1)*m(2, 3)*m(3, 2) - m(1, 2)*m(2, 1)*m(3, 3) + m(1, 1)*m(2, 2)*m(3, 3));
 		tmp(0, 1) = scale*(m(0, 3)*m(2, 2)*m(3, 1) - m(0, 2)*m(2, 3)*m(3, 1) - m(0, 3)*m(2, 1)*m(3, 2) + m(0, 1)*m(2, 3)*m(3, 2) + m(0, 2)*m(2, 1)*m(3, 3) - m(0, 1)*m(2, 2)*m(3, 3));
@@ -69,7 +69,7 @@ namespace mw {
 	}
 
 	Matrix44 getTranslateMatrix44(float x, float y, float z) {
-		return mw::Matrix44(
+		return Matrix44(
 			1, 0, 0, x,
 			0, 1, 0, y,
 			0, 0, 1, z,
@@ -80,7 +80,7 @@ namespace mw {
 		float s = std::sin(angle);
 		float c = std::cos(angle);
 
-		return mw::Matrix44(
+		return Matrix44(
 			x*x*(1 - c) + c,   x*y*(1 - c) - z*s, x*z*(1 - c) + y*s, 0,
 			y*x*(1 - c) + z*s, y*y*(1 - c) + c,   y*z*(1 - c) - x*s, 0,
 			z*x*(1 - c) - y*s, y*z*(1 - c) + x*s, z*z*(1 - c) + c,   0,
@@ -88,7 +88,7 @@ namespace mw {
 	}
 
 	Matrix44 getScaleMatrix44(float x, float y, float z) {
-		return mw::Matrix44(
+		return Matrix44(
 			x, 0, 0, 0,
 			0, y, 0, 0,
 			0, 0, z, 0,
@@ -98,7 +98,7 @@ namespace mw {
 	Matrix44 getOrthoProjectionMatrix44(float left, float right, float bottom, float top,
 		float nearVal, float farVal) {
 
-		return mw::Matrix44(
+		return Matrix44(
 			2 / (right - left), 0, 0, -(right + left) / (right - left),
 			0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom),
 			0, 0, -2 / (farVal - nearVal), -(farVal + nearVal) / (farVal - nearVal),
@@ -109,7 +109,7 @@ namespace mw {
 		float bottom, float top,
 		float nearVal, float farVal) {
 
-		return mw::Matrix44(2 * nearVal / (right - left), 0, (right + left) / (right - left), 0,
+		return Matrix44(2 * nearVal / (right - left), 0, (right + left) / (right - left), 0,
 			0, 2 * nearVal / (top - bottom), (top + bottom) / (top - bottom), 0,
 			0, 0, -(farVal + nearVal) / (farVal - nearVal), -2 * farVal * nearVal / (farVal - nearVal),
 			0, 0, -1, 0);

@@ -55,24 +55,24 @@ public:
     TestShader();
     TestShader(std::string vShader, std::string fShader);
 
-    void glUseProgram() const;
+	void useProgram() const;
 
     // Vertex buffer Attributes. ---------------------------
 
-    void setGlPosA(GLint size, const GLvoid* data) const;
-    void setGlPosA(GLint size, GLsizei stride, const GLvoid* data) const;
+    void setPosA(GLint size, const GLvoid* data) const;
+    void setPosA(GLint size, GLsizei stride, const GLvoid* data) const;
 
-    void setGlTexA(GLint size, const GLvoid* data) const;
-    void setGlTexA(GLint size, GLsizei stride, const GLvoid* data) const;
+    void setTexA(GLint size, const GLvoid* data) const;
+    void setTexA(GLint size, GLsizei stride, const GLvoid* data) const;
 
     // Uniforms. -------------------------------------------
 
-    void setGlProjectionMatrixU(const mw::Matrix44& matrix) const;
-    void setGlModelMatrixU(const mw::Matrix44& matrix) const;
+    void setProjectionMatrixU(const mw::Matrix44& matrix) const;
+    void setModelMatrixU(const mw::Matrix44& matrix) const;
 
-    void setGlColorU(float red, float green, float blue, float alpha = 1) const;
-    void setGlColorU(const mw::Color& color) const;
-    void setGlTextureU(bool texture) const;
+    void setColorU(float red, float green, float blue, float alpha = 1) const;
+    void setColorU(const mw::Color& color) const;
+    void setTextureU(bool texture) const;
 
 private:
     mw::Shader shader_;
