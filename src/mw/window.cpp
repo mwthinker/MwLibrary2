@@ -40,7 +40,8 @@ namespace mw {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorGlVersion);
 
 		if (SDL_GL_LoadLibrary(0) != 0) {
-			std::cerr << "\nSDL_GL_LoadLibrary failed: " << SDL_GetError() << "\nFailed to open gl version" << majorGlVersion << "." << minorGlVersion << std::endl;
+			std::cerr << "SDL_GL_LoadLibrary failed: " << SDL_GetError() << std::endl;
+			std::cerr << "Failed to OpenGL version" << majorGlVersion << "." << minorGlVersion << std::endl;
 			std::exit(1);
 		}
 
@@ -53,7 +54,7 @@ namespace mw {
 			flags);
 
 		if (window_ == 0) {
-			std::cerr << "\nSDL_CreateWindow failed: " << SDL_GetError() << std::endl;
+			std::cerr << "SDL_CreateWindow failed: " << SDL_GetError() << std::endl;
 			std::exit(1);
 		}
 
@@ -71,18 +72,28 @@ namespace mw {
 
 	void Window::setupOpenGlContext() {
 		glContext_ = SDL_GL_CreateContext(window_);
+		if (SDL_GL_CreateContext == 0) {
+			std::cerr << "SDL_GL_CreateContext failed: " << SDL_GetError() << std::endl;
+			std::exit(1);
+		}
+
 		if (SDL_GL_SetSwapInterval(1) < 0) {
 			std::cerr << "Warning: Unable to set VSync! SDL Error: " << SDL_GetError() << std::endl;
 		}
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-		std::cout << "\nGL_VERSION: " << reinterpret_cast<const char *>(glGetString(GL_VERSION)) << std::endl;
-		std::cout << "GL_SHADING_LANGUAGE_VERSION: " << reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)) << std::endl;
+		if (char* version = (char*) glGetString(GL_VERSION)) {
+			std::cout << "GL_VERSION: " << version << std::endl;
+			std::cout << "GL_SHADING_LANGUAGE_VERSION: " << (char*) glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+		} else {
+			std::cerr << "Error: unknown OpenGL version loadad!" << std::endl;
+			std::exit(1);
+		}
 
 		GLenum error = glewInit();
 		if (GLEW_OK != error) {
 			// Problem: glewInit failed, something is seriously wrong.
-			std::cerr << "\nError: " << glewGetErrorString(error) << "\n";
+			std::cerr << "Error: " << glewGetErrorString(error) << std::endl;
 			std::exit(1);
 		}
 
@@ -103,7 +114,7 @@ namespace mw {
 	}
 
 	void Window::startLoop() {
-	    auto time = std::chrono::high_resolution_clock::now();
+		auto time = std::chrono::high_resolution_clock::now();
 		while (!quit_) {
 			SDL_Event eventSDL;
 			while (SDL_PollEvent(&eventSDL)) {
@@ -112,12 +123,12 @@ namespace mw {
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-            auto currentTime = std::chrono::high_resolution_clock::now();
+			auto currentTime = std::chrono::high_resolution_clock::now();
 			std::chrono::duration<double> delta = currentTime - time;
 			update(delta.count());
-            time = currentTime;
+			time = currentTime;
 
-            SDL_GL_SwapWindow(window_);
+			SDL_GL_SwapWindow(window_);
 		}
 	}
 
