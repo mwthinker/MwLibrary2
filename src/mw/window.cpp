@@ -133,17 +133,18 @@ namespace mw {
 	}
 
 	void Window::setFullScreen(bool fullScreen) {
-		if (isFullScreen()) {
-			SDL_SetWindowFullscreen(window_, 0);
-			SDL_SetWindowSize(window_, width_, height_);
-			if (borderless_) {
-				SDL_SetWindowBordered(window_, SDL_bool::SDL_FALSE);
+		if (fullScreen != isFullScreen()) {
+			if (isFullScreen()) {
+				SDL_SetWindowFullscreen(window_, 0);
+				SDL_SetWindowSize(window_, width_, height_);
+				if (borderless_) {
+					SDL_SetWindowBordered(window_, SDL_bool::SDL_FALSE);
+				}
+			} else {
+				SDL_GetWindowSize(window_, &width_, &height_);
+				SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
 			}
-		} else {
-			SDL_GetWindowSize(window_, &width_, &height_);
-			SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
 		}
 	}
 
 } // Namespace mw.
-
