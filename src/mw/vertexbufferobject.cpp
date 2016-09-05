@@ -4,44 +4,57 @@
 
 namespace mw {
 
-	VertexBufferObject::VertexBufferObject() : data_(std::make_shared<Data>()), size_(0), vboId_(0), target_(0) {
+	VertexBufferObject::VertexBufferObject() : data_(std::make_shared<Data>()) {
+		data_->size_ = 0;
+		data_->vboId_ = 0;
+		data_->target_ = 0;
 	}
 
 	void VertexBufferObject::bindBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage) {
-		if (vboId_ == 0) {
-			target_ = target;
-			size_ = size;
-			glGenBuffers(1, &vboId_);
-			glBindBuffer(target, vboId_);
+		if (data_->vboId_ == 0) {
+			data_->target_ = target;
+			data_->size_ = size;
+			
+			glGenBuffers(1, &data_->vboId_);
+			glBindBuffer(target, data_->vboId_);
 			glBufferData(target, size, data, usage);
-			glBindBuffer(target_, 0);
-			data_->vboId_ = vboId_;
+			glBindBuffer(data_->target_, 0);
+			
 			data_->windowInstance_ = Window::getInstanceId();
 		}
 	}
 
 	void VertexBufferObject::bindBufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const {
-		if (vboId_ != 0) {
-			glBindBuffer(target_, vboId_);
-			glBufferSubData(target_, offset, size, data);
-			glBindBuffer(target_, 0);
+		if (data_->vboId_ != 0) {
+			glBindBuffer(data_->target_, data_->vboId_);
+			glBufferSubData(data_->target_, offset, size, data);
+			glBindBuffer(data_->target_, 0);
 		}
 	}
 
 	void VertexBufferObject::bindBuffer() const {
-		if (vboId_ != 0) {
-			glBindBuffer(target_, vboId_);
+		if (data_->vboId_ != 0) {
+			glBindBuffer(data_->target_, data_->vboId_);
 		}
 	}
 
 	void VertexBufferObject::unbindBuffer() const {
-		glBindBuffer(target_, 0);
+		glBindBuffer(data_->target_, 0);
+	}
+
+	// Return the size in bytes for the current data.
+	int VertexBufferObject::getSize() const {		
+		return data_->size_;
+	}
+
+	// Return the target specified.
+	GLenum VertexBufferObject::getTarget() const {
+		return data_->target_;
 	}
 
 	VertexBufferObject::Data::Data() : 
 		vboId_(0),
 		windowInstance_(0) {
-
 	}
 
 	VertexBufferObject::Data::~Data() {

@@ -27,14 +27,10 @@ namespace mw {
 		void unbindBuffer() const;
 
 		// Return the size in bytes for the current data.
-		inline int getSize() const {
-			return size_;
-		}
+		int getSize() const;
 
 		// Return the target specified.
-		inline GLenum getTarget() const {
-			return target_;
-		}
+		GLenum getTarget() const;
 
 	private:
 		class Data {
@@ -44,12 +40,11 @@ namespace mw {
 
 			GLuint vboId_;
 			int windowInstance_;
+			int size_;
+			GLenum target_;
 		};
 
 		std::shared_ptr<Data> data_;
-		int size_;
-		GLuint vboId_;
-		GLenum target_;
 	};
 
 } // Namespace mw.
