@@ -62,6 +62,9 @@ namespace mw {
 		if (vboId_ != 0 && windowInstance_ == Window::getInstanceId()) {
 			// Is called if the buffer is valid and therefore need to be cleaned up.
 			glDeleteBuffers(1, &vboId_);
+			vboId_ = 0;
+			size_ = 0;
+			target_ = 0;
 		}
 	}
 
