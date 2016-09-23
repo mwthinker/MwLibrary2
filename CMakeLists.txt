@@ -26,7 +26,6 @@ set(SOURCES
 	src/mw/initttf.h
 	src/mw/joystick.cpp
 	src/mw/joystick.h
-	src/mw/matrix.cpp
 	src/mw/matrix.h
 	src/mw/music.cpp
 	src/mw/music.h

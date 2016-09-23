@@ -1,5 +1,5 @@
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef MW_SHADER_H
+#define MW_SHADER_H
 
 #include "opengl.h"
 
@@ -49,7 +49,7 @@ namespace mw {
 
 		// Return if the shader program is linked.
 		inline bool isLinked() const {
-			return programObjectId_ != 0;
+			return shaderData_->programObjectId_ != 0;
 		}
 
 	private:
@@ -65,12 +65,9 @@ namespace mw {
 			int windowInstance_;
 		};
 
-		int location_;
-		GLuint programObjectId_;
-
 		std::shared_ptr<ShaderData> shaderData_;
 	};
 
 } // Namespace mw.
 
-#endif // SHADER_H
+#endif // MW_SHADER_H

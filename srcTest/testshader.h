@@ -8,6 +8,8 @@
 
 #include <string>
 
+using Mat44 = mw::Matrix44<float>;
+
 static const std::string TEST_SHADER_VER =
     "#version 100\n"
     ""
@@ -67,8 +69,8 @@ public:
 
     // Uniforms. -------------------------------------------
 
-    void setProjectionMatrixU(const mw::Matrix44& matrix) const;
-    void setModelMatrixU(const mw::Matrix44& matrix) const;
+    void setProjectionMatrixU(const Mat44& matrix) const;
+    void setModelMatrixU(const Mat44& matrix) const;
 
     void setColorU(float red, float green, float blue, float alpha = 1) const;
     void setColorU(const mw::Color& color) const;

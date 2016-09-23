@@ -100,7 +100,7 @@ bool equal(float a, float b) {
     return std::abs(a - b) < 0.01f;
 }
 
-bool equal(const mw::Matrix44& a, const mw::Matrix44& b) {
+bool equal(const Mat44& a, const Mat44& b) {
     for (int i = 0; i < 16; ++i) {
         if (!equal(a[i], b[i])) {
             return false;
@@ -109,7 +109,16 @@ bool equal(const mw::Matrix44& a, const mw::Matrix44& b) {
     return true;
 }
 
-void print(const mw::Matrix44& m) {
+bool equalZERO(const Mat44& m) {
+	for (float element : m) {
+		if (!equal(element, 0)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+void print(const Mat44& m) {
     std::cout << "\nMatrix\n";
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -120,29 +129,39 @@ void print(const mw::Matrix44& m) {
 }
 
 void testMatrix() {
-    mw::Matrix44 m(1,     3.1f, 7.2f, 3.9f,
-                   9.1f,  1.3f, 2.f,  0.1f,
-                   0.3f,  0.9f, 11.f, 12.f,
-                   12.f,  0.4f, 0.5f, 5.f);
+	//const Mat44 a = Mat44::I<float>;
+	const Mat44 b = Mat44::I;
+
+	Mat44 m(1, 3.1f, 7.2f, 3.9f,
+		9.1f, 1.3f, 2.f, 0.1f,
+		0.3f, 0.9f, 11.f, 12.f,
+		12.f, 0.4f, 0.5f, 5.f);
 
     assert(equal(m, m));
-    auto m2 = mw::I_44 + m;
+    auto m2 = Mat44::I + m;
     assert(!equal(m, m2));
+
+	// Test constants.
+	assert(equalZERO(Mat44::ZERO));
+	assert(equal(Mat44::I(0,0), 1) && equal(Mat44::I(0, 1), 0) && equal(Mat44::I(0, 2), 0) && equal(Mat44::I(0, 3), 0) &&
+		equal(Mat44::I(1, 0), 0) && equal(Mat44::I(1, 1), 1) && equal(Mat44::I(1, 2), 0) && equal(Mat44::I(1, 3), 0) &&
+		equal(Mat44::I(2, 0), 0) && equal(Mat44::I(2, 1), 0) && equal(Mat44::I(2, 2), 1) && equal(Mat44::I(2, 3), 0) &&
+		equal(Mat44::I(3, 0), 0) && equal(Mat44::I(3, 1), 0) && equal(Mat44::I(3, 2), 0) && equal(Mat44::I(3, 3), 1));
 
     // Test rotation!
     m2 = m;
     mw::rotate2D(m2, 0.3f);
-    assert(equal(m * mw::getRotateMatrix44(0.3f, 0, 0, 1), m2));
+    assert(equal(m * mw::getRotateMatrix44<float>(0.3f, 0, 0, 1), m2));
 
     // Test translation!
     m2 = m;
     mw::translate2D(m2, 2.f, 3.f);
-    assert(equal(m * mw::getTranslateMatrix44(2.f, 3.f), m2));
+    assert(equal(m * mw::getTranslateMatrix44<float>(2.f, 3.f), m2));
 
     // Test scaling!
     m2 = m;
     mw::scale2D(m2, 2.f, 3.f);
-    assert(equal(m * mw::getScaleMatrix44(2.f, 3.f, 1), m2));
+    assert(equal(m * mw::getScaleMatrix44<float>(2.f, 3.f, 1), m2));
 
     std::cout << "\ntestMatrix() sucsessfully!\n";
 }

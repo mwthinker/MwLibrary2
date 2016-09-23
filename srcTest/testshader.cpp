@@ -61,11 +61,11 @@ void TestShader::setTexA(GLint size, GLsizei stride, const GLvoid* data) const {
 
 // Uniforms. -------------------------------------------
 
-void TestShader::setProjectionMatrixU(const mw::Matrix44& matrix) const {
+void TestShader::setProjectionMatrixU(const Mat44& matrix) const {
     glUniformMatrix4fv(uProjIndex_, 1, false, matrix.data());
 }
 
-void TestShader::setModelMatrixU(const mw::Matrix44& matrix) const {
+void TestShader::setModelMatrixU(const Mat44& matrix) const {
     glUniformMatrix4fv(uModelIndex_, 1, false, matrix.data());
 }
 

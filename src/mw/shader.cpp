@@ -37,8 +37,6 @@ namespace mw {
 	}
 
 	Shader::Shader() :
-		location_(0),
-		programObjectId_(0),
 		shaderData_(std::make_shared<ShaderData>()) {
 
 	}
@@ -59,8 +57,8 @@ namespace mw {
 	}
 
 	void Shader::bindAttribute(std::string attribute) {
-		if (programObjectId_ == 0) {
-			shaderData_->attributes_[attribute] = location_;
+		if (shaderData_->programObjectId_ == 0) {
+			shaderData_->attributes_[attribute] = shaderData_->location_;
 		}
 	}
 
@@ -73,13 +71,13 @@ namespace mw {
 	}
 
 	int Shader::getUniformLocation(std::string uniform) const {
-		if (programObjectId_ != 0) {
+		if (shaderData_->programObjectId_ != 0) {
 			auto it = shaderData_->uniforms_.find(uniform);
 
 			if (it != shaderData_->uniforms_.end()) {
 				return it->second;
 			} else {
-				int loc = glGetUniformLocation(programObjectId_, uniform.c_str());
+				int loc = glGetUniformLocation(shaderData_->programObjectId_, uniform.c_str());
 				if (loc != -1) {
 					shaderData_->uniforms_[uniform] = loc;
 				}
@@ -90,7 +88,7 @@ namespace mw {
 	}
 
 	bool Shader::loadAndLinkFromFile(std::string vShaderFile, std::string gShaderFile, std::string fShaderFile) {
-		if (programObjectId_ == 0) {
+		if (shaderData_->programObjectId_ == 0 && shaderData_->programObjectId_ == 0) {
 			{
 				std::ifstream inFile(vShaderFile);
 				std::stringstream stream;
@@ -119,43 +117,42 @@ namespace mw {
 	}
 
 	bool Shader::loadAndLink(std::string vShader, std::string gShader, std::string fShader) {
-		if (programObjectId_ == 0) {
-			programObjectId_ = glCreateProgram();
-			shaderData_->programObjectId_ = programObjectId_;
+		if (shaderData_->programObjectId_ == 0) {
+			shaderData_->programObjectId_ = glCreateProgram();
 			shaderData_->windowInstance_ = Window::getInstanceId();
 			
-			if (programObjectId_ == 0) {
+			if (shaderData_->programObjectId_ == 0) {
 				return false;
 			}
 
-			loadShader(programObjectId_, GL_VERTEX_SHADER, vShader.c_str());
+			loadShader(shaderData_->programObjectId_, GL_VERTEX_SHADER, vShader.c_str());
 			if (!gShader.empty()) {
-				loadShader(programObjectId_, GL_GEOMETRY_SHADER, gShader.c_str());
+				loadShader(shaderData_->programObjectId_, GL_GEOMETRY_SHADER, gShader.c_str());
 			}
-			loadShader(programObjectId_, GL_FRAGMENT_SHADER, fShader.c_str());
+			loadShader(shaderData_->programObjectId_, GL_FRAGMENT_SHADER, fShader.c_str());
 
 			// Bind all attributes.
 			for (auto& pair : shaderData_->attributes_) {
-				glBindAttribLocation(programObjectId_, location_, pair.first.c_str());
-				pair.second = location_++;
+				glBindAttribLocation(shaderData_->programObjectId_, shaderData_->location_, pair.first.c_str());
+				pair.second = shaderData_->location_++;
 			}
 
-			glLinkProgram(programObjectId_);
+			glLinkProgram(shaderData_->programObjectId_);
 
 			GLint linked;
-			glGetProgramiv(programObjectId_, GL_LINK_STATUS, &linked);
+			glGetProgramiv(shaderData_->programObjectId_, GL_LINK_STATUS, &linked);
 			if (!linked) {
 				GLint infoLen = 0;
-				glGetProgramiv(programObjectId_, GL_INFO_LOG_LENGTH, &infoLen);
+				glGetProgramiv(shaderData_->programObjectId_, GL_INFO_LOG_LENGTH, &infoLen);
 				if (infoLen > 1) {
 					char message[256];
 					GLsizei size;
-					glGetProgramInfoLog(programObjectId_, sizeof(message), &size, message);
+					glGetProgramInfoLog(shaderData_->programObjectId_, sizeof(message), &size, message);
 					std::string str;
 					str.append(message, message + size);
 					std::cerr << "Error linking program: " << str << std::endl;
 				}
-				glDeleteProgram(programObjectId_);
+				glDeleteProgram(shaderData_->programObjectId_);
 				return false;
 			}
 
@@ -170,8 +167,8 @@ namespace mw {
 	}
 
 	void Shader::useProgram() const {
-		if (programObjectId_ != 0) {
-			glUseProgram(programObjectId_);
+		if (shaderData_->programObjectId_ != 0) {
+			glUseProgram(shaderData_->programObjectId_);
 		}
 	}
 

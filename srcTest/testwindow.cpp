@@ -101,9 +101,9 @@ TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
 }
 
 void TestWindow::update(double deltaTime) {
-	mw::Matrix44 m = mw::getTranslateMatrix44((float) x_, (float) y_);
-	mw::Matrix44 m2 = m * mw::getScaleMatrix44(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44(0.5, 0.5);
-	mw::Matrix44 m3 = m *  mw::getTranslateMatrix44(getWidth() * 0.5f, getHeight() * 0.5f) * mw::getScaleMatrix44(sprite2_.getWidth(), sprite2_.getHeight());
+	Mat44 m = mw::getTranslateMatrix44<float>((float) x_, (float) y_);
+	Mat44 m2 = m * mw::getScaleMatrix44<float>(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44<float>(0.5, 0.5);
+	Mat44 m3 = m *  mw::getTranslateMatrix44<float>(getWidth() * 0.5f, getHeight() * 0.5f) * mw::getScaleMatrix44<float>(sprite2_.getWidth(), sprite2_.getHeight());
 	// Update model matrix.
 	shader_.useProgram();
 	shader_.setColorU(1, 1, 1);
@@ -163,5 +163,5 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 
 void TestWindow::resize(int w, int h) {
 	glViewport(0, 0, w, h);
-	shader_.setProjectionMatrixU(mw::getOrthoProjectionMatrix44(0, (float) w, 0, (float) h));
+	shader_.setProjectionMatrixU(mw::getOrthoProjectionMatrix44<float>(0, (float) w, 0, (float) h));
 }

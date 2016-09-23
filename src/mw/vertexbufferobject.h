@@ -1,5 +1,5 @@
-#ifndef VERTEXBUFFEROBJECT_H
-#define VERTEXBUFFEROBJECT_H
+#ifndef MW_VERTEXBUFFEROBJECT_H
+#define MW_VERTEXBUFFEROBJECT_H
 
 #include "opengl.h"
 
@@ -49,4 +49,4 @@ namespace mw {
 
 } // Namespace mw.
 
-#endif // VERTEXBUFFEROBJECT_H
+#endif // MW_VERTEXBUFFEROBJECT_H
