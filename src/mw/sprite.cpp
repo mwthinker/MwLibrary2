@@ -9,7 +9,9 @@ namespace mw {
 	Sprite::Sprite() : x_(0), y_(0), dx_(0), dy_(0) {
 	}
 
-	Sprite::Sprite(std::string image, std::function<void()> filter) : Sprite(mw::Texture(image, filter), 0, 0, (float) texture_.getWidth(), (float) texture_.getHeight()) {
+	Sprite::Sprite(std::string image, std::function<void()> filter) : texture_(mw::Texture(image, filter)), x_(0), y_(0) {
+		dx_ = (float) texture_.getWidth();
+		dy_ = (float) texture_.getHeight();
 	}
 
 	Sprite::Sprite(const Texture& texture) : Sprite(texture, 0, 0, (float) texture.getWidth(), (float) texture.getHeight()) {

@@ -122,7 +122,7 @@ namespace mw {
 		mixChunk_ = Mix_LoadWAV(filename.c_str());
 		if (mixChunk_ == nullptr) {
 			valid_ = false;
-			std::cerr << filename + " failed to load!" << std::endl;
+			std::cerr << "Mix_LoadWAV: " << filename + " failed to load. " << Mix_GetError() << std::endl;
 		}
 	}
 
