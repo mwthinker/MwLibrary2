@@ -4,16 +4,17 @@
 namespace mw {
 
 	// Holds RGBA-color needed to define the color in OpenGL.
+	template <typename T>
 	class Color {
 	public:
 		inline Color() {
 		}
 
-		inline Color(float red, float green, float blue, float alpha = 1.f) :
+		inline Color(T red, T green, T blue, T alpha = 1) :
             red_(red), green_(green), blue_(blue), alpha_(alpha) {
 		}
 
-		float red_, green_, blue_, alpha_;
+		T red_, green_, blue_, alpha_;
 	};
 
 } // Namespace mw.

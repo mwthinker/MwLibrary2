@@ -36,9 +36,7 @@ namespace mw {
 
 	}
 
-	Shader::Shader() :
-		shaderData_(std::make_shared<ShaderData>()) {
-
+	Shader::Shader() : shaderData_(std::make_shared<ShaderData>()) {
 	}
 
 	Shader::ShaderData::ShaderData() :

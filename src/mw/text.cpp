@@ -11,15 +11,11 @@ namespace mw {
 		setText("");
 	}
 
-	Text::Text(std::string text, const Font& font) :
-	    characterSize_((float) font.getCharacterSize()), font_(font) {
-
+	Text::Text(std::string text, const Font& font) : characterSize_((float) font.getCharacterSize()), font_(font) {
 		setText(text);
 	}
 
-	Text::Text(std::string text, const Font& font, float characterSize) :
-	    characterSize_(characterSize), font_(font) {
-
+	Text::Text(std::string text, const Font& font, float characterSize) : characterSize_(characterSize), font_(font) {
 	    setText(text);
 	}
 

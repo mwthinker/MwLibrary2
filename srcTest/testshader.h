@@ -8,7 +8,8 @@
 
 #include <string>
 
-using Mat44 = mw::Matrix44<float>;
+using Mat44 = mw::Matrix44<GLfloat>;
+using Color = mw::Color<GLfloat>;
 
 static const std::string TEST_SHADER_VER =
     "#version 100\n"
@@ -73,7 +74,7 @@ public:
     void setModelMatrixU(const Mat44& matrix) const;
 
     void setColorU(float red, float green, float blue, float alpha = 1) const;
-    void setColorU(const mw::Color& color) const;
+    void setColorU(const Color& color) const;
     void setTextureU(bool texture) const;
 
 private:

@@ -163,5 +163,5 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 
 void TestWindow::resize(int w, int h) {
 	glViewport(0, 0, w, h);
-	shader_.setProjectionMatrixU(mw::getOrthoProjectionMatrix44<float>(0, (float) w, 0, (float) h));
+	shader_.setProjectionMatrixU(mw::getOrthoProjectionMatrix44<GLfloat>(0, (GLfloat) w, 0, (GLfloat) h));
 }
