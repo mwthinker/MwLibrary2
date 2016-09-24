@@ -15,29 +15,34 @@ namespace mw {
 
 		namespace {
 
-			typedef std::tuple<Uint8, Uint8, Uint8> Pixel3;
-			typedef std::tuple<Uint8, Uint8, Uint8, Uint8> Pixel4;
+			using Pixel1 = std::tuple<Uint8>;
+			using Pixel2 = std::tuple<Uint8, Uint8>;
+			using Pixel3 = std::tuple<Uint8, Uint8, Uint8>;
+			using Pixel4 = std::tuple<Uint8, Uint8, Uint8, Uint8>;
+
+			template <typename Pixel>
+			void flipVerticalGeneric(SDL_Surface* surface) {
+				for (int i = 0; i < surface->h / 2; ++i) {
+					for (int j = 0; j < surface->w; ++j) {
+						Pixel* startElement = (Pixel*) surface->pixels + i * surface->w + j;
+						Pixel* endElement = (Pixel*) surface->pixels + (surface->h - i - 1) * surface->w + j;
+						std::swap(*startElement, *endElement);
+					}
+				}
+			}
 
 		}
-		
+
 		void flipVertical(SDL_Surface* surface) {
-			assert(surface->format->BytesPerPixel == 4 || surface->format->BytesPerPixel == 3);
+			assert(surface->format->BytesPerPixel >= 1 && surface->format->BytesPerPixel <= 4);
 			if (surface->format->BytesPerPixel == 4) {
-				for (int i = 0; i < surface->h / 2; ++i) {
-					for (int j = 0; j < surface->w; ++j) {
-						Pixel4* startElement = (Pixel4*) surface->pixels + i * surface->w + j;
-						Pixel4* endElement = (Pixel4*) surface->pixels + (surface->h - i - 1) * surface->w + j;
-						std::swap(*startElement, *endElement);
-					}
-				}
-			} else {
-				for (int i = 0; i < surface->h / 2; ++i) {
-					for (int j = 0; j < surface->w; ++j) {
-						Pixel3* startElement = (Pixel3*) surface->pixels + i * surface->w + j;
-						Pixel3* endElement = (Pixel3*) surface->pixels + (surface->h - i - 1) * surface->w + j;
-						std::swap(*startElement, *endElement);
-					}
-				}
+				flipVerticalGeneric<Pixel4>(surface);
+			} else if (surface->format->BytesPerPixel == 3) {
+				flipVerticalGeneric<Pixel3>(surface);
+			} else if (surface->format->BytesPerPixel == 2) {
+				flipVerticalGeneric<Pixel2>(surface);
+			} else if (surface->format->BytesPerPixel == 1) {
+				flipVerticalGeneric<Pixel1>(surface);
 			}
 		}
 
