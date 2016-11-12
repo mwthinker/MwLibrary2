@@ -1,5 +1,5 @@
-#ifndef MW_MATRIX_H
-#define MW_MATRIX_H
+#ifndef MW_MATRIX44_H
+#define MW_MATRIX44_H
 
 #include <cmath>
 #include <array>
@@ -258,4 +258,4 @@ namespace mw {
 
 } // Namespace mw.
 
-#endif // MW_MATRIX_H
+#endif // MW_MATRIX44_H

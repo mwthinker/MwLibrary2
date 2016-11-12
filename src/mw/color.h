@@ -14,8 +14,17 @@ namespace mw {
             red_(red), green_(green), blue_(blue), alpha_(alpha) {
 		}
 
+		Color<T> operator*(T scale) {
+			return Color<T>(red_ * scale, green_ * scale, blue_ * scale, alpha_ * scale);
+		}
+
 		T red_, green_, blue_, alpha_;
 	};
+
+	template <typename T>
+	mw::Color<T> operator*(T scale, mw::Color<T> color) {
+		return mw::Color<T>(color.red_ * scale, color.green_ * scale, color.blue_ * scale, color.alpha_ * scale);
+	}
 
 } // Namespace mw.
 

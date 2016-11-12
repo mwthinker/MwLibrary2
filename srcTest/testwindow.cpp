@@ -4,7 +4,7 @@
 #include <mw/text.h>
 #include <mw/color.h>
 #include <mw/window.h>
-#include <mw/matrix.h>
+#include <mw/matrix44.h>
 #include <mw/opengl.h>
 #include <mw/sprite.h>
 
@@ -89,7 +89,7 @@ namespace {
 } // Anonymous namespace.
 
 TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
-	: mw::Window(2, 1, false, -1, -1, 512, 512, true, "Test"), sprite_(sprite), x_(x), y_(y),
+	: mw::Window(-1, -1, 512, 512, true, "Test"), sprite_(sprite), x_(x), y_(y),
 	shader_(TEST_SHADER_VER, TEST_SHADER_FRAG) {
 
 	focus_ = true;

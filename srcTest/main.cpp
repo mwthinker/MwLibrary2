@@ -3,7 +3,8 @@
 #include <mw/sprite.h>
 #include <mw/sound.h>
 #include <mw/textureatlas.h>
-#include <mw/matrix.h>
+#include <mw/matrix44.h>
+#include <mw/vec2.h>
 
 #include <iostream>
 #include <cassert>
@@ -96,8 +97,19 @@ void testLoadTextureAtlas2() {
 	std::cout << "\ntestLoadTextureAtlas2() sucsessfully!\n";
 }
 
-bool equal(float a, float b) {
-    return std::abs(a - b) < 0.01f;
+template <typename T>
+bool equal(T a, T b) {
+    return std::abs(a - b) < (T) 0.01;
+}
+
+template <typename T>
+bool equal(mw::Vec2<T> a, mw::Vec2<T> b) {
+	return equal(a.x_, b.x_) && equal(a.y_, b.y_);
+}
+
+template <typename T>
+bool equal(mw::Color<T> a, mw::Color<T> b) {
+	return equal(a.red_, b.red_) && equal(a.blue_, b.blue_) && equal(a.green_, b.green_) && equal(a.alpha_, b.alpha_);
 }
 
 bool equal(const Mat44& a, const Mat44& b) {
@@ -111,7 +123,7 @@ bool equal(const Mat44& a, const Mat44& b) {
 
 bool equalZERO(const Mat44& m) {
 	for (float element : m) {
-		if (!equal(element, 0)) {
+		if (!equal(element, 0.f)) {
 			return false;
 		}
 	}
@@ -143,10 +155,10 @@ void testMatrix() {
 
 	// Test constants.
 	assert(equalZERO(Mat44::ZERO));
-	assert(equal(Mat44::I(0,0), 1) && equal(Mat44::I(0, 1), 0) && equal(Mat44::I(0, 2), 0) && equal(Mat44::I(0, 3), 0) &&
-		equal(Mat44::I(1, 0), 0) && equal(Mat44::I(1, 1), 1) && equal(Mat44::I(1, 2), 0) && equal(Mat44::I(1, 3), 0) &&
-		equal(Mat44::I(2, 0), 0) && equal(Mat44::I(2, 1), 0) && equal(Mat44::I(2, 2), 1) && equal(Mat44::I(2, 3), 0) &&
-		equal(Mat44::I(3, 0), 0) && equal(Mat44::I(3, 1), 0) && equal(Mat44::I(3, 2), 0) && equal(Mat44::I(3, 3), 1));
+	assert(equal(Mat44::I(0,0), 1.f) && equal(Mat44::I(0, 1), 0.f) && equal(Mat44::I(0, 2), 0.f) && equal(Mat44::I(0, 3), 0.f) &&
+		equal(Mat44::I(1, 0), 0.f) && equal(Mat44::I(1, 1), 1.f) && equal(Mat44::I(1, 2), 0.f) && equal(Mat44::I(1, 3), 0.f) &&
+		equal(Mat44::I(2, 0), 0.f) && equal(Mat44::I(2, 1), 0.f) && equal(Mat44::I(2, 2), 1.f) && equal(Mat44::I(2, 3), 0.f) &&
+		equal(Mat44::I(3, 0), 0.f) && equal(Mat44::I(3, 1), 0.f) && equal(Mat44::I(3, 2), 0.f) && equal(Mat44::I(3, 3), 1.f));
 
     // Test rotation!
     m2 = m;
@@ -166,8 +178,34 @@ void testMatrix() {
     std::cout << "\ntestMatrix() sucsessfully!\n";
 }
 
+void testVec2() {
+	using Vec2 = mw::Vec2<double>;
+
+	Vec2 v(1, 3);
+	Vec2 v2(7, 2);
+
+	assert(equal(v * v2, v.x_ * v2.x_ + v.y_ * v2.y_));
+
+	assert(!equal(-v, v));
+	assert(equal(v - v, Vec2(0, 0)));
+}
+
+void testColor() {
+	using Color = mw::Color<double>;
+
+	Color c1(1, 1, 1);
+	Color c2(0.5, 0.5, 0.5, 0.5);
+	Color c3(0.0, 0.0, 0.0, 0.0);
+
+	assert(equal(c1, c1));
+	assert(equal(0.5 * c1, c2));
+	assert(equal(c1 * 0.5, c2));
+}
+
 int main(int argc, char** argv) {
     testMatrix();
+	testVec2();
+	testColor();
 	testLoadTextureAtlas();
 	testLoadTextureAtlas2();
 

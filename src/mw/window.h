@@ -6,6 +6,7 @@
 #include <SDL.h>
 
 #include <string>
+#include <functional>
 
 namespace mw {
 
@@ -15,9 +16,13 @@ namespace mw {
 	class Window : public InitSdl {
 	public:
 		// Create a window with size determined by width and height in pixels.
-		Window(const int majorGlVersion, const int minorGlVersion, const bool glProfileEs,
-			int x, int y, int width, int height, bool resizeable,
-			std::string title = "", std::string icon = "", bool borderless = false);
+		Window(int x, int y, int width, int height, bool resizeable,
+			std::string title, std::string icon = "", bool borderless = false);
+
+		// Create a window with size determined by width and height in pixels.
+		Window(int x, int y, int width, int height, bool resizeable,
+			std::string title, std::string icon, bool borderless,
+			std::function<void()> initGl);
 
 		virtual ~Window();
 

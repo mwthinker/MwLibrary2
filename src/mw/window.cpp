@@ -4,21 +4,41 @@
 
 #include <SDL_image.h>
 
-#include <iostream>
 #include <chrono>
+#include <iostream>
 
 namespace mw {
 
 	int Window::nbrCurrentInstance = 0;
 
-	Window::Window(const int majorGlVersion, const int minorGlVersion, const bool glProfileEs,
-		int x, int y, int width, int height, bool resizeable,
-		std::string title, std::string icon, bool borderless) {
+	Window::Window(int x, int y, int width, int height, bool resizeable,
+		std::string title, std::string icon, bool borderless) : Window(x, y, width, height, resizeable, title, icon, borderless, []() {
+
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+		const int MAJOR_VERSION = 2;
+		const int MINOR_VERSION = 1;
+
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, MAJOR_VERSION);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, MINOR_VERSION);
+
+		if (SDL_GL_LoadLibrary(0) != 0) {
+			std::cerr << "SDL_GL_LoadLibrary failed: " << SDL_GetError() << std::endl;
+			std::cerr << "Failed to OpenGL version" << MAJOR_VERSION << "." << MINOR_VERSION << std::endl;
+			std::exit(1);
+		}
+	}) {
+	}
+
+	Window::Window(int x, int y, int width, int height, bool resizeable,
+		std::string title, std::string icon, bool borderless,
+		std::function<void()> initGl) {
 
 		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 		if (resizeable) {
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
+
 		borderless_ = borderless;
 		if (borderless) {
 			flags |= SDL_WINDOW_BORDERLESS;
@@ -31,19 +51,7 @@ namespace mw {
 			y = SDL_WINDOWPOS_UNDEFINED;
 		}
 
-		if (glProfileEs) {
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-		} else {
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-		}
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorGlVersion);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorGlVersion);
-
-		if (SDL_GL_LoadLibrary(0) != 0) {
-			std::cerr << "SDL_GL_LoadLibrary failed: " << SDL_GetError() << std::endl;
-			std::cerr << "Failed to OpenGL version" << majorGlVersion << "." << minorGlVersion << std::endl;
-			std::exit(1);
-		}
+		initGl();
 
 		window_ = SDL_CreateWindow(
 			title.c_str(),

@@ -2,7 +2,7 @@
 #define TESTSHADER_H
 
 #include <mw/opengl.h>
-#include <mw/matrix.h>
+#include <mw/matrix44.h>
 #include <mw/shader.h>
 #include <mw/color.h>
 
