@@ -104,7 +104,7 @@ namespace mw {
 		if (size != images_.size()) {
 			SDL_Surface* image = IMG_Load(filename.c_str());
 			if (image != 0) {
-				sprite = add(image);
+				sprite = add(image, border, uniqueKey);
 				SDL_FreeSurface(image);
 				return sprite;
 			} else {

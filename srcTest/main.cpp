@@ -63,16 +63,16 @@ void testLoadTextureAtlas2() {
 				sprite = atlas.add("cross.png", 1);
 				break;
 			case 3:
-				sprite = atlas.add(a, 1);
+				sprite = atlas.add(a, 10);
 				break;
 			case 4:
-				sprite = atlas.add(b, 1);
+				sprite = atlas.add(b, 5);
 				break;
 			case 5:
-				sprite = atlas.add(c, 1);
+				sprite = atlas.add(c, 50);
 				break;
 			case 6:
-				sprite = atlas.add(d, 1);
+				sprite = atlas.add(d, 20);
 				break;
 			default:
 			{
