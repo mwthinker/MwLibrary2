@@ -19,6 +19,8 @@ namespace mw {
 		// Only one music file can be played.
 		Music(std::string filename);
 
+		bool operator==(const Music& music) const;
+
 		// Play the music one time plus the "loops" variable.
 		// Will stop any other music object already playing.
 		// Set the volume defined by this object.

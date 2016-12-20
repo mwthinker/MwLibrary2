@@ -15,6 +15,8 @@ namespace mw {
 		// Creates an empty font.
 		Font();
 
+		bool operator==(const Font& Font) const;
+
 		// Load the font located in the file named (filename).
 		// Higher character size demands higher memory usage.
 		Font(const std::string& filename, int characterSize);

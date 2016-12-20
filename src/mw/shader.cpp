@@ -9,6 +9,8 @@
 
 namespace mw {
 
+	int Shader::currentProgramId = 0;
+
 	namespace {		
 
 		GLuint loadShader(GLuint program, GLenum type, const GLchar* shaderSrc) {
@@ -39,6 +41,10 @@ namespace mw {
 	Shader::Shader() : shaderData_(std::make_shared<ShaderData>()) {
 	}
 
+	bool Shader::operator==(const Shader& shader) const {
+		return shaderData_ == shader.shaderData_;
+	}
+
 	Shader::ShaderData::ShaderData() :
 		location_(0),
 		programObjectId_(0),
@@ -51,6 +57,7 @@ namespace mw {
 		if (programObjectId_ != 0 && windowInstance_ == Window::getInstanceId()) {
 			// Is called if the program is valid and therefore need to be cleaned up.
 			glDeleteProgram(programObjectId_);
+			currentProgramId = 0;
 		}
 	}
 
@@ -165,8 +172,9 @@ namespace mw {
 	}
 
 	void Shader::useProgram() const {
-		if (shaderData_->programObjectId_ != 0) {
+		if (shaderData_->programObjectId_ != 0 && currentProgramId != shaderData_->programObjectId_) {
 			glUseProgram(shaderData_->programObjectId_);
+			currentProgramId = shaderData_->programObjectId_;
 		}
 	}
 

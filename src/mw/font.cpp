@@ -10,6 +10,10 @@ namespace mw {
 	    characterSize_(0) {
 	}
 
+	bool Font::operator==(const Font& font) const {
+		return fontData_ == font.fontData_;
+	}
+
 	Font::Font(const std::string& filename, int characterSize) :
 	    fontData_(std::make_shared<FontData>()),
 	    characterSize_(0) {

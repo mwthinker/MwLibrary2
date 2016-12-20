@@ -19,6 +19,10 @@ namespace mw {
 	    setText(text);
 	}
 
+	bool Text::operator==(const Text& text) const {
+		return texture_ == text.texture_;
+	}
+
 	void Text::setText(std::string text) {
 		// Text changed?
 		if (text_ != text) {

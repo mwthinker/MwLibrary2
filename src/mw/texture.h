@@ -48,6 +48,8 @@ namespace mw {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		});
 
+		bool operator==(const Texture& texture) const;
+
 		// Binds the texture to the target. First call, copies 
 		// the image data to graphic memory.
 		void bindTexture() const;

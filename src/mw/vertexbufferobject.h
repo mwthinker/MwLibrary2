@@ -11,6 +11,8 @@ namespace mw {
 	public:
 		// Create a empty vertex buffer object.
 		VertexBufferObject();
+		
+		bool operator==(const VertexBufferObject& shader) const;
 
 		// Generates an id and bind the buffer data to the graphic card. The buffer is then unbind.
 		// Will only bind for the first call to this function.
@@ -33,6 +35,8 @@ namespace mw {
 		GLenum getTarget() const;
 
 	private:
+		static int currentBufferIdBinded;
+
 		class Data {
 		public:
 			Data();

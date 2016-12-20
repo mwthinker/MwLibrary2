@@ -14,6 +14,10 @@ namespace mw {
 		volume_ = 1;
 	}
 
+	bool Music::operator==(const Music& music) const {
+		return musicBuffer_ != nullptr && musicBuffer_ == music.musicBuffer_;
+	}
+
 	void Music::play(int loops) {
 		if (musicBuffer_ && musicBuffer_->valid_) {
 			setVolume(volume_);

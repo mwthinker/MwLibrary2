@@ -17,6 +17,8 @@ namespace mw {
 
 		~Sound();
 
+		bool operator==(const Sound& sound) const;
+
 		// Loads a soundfile and creates a sound.
 		Sound(std::string filename);
 

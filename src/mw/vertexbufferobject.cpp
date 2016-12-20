@@ -4,10 +4,16 @@
 
 namespace mw {
 
+	int VertexBufferObject::currentBufferIdBinded = 0;
+
 	VertexBufferObject::VertexBufferObject() : data_(std::make_shared<Data>()) {
 		data_->size_ = 0;
 		data_->vboId_ = 0;
 		data_->target_ = 0;
+	}
+
+	bool VertexBufferObject::operator==(const VertexBufferObject& vbo) const {
+		return data_ == vbo.data_;
 	}
 
 	void VertexBufferObject::bindBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage) {
@@ -18,7 +24,8 @@ namespace mw {
 			glGenBuffers(1, &data_->vboId_);
 			glBindBuffer(target, data_->vboId_);
 			glBufferData(target, size, data, usage);
-			glBindBuffer(data_->target_, 0);
+			currentBufferIdBinded = data_->vboId_;
+			//glBindBuffer(data_->target_, 0);
 			
 			data_->windowInstance_ = Window::getInstanceId();
 		}
@@ -26,19 +33,21 @@ namespace mw {
 
 	void VertexBufferObject::bindBufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const {
 		if (data_->vboId_ != 0) {
-			glBindBuffer(data_->target_, data_->vboId_);
+			//glBindBuffer(data_->target_, data_->vboId_);
 			glBufferSubData(data_->target_, offset, size, data);
-			glBindBuffer(data_->target_, 0);
+			//glBindBuffer(data_->target_, 0);			
 		}
 	}
 
 	void VertexBufferObject::bindBuffer() const {
-		if (data_->vboId_ != 0) {
+		if (data_->vboId_ != 0 && currentBufferIdBinded != data_->vboId_) {
 			glBindBuffer(data_->target_, data_->vboId_);
+			currentBufferIdBinded = data_->vboId_;
 		}
 	}
 
 	void VertexBufferObject::unbindBuffer() const {
+		currentBufferIdBinded = 0;
 		glBindBuffer(data_->target_, 0);
 	}
 
@@ -52,9 +61,7 @@ namespace mw {
 		return data_->target_;
 	}
 
-	VertexBufferObject::Data::Data() : 
-		vboId_(0),
-		windowInstance_(0) {
+	VertexBufferObject::Data::Data() : vboId_(0), windowInstance_(0) {
 	}
 
 	VertexBufferObject::Data::~Data() {

@@ -22,6 +22,8 @@ namespace mw {
 		TextureAtlas(const TextureAtlas&) = delete;
 		TextureAtlas& operator=(const TextureAtlas&) = delete;
 
+		bool operator==(const TextureAtlas& textureAtlas) const;
+
 		Sprite add(std::string filename, int border=0, std::string uniqueKey = "");
 
 		// Add the image to the texture atlas. Return true if sucsessfull, 

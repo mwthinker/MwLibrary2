@@ -14,6 +14,8 @@ namespace mw {
 		// Create an empty non linked shader.
 		Shader();
 
+		bool operator==(const Shader& shader ) const;
+
 		// Bind the attribute to the shader.
 		// Must be called before linking the shader in order for the attribute to
 		// be available. I.e. before calling loadAndLinkShadersFromFile(...).
@@ -53,6 +55,8 @@ namespace mw {
 		}
 
 	private:
+		static int currentProgramId;
+
 		struct ShaderData {
 			ShaderData();
 			~ShaderData();

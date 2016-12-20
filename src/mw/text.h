@@ -25,6 +25,8 @@ namespace mw {
 		// scaled to match the provided character size.
 		Text(std::string text, const Font& font, float characterSize);
 
+		bool operator==(const Text& text) const;
+
 		void setText(std::string text);
 
 		inline std::string getText() const {

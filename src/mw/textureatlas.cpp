@@ -97,6 +97,10 @@ namespace mw {
 		texture_ = Texture(width, height, filter);
 	}
 
+	bool TextureAtlas::operator==(const TextureAtlas& textureAtlas) const {
+		return texture_ == textureAtlas.texture_;
+	}
+
 	Sprite TextureAtlas::add(std::string filename, int border, std::string uniqueKey) {
 		int size = images_.size();
 		Sprite& sprite = images_[filename + uniqueKey];
