@@ -25,7 +25,6 @@ namespace mw {
 			glBindBuffer(target, data_->vboId_);
 			glBufferData(target, size, data, usage);
 			currentBufferIdBinded = data_->vboId_;
-			//glBindBuffer(data_->target_, 0);
 			
 			data_->windowInstance_ = Window::getInstanceId();
 		}
@@ -33,9 +32,7 @@ namespace mw {
 
 	void VertexBufferObject::bindBufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const {
 		if (data_->vboId_ != 0) {
-			//glBindBuffer(data_->target_, data_->vboId_);
 			glBufferSubData(data_->target_, offset, size, data);
-			//glBindBuffer(data_->target_, 0);			
 		}
 	}
 
