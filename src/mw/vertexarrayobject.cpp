@@ -20,7 +20,7 @@ namespace mw {
 
 	void VertexArrayObject::bind() const {
 		useProgram();
-		if (*vao_ > 0) {
+		if (*vao_ == 0) {
 			glGenVertexArrays(1, &*vao_);
 			glBindVertexArray(*vao_);
 			// Remove the block to unneeded calls to buffer changes.
