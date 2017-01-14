@@ -46,7 +46,7 @@ namespace mw {
 	}
 
 	void VertexBufferObject::bindBuffer() const {
-		if (data_->vboId_ != 0 && (ignoreCurrentIdBinded && currentBufferIdBinded != data_->vboId_)) {
+		if (data_->vboId_ != 0 && (ignoreCurrentIdBinded || currentBufferIdBinded != data_->vboId_)) {
 			glBindBuffer(data_->target_, data_->vboId_);
 			currentBufferIdBinded = data_->vboId_;
 		}
