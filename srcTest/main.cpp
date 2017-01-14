@@ -31,7 +31,7 @@ void testLoadTextureAtlas() {
 	atlas.add(c, 1);
 	atlas.add(d, 1);
 
-	TestWindow w(atlas.getTexture(), 0, 0);
+	TestWindow w(atlas.getTexture());
 	w.startLoop();
 
 	SDL_FreeSurface(a);
@@ -50,7 +50,7 @@ void testLoadTextureAtlas2() {
 	SDL_Surface* d = createSurface(30, 30, (char) 255, (char) 255, (char) 255); // White block.
 
 	mw::TextureAtlas atlas(512, 512);
-	TestWindow w(atlas.getTexture(), 0, 0);
+	TestWindow w(atlas.getTexture());
 	int nbr = 0;
 	std::function<void()> func = [&]() {
 		++nbr;

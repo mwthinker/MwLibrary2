@@ -15,14 +15,7 @@ namespace mw {
 	// the window and origo is on the left down side.
 	class Window : public InitSdl {
 	public:
-		// Create a window with size determined by width and height in pixels.
-		Window(int x, int y, int width, int height, bool resizeable,
-			std::string title, std::string icon = "", bool borderless = false);
-
-		// Create a window with size determined by width and height in pixels.
-		Window(int x, int y, int width, int height, bool resizeable,
-			std::string title, std::string icon, bool borderless,
-			std::function<void()> initGl);
+		Window::Window();
 
 		virtual ~Window();
 
@@ -36,27 +29,15 @@ namespace mw {
 		void setFullScreen(bool fullScreen);
 
 		// Return true if the program is in full screen mode.
-		inline bool isFullScreen() const {
-		    return (SDL_GetWindowFlags(window_) & SDL_WINDOW_FULLSCREEN_DESKTOP) > 0;
-		}
+		bool isFullScreen() const;
 
-		inline void getSize(int& width, int& height) const {
-		    SDL_GetWindowSize(window_, &width, &height);
-		}
+		void getSize(int& width, int& height) const;
 
 		// Return the current windows width in pixels.
-		inline int getWidth() const {
-            int w, h;
-            getSize(w, h);
-            return w;
-		}
+		int getWidth() const;
 
 		// Return the current windows height in pixels.
-		inline int getHeight() const {
-            int w, h;
-            getSize(w, h);
-            return h;
-		}
+		int getHeight() const;
 
 		// Make the program to quit as soon as the current frame is finished.
 		// I.e. the loop in startLoop() will be made to stop and startLoop() will return.
@@ -80,6 +61,20 @@ namespace mw {
 			return nbrCurrentInstance;
 		}
 
+		void setPosition(int x, int y);
+
+		void setBordered(bool bordered);
+
+		void setResizeable(bool resizable);
+
+		void setIcon(std::string icon);
+
+		void setTitle(std::string title);
+
+		void setWindowSize(int width, int height);
+
+		void setOpenGlVersion(int majorVersion, int minorVersion);
+
 	private:
 		// Is called by the loop. The frequency in which this function is called is fixed
 		// by the vertical frequency of the monitor (VSYNC).
@@ -90,13 +85,24 @@ namespace mw {
 		inline virtual void eventUpdate(const SDL_Event& windowEvent) {
 		}
 
+		virtual void initOpenGl();
+
+		virtual void initPreLoop() {
+		}
+
 		void setupOpenGlContext();
 
 		SDL_Window* window_;
 		SDL_GLContext glContext_;
 		int width_, height_;
 		bool quit_;
-		bool borderless_;
+		bool fullScreen_;
+		bool bordered_;
+		bool resizable_;
+		int x_, y_;
+		std::string title_;
+		SDL_Surface* icon_;
+		int majorVersionGl_, minorVersionGl_;
 
 		static int nbrCurrentInstance;
 	};
@@ -104,4 +110,3 @@ namespace mw {
 } // Namespace mw.
 
 #endif // MW_WINDOW_H
-

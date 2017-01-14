@@ -10,45 +10,15 @@
 
 #include <iostream>
 
-TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
-	: mw::Window(-1, -1, 512, 512, true, "Test", "", false, []() {
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-	const int MAJOR_VERSION = 2;
-	const int MINOR_VERSION = 1;
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, MAJOR_VERSION);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, MINOR_VERSION);
-
-	if (SDL_GL_LoadLibrary(0) != 0) {
-		std::cerr << "SDL_GL_LoadLibrary failed: " << SDL_GetError() << std::endl;
-		std::cerr << "Failed to OpenGL version" << MAJOR_VERSION << "." << MINOR_VERSION << std::endl;
-		std::exit(1);
-	}
-}), sprite_(sprite), x_(x), y_(y),
-	shader_(std::make_shared<TestShader>("testShader2_1.ver.glsl", "testShader2_1.fra.glsl")), buffer1_(true) {
-
-	focus_ = true;
-	mw::Font font("Ubuntu-B.ttf", 60);
-	text_ = mw::Text("hej", font);
-	shader_->useProgram();
-	glClearColor(0, 0, 0, 1);
-	resize(getWidth(), getHeight());
-	data1_ = std::make_shared<TestShaderData>(shader_);
-	data1_->begin();
-	data1_->addSquareTRIANGLES(-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, sprite_);
-	data1_->end();
-	drawText_ = std::make_shared<DrawText>(shader_, text_, 0.f, 0.f);
-	buffer1_.addVertexData(data1_);
-	buffer1_.addVertexData(drawText_);
-	buffer1_.uploadToGraphicCard();
+TestWindow::TestWindow(mw::Sprite sprite) : sprite_(sprite), buffer1_(true) {
+	mw::Window::setWindowSize(512, 512);
+	mw::Window::setTitle("Test");
+	mw::Window::setIcon("tetris.bmp");
 }
 
-void TestWindow::update(double deltaTime) {
-	Mat44 m = mw::getTranslateMatrix44<float>((float) x_, (float) y_);
-	Mat44 m2 = m * mw::getScaleMatrix44<float>(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44<float>(0.5, 0.5);
-	Mat44 m3 = m *  mw::getTranslateMatrix44<float>(getWidth() * 0.5f, getHeight() * 0.5f) * mw::getScaleMatrix44<float>(sprite2_.getWidth(), sprite2_.getHeight());
+void TestWindow::update(double deltaTime) {	
+	Mat44 m = mw::getScaleMatrix44<float>(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44<float>(0.5, 0.5);
+	Mat44 m2 = m *  mw::getTranslateMatrix44<float>(getWidth() * 0.5f, getHeight() * 0.5f) * mw::getScaleMatrix44<float>(sprite2_.getWidth(), sprite2_.getHeight());
 	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -56,12 +26,12 @@ void TestWindow::update(double deltaTime) {
 	// Update model matrix.
 	shader_->useProgram();
 	shader_->setColorU(1, 1, 1);
-	shader_->setModelMatrixU(m2);
+	shader_->setModelMatrixU(m);
 	shader_->setTextureU(true);
 	sprite_.bindTexture();
 	data1_->drawTRIANGLES();
 	shader_->setColorU(1, 1, 1);
-	shader_->setModelMatrixU(m3);
+	shader_->setModelMatrixU(m2);
 	data1_->drawTRIANGLES();
 	shader_->setColorU(1, 0, 0);
 	shader_->setModelMatrixU(m);
@@ -113,10 +83,35 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					break;
 			}
 			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (windowEvent.button.button == SDL_BUTTON_LEFT) {
+				if (windowEvent.button.clicks == 2) {
+					setFullScreen(!isFullScreen());
+				}
+			}
+			break;
 	}
 }
 
 void TestWindow::resize(int w, int h) {
 	glViewport(0, 0, w, h);
 	shader_->setProjectionMatrixU(mw::getOrthoProjectionMatrix44<GLfloat>(0, (GLfloat) w, 0, (GLfloat) h));
+}
+
+void TestWindow::initPreLoop() {
+	focus_ = true;
+	shader_ = std::make_shared<TestShader>("testShader2_1.ver.glsl", "testShader2_1.fra.glsl");
+	mw::Font font("Ubuntu-B.ttf", 60);
+	text_ = mw::Text("hej", font);
+	shader_->useProgram();
+	glClearColor(0, 0, 0, 1);
+	resize(getWidth(), getHeight());
+	data1_ = std::make_shared<TestShaderData>(shader_);
+	data1_->begin();
+	data1_->addSquareTRIANGLES(-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, sprite_);
+	data1_->end();
+	drawText_ = std::make_shared<DrawText>(shader_, text_, 0.f, 0.f);
+	buffer1_.addVertexData(data1_);
+	buffer1_.addVertexData(drawText_);
+	buffer1_.uploadToGraphicCard();
 }

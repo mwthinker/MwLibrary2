@@ -14,7 +14,7 @@
 
 class TestWindow : public mw::Window {
 public:
-	TestWindow(mw::Sprite sprite = mw::Sprite(), int x = 0, int y = 0);
+	TestWindow(mw::Sprite sprite = mw::Sprite());
 
 	// Execute the function when space bar is pressed.
 	inline void setSpaceFunction(const std::function<void()> func) {
@@ -26,6 +26,8 @@ public:
 	}
 
 private:
+	void initPreLoop() override;
+
     void update(double deltaTime) override;
 
 	void eventUpdate(const SDL_Event& windowEvent) override;
@@ -39,7 +41,6 @@ private:
 	std::shared_ptr<TestShaderData> data1_;
 	std::shared_ptr<DrawText> drawText_;
 
-	int x_, y_;
 	mw::Text text_;
 	std::function<void()> func_;
 
