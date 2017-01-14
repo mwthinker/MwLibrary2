@@ -34,8 +34,12 @@ namespace mw {
 		// Return the target specified.
 		GLenum getTarget() const;
 
+		static void setIgnoreCurrentBind(bool activate);
+		static bool getIgnoreCurrentBind();
+
 	private:
 		static int currentBufferIdBinded;
+		static bool ignoreCurrentIdBinded;
 
 		class Data {
 		public:

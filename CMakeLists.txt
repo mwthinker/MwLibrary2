@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(MwLibrary2)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
 if (NOT MSVC)
-	set(CMAKE_CXX_FLAGS "-std=c++11")
+	set(CMAKE_CXX_FLAGS "-std=c++1y")
 	option(Debug "Set projects to debug mode.")
 	if (Debug)
 		set(CMAKE_BUILD_TYPE "Debug" CACHE INTERNAL "Build type.")
@@ -16,8 +16,9 @@ option(MwLibrary2Test "Add MwLibrary2Test project." OFF)
 
 # Source files.
 set(SOURCES
+	src/mw/buffer.cpp
+	src/mw/buffer.h
 	src/mw/color.h
-	src/mw/exception.h
 	src/mw/font.cpp
 	src/mw/font.h
 	src/mw/initsdl.cpp
@@ -46,17 +47,27 @@ set(SOURCES
 	src/mw/texture.h
 	src/mw/textureatlas.cpp
 	src/mw/textureatlas.h
+	src/mw/vertexarrayobject.cpp
+	src/mw/vertexarrayobject.h
 	src/mw/vertexbufferobject.cpp
 	src/mw/vertexbufferobject.h
+	src/mw/vertexdata.cpp
+	src/mw/vertexdata.h
 	src/mw/window.cpp
-	src/mw/window.h)
+	src/mw/window.h
+)
 
 set(SOURCES_TEST
+	srcTest/drawtext.cpp
+	srcTest/drawtext.h
 	srcTest/testshader.cpp
 	srcTest/testshader.h
+	srcTest/testshaderdata.h
 	srcTest/main.cpp
 	srcTest/testwindow.cpp
-	srcTest/testwindow.h)
+	srcTest/testwindow.h
+)
+
 # End of source files.
 
 find_package(SDL2 REQUIRED)

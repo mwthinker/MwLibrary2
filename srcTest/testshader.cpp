@@ -16,7 +16,7 @@ TestShader::TestShader() {
 TestShader::TestShader(std::string vShader, std::string fShader) {
     shader_.bindAttribute("aPos");
     shader_.bindAttribute("aTex");
-    shader_.loadAndLink(vShader, fShader);
+    shader_.loadAndLinkFromFile(vShader, fShader);
 
     shader_.useProgram();
 
@@ -37,47 +37,38 @@ void TestShader::useProgram() const {
 	shader_.useProgram();
 }
 
-// Vertex buffer Attributes. ---------------------------
-
-void TestShader::setPosA(GLint size, const GLvoid* data) const {
-    glEnableVertexAttribArray(aPosIndex_);
-    glVertexAttribPointer(aPosIndex_, size, GL_FLOAT, GL_FALSE, 0, data);
-}
-
-void TestShader::setPosA(GLint size, GLsizei stride, const GLvoid* data) const {
-    glEnableVertexAttribArray(aPosIndex_);
-    glVertexAttribPointer(aPosIndex_, size, GL_FLOAT, GL_FALSE, stride, data);
-}
-
-void TestShader::setTexA(GLint size, const GLvoid* data) const {
-    glEnableVertexAttribArray(aTexIndex_);
-    glVertexAttribPointer(aTexIndex_, size, GL_FLOAT, GL_FALSE, 0, data);
-}
-
-void TestShader::setTexA(GLint size, GLsizei stride, const GLvoid* data) const {
-    glEnableVertexAttribArray(aTexIndex_);
-    glVertexAttribPointer(aTexIndex_, size, GL_FLOAT, GL_FALSE, stride, data);
+void TestShader::setVertexAttribPointer() const {
+	glEnableVertexAttribArray(aPosIndex_);
+	glVertexAttribPointer(aPosIndex_, 2, GL_FLOAT, GL_FALSE, vertexSizeInBytes(), (GLvoid*) (sizeof(GLfloat) * 0));
+	glEnableVertexAttribArray(aTexIndex_);
+	glVertexAttribPointer(aTexIndex_, 2, GL_FLOAT, GL_FALSE, vertexSizeInBytes(), (GLvoid*) (sizeof(GLfloat) * 2));
+	mw::checkGlError();
 }
 
 // Uniforms. -------------------------------------------
 
 void TestShader::setProjectionMatrixU(const Mat44& matrix) const {
+	shader_.useProgram();
     glUniformMatrix4fv(uProjIndex_, 1, false, matrix.data());
 }
 
 void TestShader::setModelMatrixU(const Mat44& matrix) const {
+	shader_.useProgram();
     glUniformMatrix4fv(uModelIndex_, 1, false, matrix.data());
 }
 
 void TestShader::setColorU(float red, float green, float blue, float alpha) const {
+	shader_.useProgram();
     glUniform4f(uColorIndex_, red, green, blue, alpha);
 }
 
 void TestShader::setColorU(const Color& color) const {
+	shader_.useProgram();
     glUniform4f(uColorIndex_, color.red_, color.green_, color.blue_, color.alpha_);
 }
 
 void TestShader::setTextureU(bool texture) const {
+	shader_.useProgram();
     if (texture) {
         glUniform1f(uIsTexIndex_, 1);
     } else {

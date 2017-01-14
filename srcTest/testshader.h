@@ -2,6 +2,7 @@
 #define TESTSHADER_H
 
 #include <mw/opengl.h>
+#include <mw/vertexarrayobject.h>
 #include <mw/matrix44.h>
 #include <mw/shader.h>
 #include <mw/color.h>
@@ -11,62 +12,21 @@
 using Mat44 = mw::Matrix44<GLfloat>;
 using Color = mw::Color<GLfloat>;
 
-static const std::string TEST_SHADER_VER =
-    "#version 100\n"
-    ""
-    "precision mediump float;\n"
-    ""
-    "uniform mat4 uModel;\n"
-    "uniform mat4 uProj;\n"
-    "uniform float uIsTexture;\n"
-    ""
-    "attribute vec4 aPos;\n"
-    "attribute vec2 aTex;\n"
-    ""
-    "varying vec2 vTexCoord;\n"
-    ""
-    "void main() {"
-    "	gl_Position = uProj * uModel * aPos;"
-    "	if (uIsTexture > 0.5) {"
-    "		vTexCoord = aTex;"
-    "	}"
-    "}";
-
-static const std::string TEST_SHADER_FRAG =
-    "#version 100\n"
-    ""
-    "precision mediump float;\n"
-    ""
-    "uniform sampler2D uTexture;\n"
-    "uniform vec4 uColor;\n"
-    "uniform float uIsTexture;\n"
-    ""
-    "varying vec2 vTexCoord;\n"
-    ""
-    "void main() {"
-    ""
-    "	if (uIsTexture < 0.5) {"
-    "		gl_FragColor = uColor;"
-    "	} else {"
-    "		vec4 tex = texture2D(uTexture, vTexCoord); "
-    "		gl_FragColor = vec4(uColor.x * tex.x, uColor.y * tex.y, uColor.z * tex.z, uColor.a * tex.a);"
-    "	}"
-    "}";
-
 class TestShader {
 public:
     TestShader();
     TestShader(std::string vShader, std::string fShader);
 
+	inline static constexpr unsigned int vertexSizeInBytes() {
+		return vertexSizeInFloat() * sizeof(GLfloat);
+	}
+
+	inline static constexpr unsigned int vertexSizeInFloat() {
+		return 4;
+	}
+
 	void useProgram() const;
-
-    // Vertex buffer Attributes. ---------------------------
-
-    void setPosA(GLint size, const GLvoid* data) const;
-    void setPosA(GLint size, GLsizei stride, const GLvoid* data) const;
-
-    void setTexA(GLint size, const GLvoid* data) const;
-    void setTexA(GLint size, GLsizei stride, const GLvoid* data) const;
+    void setVertexAttribPointer() const;
 
     // Uniforms. -------------------------------------------
 

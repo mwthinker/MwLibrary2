@@ -31,7 +31,7 @@ namespace mw {
 				}
 			}
 
-		}
+		} // Namespace anonymous.
 
 		void flipVertical(SDL_Surface* surface) {
 			assert(surface->format->BytesPerPixel >= 1 && surface->format->BytesPerPixel <= 4);
@@ -64,7 +64,7 @@ namespace mw {
 			return SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
 		}
 
-	}
+	} // Namespace helper.
 
 	namespace {
 

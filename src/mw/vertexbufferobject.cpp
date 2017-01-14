@@ -5,6 +5,15 @@
 namespace mw {
 
 	int VertexBufferObject::currentBufferIdBinded = 0;
+	bool VertexBufferObject::ignoreCurrentIdBinded = false;
+
+	void VertexBufferObject::setIgnoreCurrentBind(bool activate) {
+		ignoreCurrentIdBinded = activate;
+	}
+
+	bool VertexBufferObject::getIgnoreCurrentBind() {
+		return ignoreCurrentIdBinded;
+	}
 
 	VertexBufferObject::VertexBufferObject() : data_(std::make_shared<Data>()) {
 		data_->size_ = 0;
@@ -37,7 +46,7 @@ namespace mw {
 	}
 
 	void VertexBufferObject::bindBuffer() const {
-		if (data_->vboId_ != 0 && currentBufferIdBinded != data_->vboId_) {
+		if (data_->vboId_ != 0 && (ignoreCurrentIdBinded && currentBufferIdBinded != data_->vboId_)) {
 			glBindBuffer(data_->target_, data_->vboId_);
 			currentBufferIdBinded = data_->vboId_;
 		}

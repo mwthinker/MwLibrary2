@@ -2,10 +2,13 @@
 #define TESTWINDOW_H
 
 #include "testshader.h"
+#include "testshaderdata.h"
+#include "drawtext.h"
 
 #include <mw/window.h>
 #include <mw/sprite.h>
 #include <mw/text.h>
+#include <mw/buffer.h>
 
 #include <functional>
 
@@ -32,12 +35,15 @@ private:
 	bool focus_;
 	mw::Sprite sprite_;
 	mw::Sprite sprite2_;
+	mw::Buffer buffer1_;
+	std::shared_ptr<TestShaderData> data1_;
+	std::shared_ptr<DrawText> drawText_;
 
 	int x_, y_;
 	mw::Text text_;
 	std::function<void()> func_;
 
-	TestShader shader_;
+	std::shared_ptr<TestShader> shader_;
 
 };
 

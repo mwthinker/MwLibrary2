@@ -7,7 +7,7 @@
 #include <string>
 #include <map>
 
-namespace mw {	
+namespace mw {
 
 	class Shader {
 	public:

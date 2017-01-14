@@ -8,113 +8,68 @@
 #include <mw/opengl.h>
 #include <mw/sprite.h>
 
-namespace {
-
-    void draw(const TestShader& shader, const mw::Sprite& sprite) {
-        const mw::Texture& texture = sprite.getTexture();
-		if (texture.isValid()) {
-			texture.bindTexture();
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			// Centered square in ORIGO.
-			GLfloat aPos[] = {
-				-0.5f, -0.5f,
-				0.5f, -0.5f,
-				-0.5f, 0.5f,
-				0.5f, 0.5f};
-
-            float x = sprite.getX();
-            float y = sprite.getY();
-            float dx = sprite.getWidth();
-            float dy = sprite.getHeight();
-
-			// Map the sprite out from the texture.
-			GLfloat aTex[] = {
-				x / texture.getWidth(), y / texture.getHeight(),
-				(x + dx) / texture.getWidth(), y / texture.getHeight(),
-				x / texture.getWidth(), (y + dy) / texture.getHeight(),
-				(x + dx) / texture.getWidth(), (y + dy) / texture.getHeight()};
-
-			// Use the program object.
-			shader.useProgram();
-			shader.setTextureU(true);
-
-			// Set the vertex pointer.
-			shader.setPosA(2, aPos);
-			shader.setTexA(2, aTex);
-
-			// Upload the attributes and draw the sprite.
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			glDisable(GL_BLEND);
-			mw::checkGlError();
-		}
-	}
-
-	void draw(const TestShader& shader, const mw::Text& text, float x = 0, float y = 0) {
-		if (text.isValid()) {
-			text.bindTexture();
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			// Lower left corner is in ORIGO.
-			GLfloat aPos[] = {
-				x, y,
-				x + text.getWidth(), y,
-				x, text.getHeight() + y,
-				x + text.getWidth(), text.getHeight() + y};
-
-			// Map the sprite out from the texture.
-			GLfloat aTex[] = {
-				0, 0,
-				1, 0,
-				0, 1,
-				1, 1};
-
-			// Use the program object
-			shader.useProgram();
-			shader.setTextureU(true);
-
-			// Set the vertex pointer.
-			shader.setPosA(2, aPos);
-			shader.setTexA(2, aTex);
-
-			// Upload the attributes and draw the sprite.
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			glDisable(GL_BLEND);
-			mw::checkGlError();
-		}
-	}
-
-} // Anonymous namespace.
+#include <iostream>
 
 TestWindow::TestWindow(mw::Sprite sprite, int x, int y)
-	: mw::Window(-1, -1, 512, 512, true, "Test"), sprite_(sprite), x_(x), y_(y),
-	shader_(TEST_SHADER_VER, TEST_SHADER_FRAG) {
+	: mw::Window(-1, -1, 512, 512, true, "Test", "", false, []() {
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+	const int MAJOR_VERSION = 2;
+	const int MINOR_VERSION = 1;
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, MAJOR_VERSION);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, MINOR_VERSION);
+
+	if (SDL_GL_LoadLibrary(0) != 0) {
+		std::cerr << "SDL_GL_LoadLibrary failed: " << SDL_GetError() << std::endl;
+		std::cerr << "Failed to OpenGL version" << MAJOR_VERSION << "." << MINOR_VERSION << std::endl;
+		std::exit(1);
+	}
+}), sprite_(sprite), x_(x), y_(y),
+	shader_(std::make_shared<TestShader>("testShader2_1.ver.glsl", "testShader2_1.fra.glsl")), buffer1_(true) {
 
 	focus_ = true;
 	mw::Font font("Ubuntu-B.ttf", 60);
 	text_ = mw::Text("hej", font);
-	shader_.useProgram();
+	shader_->useProgram();
 	glClearColor(0, 0, 0, 1);
 	resize(getWidth(), getHeight());
+	data1_ = std::make_shared<TestShaderData>(shader_);
+	data1_->begin();
+	data1_->addSquareTRIANGLES(-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, sprite_);
+	data1_->end();
+	drawText_ = std::make_shared<DrawText>(shader_, text_, 0.f, 0.f);
+	buffer1_.addVertexData(data1_);
+	buffer1_.addVertexData(drawText_);
+	buffer1_.uploadToGraphicCard();
 }
 
 void TestWindow::update(double deltaTime) {
 	Mat44 m = mw::getTranslateMatrix44<float>((float) x_, (float) y_);
 	Mat44 m2 = m * mw::getScaleMatrix44<float>(sprite_.getWidth(), sprite_.getHeight())*mw::getTranslateMatrix44<float>(0.5, 0.5);
 	Mat44 m3 = m *  mw::getTranslateMatrix44<float>(getWidth() * 0.5f, getHeight() * 0.5f) * mw::getScaleMatrix44<float>(sprite2_.getWidth(), sprite2_.getHeight());
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	// Update model matrix.
-	shader_.useProgram();
-	shader_.setColorU(1, 1, 1);
-	shader_.setModelMatrixU(m2);
-	draw(shader_, sprite_);
-	shader_.setColorU(1, 1, 1);
-	shader_.setModelMatrixU(m3);
-	draw(shader_, sprite2_);
-	shader_.setColorU(1, 0, 0);
-	shader_.setModelMatrixU(m);
-	draw(shader_, text_);
+	shader_->useProgram();
+	shader_->setColorU(1, 1, 1);
+	shader_->setModelMatrixU(m2);
+	shader_->setTextureU(true);
+	sprite_.bindTexture();
+	data1_->drawTRIANGLES();
+	shader_->setColorU(1, 1, 1);
+	shader_->setModelMatrixU(m3);
+	data1_->drawTRIANGLES();
+	shader_->setColorU(1, 0, 0);
+	shader_->setModelMatrixU(m);
+	
+	drawText_->draw();
+	
+	glDisable(GL_BLEND);
+	mw::checkGlError();
 }
 
 void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
@@ -163,5 +118,5 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 
 void TestWindow::resize(int w, int h) {
 	glViewport(0, 0, w, h);
-	shader_.setProjectionMatrixU(mw::getOrthoProjectionMatrix44<GLfloat>(0, (GLfloat) w, 0, (GLfloat) h));
+	shader_->setProjectionMatrixU(mw::getOrthoProjectionMatrix44<GLfloat>(0, (GLfloat) w, 0, (GLfloat) h));
 }
