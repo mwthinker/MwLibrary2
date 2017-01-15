@@ -1,8 +1,8 @@
 #ifndef MW_VERTEXDATA_H
 #define MW_VERTEXDATA_H
 
-#include "mw/vertexarrayobject.h"
-#include "mw/vertexbufferobject.h"
+#include "vertexarrayobject.h"
+#include "vertexbufferobject.h"
 
 #include <vector>
 #include <array>
