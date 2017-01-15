@@ -1,7 +1,7 @@
 #ifndef MW_VERTEXARRAYOBJECT_H
 #define MW_VERTEXARRAYOBJECT_H
 
-#include <mw/opengl.h>
+#include "opengl.h"
 
 #include <memory>
 

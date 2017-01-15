@@ -1,7 +1,7 @@
 #ifndef MW_BUFFER_H
 #define MW_BUFFER_H
 
-#include <mw/vertexbufferobject.h>
+#include "vertexbufferobject.h"
 
 #include <vector>
 #include <memory>
