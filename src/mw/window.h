@@ -75,6 +75,12 @@ namespace mw {
 
 		void setOpenGlVersion(int majorVersion, int minorVersion);
 
+	protected:
+		virtual void initOpenGl();
+
+		virtual void initPreLoop() {
+		}
+
 	private:
 		// Is called by the loop. The frequency in which this function is called is fixed
 		// by the vertical frequency of the monitor (VSYNC).
@@ -83,12 +89,7 @@ namespace mw {
 
 		// Is called by the loop. Is called when ever a SDL_EVENT occurs.
 		inline virtual void eventUpdate(const SDL_Event& windowEvent) {
-		}
-
-		virtual void initOpenGl();
-
-		virtual void initPreLoop() {
-		}
+		}		
 
 		void setupOpenGlContext();
 
