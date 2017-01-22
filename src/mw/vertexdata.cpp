@@ -19,9 +19,6 @@ namespace mw {
 
 		if (vbo_.getSize() > 0) {
 			bind();
-			useProgram();
-			vbo_.bindBuffer();
-			setVertexAttribPointer();
 			glDrawArrays(mode, offsetInBytes_ / vertexSizeInBytes(), vertexes);
 			mw::checkGlError();
 		}

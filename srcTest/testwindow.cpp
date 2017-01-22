@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-TestWindow::TestWindow(mw::Sprite sprite) : sprite_(sprite), buffer1_(true) {
+TestWindow::TestWindow(mw::Sprite sprite) : sprite_(sprite), buffer1_(mw::Buffer::STATIC) {
 	mw::Window::setWindowSize(512, 512);
 	mw::Window::setTitle("Test");
 	mw::Window::setIcon("tetris.bmp");
@@ -107,9 +107,15 @@ void TestWindow::initPreLoop() {
 	glClearColor(0, 0, 0, 1);
 	resize(getWidth(), getHeight());
 	data1_ = std::make_shared<TestShaderData>(shader_);
+	// Testing empty data.
+	data1_->begin();
+	data1_->addEmptySquareTRIANGLES();
+	data1_->end();
+	// Use real data.
 	data1_->begin();
 	data1_->addSquareTRIANGLES(-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, sprite_);
 	data1_->end();
+
 	drawText_ = std::make_shared<DrawText>(shader_, text_, 0.f, 0.f);
 	buffer1_.addVertexData(data1_);
 	buffer1_.addVertexData(drawText_);

@@ -118,6 +118,15 @@ public:
 		addVertex(x3, y3, xTex3, yTex3);
 	}
 
+	inline void addEmptySquareTRIANGLE_STRIP() {
+		addEmptyVertexes<4>(4);
+	}
+
+	inline void addEmptySquareTRIANGLES() {
+		addEmptyVertexes<4>(3);
+		addEmptyVertexes<4>(3);
+	}
+
 	inline void addVertex(float x, float y, float xTex, float yTex) {
 		VertexData::addVertex<4>({x, y, xTex, yTex});
 	}

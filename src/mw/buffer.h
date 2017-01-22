@@ -13,9 +13,9 @@ namespace mw {
 
 	class Buffer {
 	public:
-		Buffer();
+		enum Usage {STATIC, DYNAMIC};
 
-		Buffer(bool staticData);
+		Buffer(Usage usage);
 
 		void uploadToGraphicCard();
 

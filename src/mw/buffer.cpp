@@ -2,11 +2,8 @@
 #include "vertexdata.h"
 
 namespace mw {
-
-	Buffer::Buffer() : staticData_(true) {
-	}
-
-	Buffer::Buffer(bool staticData) : staticData_(staticData) {
+	
+	Buffer::Buffer(Usage staticData) : staticData_(staticData == STATIC ? true : false) {
 	}
 
 	void Buffer::uploadToGraphicCard() {

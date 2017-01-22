@@ -25,8 +25,7 @@ namespace mw {
 
 		VertexData();
 
-		inline virtual ~VertexData() {
-		}
+		virtual ~VertexData() = default;
 
 		inline unsigned int getOffsetInBytes() const {
 			return offsetInBytes_;
@@ -47,8 +46,8 @@ namespace mw {
 			return dynamic_;
 		}
 
-		template <unsigned int N>
-		void addVertex(const std::array<float, N>& vertex) {
+		template <unsigned int VERTEX_SIZE>
+		void addVertex(const std::array<GLfloat, VERTEX_SIZE>& vertex) {
 			// Vertex size must equal the provided vertex size.
 			assert(vertex.size() == vertexSizeInFloat());
 			if (dynamic_) {
@@ -80,6 +79,20 @@ namespace mw {
 					data_.push_back(value);
 				}
 				index_ += vertexSizeInFloat();
+			}
+		}
+
+		template <unsigned int N>
+		void addEmptyVertex() {
+			// Insert garbage data inorder for the vertex buffer to be created.
+			std::array<GLfloat, N> vertex;
+			addVertex(vertex);
+		}
+
+		template <unsigned int VERTEX_SIZE>
+		void addEmptyVertexes(int nbr) {
+			for (int i = 0; i < nbr; ++i) {
+				addEmptyVertex<VERTEX_SIZE>();
 			}
 		}
 
