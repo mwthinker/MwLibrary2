@@ -7,13 +7,75 @@
 #include <mw/matrix44.h>
 #include <mw/opengl.h>
 #include <mw/sprite.h>
+#include <mw/gamecontroller.h>
 
 #include <iostream>
+
+namespace {
+
+	void printGameControllerButton(Uint8 button) {
+		switch (button) {
+			case SDL_CONTROLLER_BUTTON_INVALID:
+				std::cout << "SDL_CONTROLLER_BUTTON_INVALID" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_A:
+				std::cout << "SDL_CONTROLLER_BUTTON_A" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_B:
+				std::cout << "SDL_CONTROLLER_BUTTON_B" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_X:
+				std::cout << "SDL_CONTROLLER_BUTTON_X" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_Y:
+				std::cout << "SDL_CONTROLLER_BUTTON_Y" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_BACK:
+				std::cout << "SDL_CONTROLLER_BUTTON_BACK" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_GUIDE:
+				std::cout << "SDL_CONTROLLER_BUTTON_GUIDE" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_START:
+				std::cout << "SDL_CONTROLLER_BUTTON_START" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+				std::cout << "SDL_CONTROLLER_BUTTON_LEFTSTICK" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
+				std::cout << "SDL_CONTROLLER_BUTTON_RIGHTSTICK" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+				std::cout << "SDL_CONTROLLER_BUTTON_LEFTSHOULDER" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+				std::cout << "SDL_CONTROLLER_BUTTON_RIGHTSHOULDER" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_DPAD_UP:
+				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_UP" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_DOWN" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_LEFT" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+				std::cout << "SDL_CONTROLLER_BUTTON_DPAD_RIGHT" << std::endl;
+				break;
+			case SDL_CONTROLLER_BUTTON_MAX:
+				std::cout << "SDL_CONTROLLER_BUTTON_MAX" << std::endl;
+				break;
+		}
+	}
+
+}
 
 TestWindow::TestWindow(mw::Sprite sprite) : sprite_(sprite), buffer1_(mw::Buffer::STATIC) {
 	mw::Window::setWindowSize(512, 512);
 	mw::Window::setTitle("Test");
 	mw::Window::setIcon("tetris.bmp");
+	controllerEvent_ = 0;
 }
 
 void TestWindow::update(double deltaTime) {	
@@ -71,6 +133,11 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 			break;
 		case SDL_KEYDOWN:
 			switch (windowEvent.key.keysym.sym) {
+				case SDLK_c:
+					for (auto gamepad : mw::GameController::getGameControllers()) {
+						std::cout << gamepad->getName() << std::endl;
+					}
+					break;
 				case SDLK_SPACE:
 					if (func_) {
 						func_();
@@ -89,6 +156,49 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					setFullScreen(!isFullScreen());
 				}
 			}
+			break;
+		case SDL_CONTROLLERDEVICEADDED:
+			std::cout << "SDL_CONTROLLERDEVICEADDED" << std::endl;
+			std::cout << "ControllerEvent:" << ++controllerEvent_ << std::endl;
+			std::cout << "Timestamp: " << windowEvent.cdevice.timestamp << std::endl;
+			std::cout << "Type: " << windowEvent.cdevice.type << std::endl;
+			std::cout << "Which: " << windowEvent.cdevice.which << std::endl;
+			mw::GameController::addController(windowEvent.cdevice.which);
+			break;
+		case SDL_CONTROLLERDEVICEREMOVED:
+			std::cout << "SDL_CONTROLLERDEVICEREMOVED" << std::endl;
+			std::cout << "ControllerEvent:" << ++controllerEvent_ << std::endl;
+			std::cout << "Timestamp: " << windowEvent.cdevice.timestamp << std::endl;
+			std::cout << "Type: " << windowEvent.cdevice.type << std::endl;
+			std::cout << "Which: " << windowEvent.cdevice.which << std::endl;
+			mw::GameController::removeController(windowEvent.cdevice.which);
+			break;
+		case SDL_CONTROLLERBUTTONDOWN:
+			printGameControllerButton(windowEvent.cbutton.button);
+			std::cout << "SDL_CONTROLLERBUTTONDOWN" << std::endl;
+			std::cout << "ControllerEvent:" << ++controllerEvent_ << std::endl;
+			std::cout << "Timestamp: " << windowEvent.cbutton.timestamp << std::endl;
+			std::cout << "Type: " << windowEvent.cbutton.type << std::endl;
+			std::cout << "Which: " << windowEvent.cbutton.which << std::endl;
+			break;
+		case SDL_CONTROLLERBUTTONUP:
+			break;
+		case SDL_CONTROLLERAXISMOTION:
+			switch (windowEvent.caxis.axis) {
+				case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+					if (windowEvent.caxis.value > 15000) {
+						std::cout << "SDL_CONTROLLER_AXIS_TRIGGERLEFT" << std::endl;
+					}
+					break;
+				case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
+					if (windowEvent.caxis.value > 15000) {
+						std::cout << "SDL_CONTROLLER_AXIS_TRIGGERRIGHT" << std::endl;
+					}
+					break;
+				default:
+					break;
+			}
+
 			break;
 	}
 }
@@ -120,4 +230,6 @@ void TestWindow::initPreLoop() {
 	buffer1_.addVertexData(data1_);
 	buffer1_.addVertexData(drawText_);
 	buffer1_.uploadToGraphicCard();
+
+	mw::GameController::loadAddGameControllerMappings("gamecontrollerdb.txt");
 }

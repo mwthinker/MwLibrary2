@@ -40,6 +40,7 @@ private:
 	mw::Buffer buffer1_;
 	std::shared_ptr<TestShaderData> data1_;
 	std::shared_ptr<DrawText> drawText_;
+	int controllerEvent_;
 
 	mw::Text text_;
 	std::function<void()> func_;

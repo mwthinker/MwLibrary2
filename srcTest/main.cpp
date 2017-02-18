@@ -94,7 +94,7 @@ void testLoadTextureAtlas2() {
 	SDL_FreeSurface(c);
 	SDL_FreeSurface(d);
 
-	std::cout << "\ntestLoadTextureAtlas2() sucsessfully!\n";
+	std::cout << "\ntestLoadTextureAtlas2() successfully!\n";
 }
 
 template <typename T>
@@ -175,7 +175,7 @@ void testMatrix() {
     mw::scale2D(m2, 2.f, 3.f);
     assert(equal(m * mw::getScaleMatrix44<float>(2.f, 3.f, 1), m2));
 
-    std::cout << "\ntestMatrix() sucsessfully!\n";
+    std::cout << "\ntestMatrix() successfully!\n";
 }
 
 void testVec2() {
