@@ -15,7 +15,7 @@ namespace mw {
 	// the window and origo is on the left down side.
 	class Window : public InitSdl {
 	public:
-		Window::Window();
+		Window();
 
 		virtual ~Window();
 
