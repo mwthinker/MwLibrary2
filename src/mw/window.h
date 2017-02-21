@@ -42,17 +42,17 @@ namespace mw {
 		// Make the program to quit as soon as the current frame is finished.
 		// I.e. the loop in startLoop() will be made to stop and startLoop() will return.
 		inline void quit() {
-		    quit_ = true;
+			quit_ = true;
 		}
 
 		// The id for the windows. Is the same as calling SDL_GetWindowID.
 		inline Uint32 getId() const {
-		    return SDL_GetWindowID(window_);
+			return SDL_GetWindowID(window_);
 		}
 
 		// Return the window pointer. Use with care.
 		inline SDL_Window* getSdlWindow() const {
-		    return window_;
+			return window_;
 		}
 
 		// Return the number, first instance of an active window return 1 next 3, etc.
@@ -89,7 +89,7 @@ namespace mw {
 
 		// Is called by the loop. Is called when ever a SDL_EVENT occurs.
 		inline virtual void eventUpdate(const SDL_Event& windowEvent) {
-		}		
+		}
 
 		void setupOpenGlContext();
 

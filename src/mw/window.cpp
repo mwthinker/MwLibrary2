@@ -147,7 +147,9 @@ namespace mw {
 
 	void Window::setResizeable(bool resizable) {
 		if (window_) {
+			#if SDL_VERSION_ATLEAST(2,0,5)
 			SDL_SetWindowResizable(window_, resizable ? SDL_TRUE : SDL_FALSE);
+			#endif
 		} else {
 			resizable_ = resizable;
 		}
