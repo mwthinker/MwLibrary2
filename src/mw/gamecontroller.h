@@ -1,5 +1,5 @@
-#ifndef MW_JOYSTICK_H
-#define MW_JOYSTICK_H
+#ifndef MW_GAMECONTROLLER_H
+#define MW_GAMECONTROLLER_H
 
 #include "initsdl.h"
 
@@ -65,4 +65,4 @@ namespace mw {
 
 } // Namespace mw.
 
-#endif // JOYSTICK_H
+#endif // MW_GAMECONTROLLER_H

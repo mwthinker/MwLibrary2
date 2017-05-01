@@ -109,6 +109,9 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 		case SDL_QUIT:
 			quit();
 			break;
+		case SDL_MOUSEWHEEL:
+			std::cout << windowEvent.wheel.which;
+			break;
 		case SDL_WINDOWEVENT:
 			switch (windowEvent.window.event) {
 				case SDL_WINDOWEVENT_CLOSE:
@@ -156,6 +159,10 @@ void TestWindow::eventUpdate(const SDL_Event& windowEvent) {
 					setFullScreen(!isFullScreen());
 				}
 			}
+			std::cout << "DOWN" << std::endl;
+			break;
+		case SDL_MOUSEBUTTONUP:
+			std::cout << "UP" << std::endl;
 			break;
 		case SDL_CONTROLLERDEVICEADDED:
 			std::cout << "SDL_CONTROLLERDEVICEADDED" << std::endl;
