@@ -15,9 +15,6 @@ namespace {
 
 	void printGameControllerButton(Uint8 button) {
 		switch (button) {
-			case SDL_CONTROLLER_BUTTON_INVALID:
-				std::cout << "SDL_CONTROLLER_BUTTON_INVALID" << std::endl;
-				break;
 			case SDL_CONTROLLER_BUTTON_A:
 				std::cout << "SDL_CONTROLLER_BUTTON_A" << std::endl;
 				break;

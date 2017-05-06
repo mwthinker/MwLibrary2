@@ -82,11 +82,11 @@ namespace mw {
 			}
 		}
 
-		template <unsigned int N>
+		template <unsigned int VERTEX_SIZE>
 		void addEmptyVertex() {
-			// Insert garbage data inorder for the vertex buffer to be created.
-			std::array<GLfloat, N> vertex;
-			addVertex(vertex);
+			// Insert garbage data in order for the vertex buffer to be created.
+			std::array<GLfloat, VERTEX_SIZE> vertex;
+			addVertex<VERTEX_SIZE>(vertex);
 		}
 
 		template <unsigned int VERTEX_SIZE>
