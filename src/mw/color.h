@@ -7,10 +7,9 @@ namespace mw {
 	template <typename T>
 	class Color {
 	public:
-		inline Color() {
-		}
+		Color() = default;
 
-		inline Color(T red, T green, T blue, T alpha = 1) :
+		Color(T red, T green, T blue, T alpha = 1) :
             red_(red), green_(green), blue_(blue), alpha_(alpha) {
 		}
 
@@ -22,8 +21,8 @@ namespace mw {
 	};
 
 	template <typename T>
-	mw::Color<T> operator*(T scale, mw::Color<T> color) {
-		return mw::Color<T>(color.red_ * scale, color.green_ * scale, color.blue_ * scale, color.alpha_ * scale);
+	Color<T> operator*(T scale, Color<T> color) {
+		return Color<T>(color.red_ * scale, color.green_ * scale, color.blue_ * scale, color.alpha_ * scale);
 	}
 
 } // Namespace mw.

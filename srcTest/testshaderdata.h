@@ -19,35 +19,35 @@ public:
 		return testShader_->vertexSizeInFloat();
 	}
 
-	inline void setVertexAttribPointer() const override {
+	void setVertexAttribPointer() const override {
 		testShader_->setVertexAttribPointer();
 	}
 
-	inline void useProgram() const override {
+	void useProgram() const override {
 		testShader_->useProgram();
 	}
 
-	inline void setColor(const Color& color) const {
+	void setColor(const Color& color) const {
 		testShader_->setColorU(color);
 	}
 
-	inline void setColor(float red, float green, float blue, float alpha = 1) const {
+	void setColor(float red, float green, float blue, float alpha = 1) const {
 		testShader_->setColorU(red, green, blue, alpha);
 	}
 	
-	inline void setTexture(bool texture) const {
+	void setTexture(bool texture) const {
 		testShader_->setTextureU(texture);
 	}
 
-	inline void drawTRIANGLES() {
+	void drawTRIANGLES() {
 		drawMode(GL_TRIANGLES);
 	}
 
-	inline void drawTRIANGLE_STRIP() {
+	void drawTRIANGLE_STRIP() {
 		drawMode(GL_TRIANGLE_STRIP);
 	}
 
-	inline void addSquareTRIANGLES(float x1, float y1,
+	void addSquareTRIANGLES(float x1, float y1,
 		float x2, float y2,
 		float x3, float y3,
 		float x4, float y4) {		
@@ -71,7 +71,7 @@ public:
 			0, 0);
 	}
 
-	inline void addSquareTRIANGLES(float x1, float y1,
+	void addSquareTRIANGLES(float x1, float y1,
 		float x2, float y2,
 		float x3, float y3,
 		float x4, float y4,
@@ -98,14 +98,14 @@ public:
 			(sprite.getX() + sprite.getWidth()) / textureW, (sprite.getY() + sprite.getHeight()) / textureH);
 	}
 
-	inline void addSquareTRIANGLE_STRIP(float x, float y, const mw::Text& text) {
+	void addSquareTRIANGLE_STRIP(float x, float y, const mw::Text& text) {
 		addVertex(x, y, 0, 0);
 		addVertex(x + text.getWidth(), y, 1, 0);
 		addVertex(x, text.getHeight() + y, 0, 1);
 		addVertex(x + text.getWidth(), text.getHeight() + y, 1, 1);
 	}
 
-	inline void addTriangleTRIANGLES(
+	void addTriangleTRIANGLES(
 		float x1, float y1,
 		float x2, float y2,
 		float x3, float y3,
@@ -118,16 +118,16 @@ public:
 		addVertex(x3, y3, xTex3, yTex3);
 	}
 
-	inline void addEmptySquareTRIANGLE_STRIP() {
+	void addEmptySquareTRIANGLE_STRIP() {
 		addEmptyVertexes<4>(4);
 	}
 
-	inline void addEmptySquareTRIANGLES() {
+	void addEmptySquareTRIANGLES() {
 		addEmptyVertexes<4>(3);
 		addEmptyVertexes<4>(3);
 	}
 
-	inline void addVertex(float x, float y, float xTex, float yTex) {
+	void addVertex(float x, float y, float xTex, float yTex) {
 		VertexData::addVertex<4>({x, y, xTex, yTex});
 	}
 

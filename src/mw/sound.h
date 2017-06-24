@@ -52,7 +52,7 @@ namespace mw {
 		float getVolume() const;
 
 		// Use with care! Return the pointer to the Mix_Chunk data.
-		inline Mix_Chunk* getMixChunk() const {
+		Mix_Chunk* getMixChunk() const {
 			return soundBuffer_ ? soundBuffer_->mixChunk_ : nullptr;
 		}
 
@@ -79,11 +79,11 @@ namespace mw {
 		// Returns the sounds channel. If no channel is own 0 is returned.
 		int getChannel() const;
 
-		inline bool isPlaying() const {
+		bool isPlaying() const {
 			return !(channel_ != -1 && Mix_Playing(channel_) != 1);
 		}
 
-		inline bool ownChannel() const {
+		bool ownChannel() const {
 			return (channel_ != -1 && SoundBuffer::channelList[channel_] == id_);
 		}
 

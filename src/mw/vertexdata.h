@@ -27,11 +27,11 @@ namespace mw {
 
 		virtual ~VertexData() = default;
 
-		inline unsigned int getOffsetInBytes() const {
+		unsigned int getOffsetInBytes() const {
 			return offsetInBytes_;
 		}
 
-		inline unsigned int getMaxVertexes() const {
+		unsigned int getMaxVertexes() const {
 			return maxVertexes_;
 		}
 
@@ -42,7 +42,7 @@ namespace mw {
 		void begin();
 		void end();
 
-		inline bool isDynamic() const {
+		bool isDynamic() const {
 			return dynamic_;
 		}
 
@@ -96,18 +96,18 @@ namespace mw {
 			}
 		}
 
-		inline bool isAddedToBuffer() const {
+		bool isAddedToBuffer() const {
 			return addedToBuffer_;
 		}
 
 	protected:
 		void drawMode(GLenum mode);
 
-		inline void nextVertex() {
+		void nextVertex() {
 			index_ += vertexSizeInFloat();
 		}
 
-		inline void updateVertex(unsigned int index, float value) {
+		void updateVertex(unsigned int index, float value) {
 			data_[index_ + index] = value;
 		}
 

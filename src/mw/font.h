@@ -21,7 +21,7 @@ namespace mw {
 		// Higher character size demands higher memory usage.
 		Font(const std::string& filename, int characterSize);
 
-		inline int getCharacterSize() const {
+		int getCharacterSize() const {
 			return characterSize_;
 		}
 

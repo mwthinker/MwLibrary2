@@ -17,11 +17,11 @@ public:
 	TestWindow(mw::Sprite sprite = mw::Sprite());
 
 	// Execute the function when space bar is pressed.
-	inline void setSpaceFunction(const std::function<void()> func) {
+	void setSpaceFunction(const std::function<void()> func) {
 		func_ = func;
 	}
 
-	inline void setCenteredSprite(const mw::Sprite& sprite) {
+	void setCenteredSprite(const mw::Sprite& sprite) {
 		sprite2_ = sprite;
 	}
 

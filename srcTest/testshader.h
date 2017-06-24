@@ -17,11 +17,11 @@ public:
     TestShader();
     TestShader(std::string vShader, std::string fShader);
 
-	inline static constexpr unsigned int vertexSizeInBytes() {
+	static constexpr unsigned int vertexSizeInBytes() {
 		return vertexSizeInFloat() * sizeof(GLfloat);
 	}
 
-	inline static constexpr unsigned int vertexSizeInFloat() {
+	static constexpr unsigned int vertexSizeInFloat() {
 		return 4;
 	}
 

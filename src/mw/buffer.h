@@ -21,11 +21,11 @@ namespace mw {
 
 		void addVertexData(const VertexDataPtr& vd);
 
-		inline bool isStaticData() const {
+		bool isStaticData() const {
 			return staticData_;
 		}
 
-		inline bool isDynamicData() const {
+		bool isDynamicData() const {
 			return !staticData_;
 		}
 

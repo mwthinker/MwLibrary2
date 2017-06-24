@@ -30,7 +30,7 @@ namespace mw {
 		// else it return false.
 		Sprite add(SDL_Surface* image, int border=0, std::string uniqueKey = "");
 
-		inline const Texture& getTexture() const {
+		const Texture& getTexture() const {
 			return texture_;
 		}
 
@@ -57,7 +57,7 @@ namespace mw {
 
 			// Return the coordinate for the node. (x,y) represents the
 			// up-left coordinate of the rectangle. Including the border.
-			inline SDL_Rect getRect() const {
+			SDL_Rect getRect() const {
 				return rect_;
 			}
 

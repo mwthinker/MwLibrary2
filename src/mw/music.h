@@ -56,7 +56,7 @@ namespace mw {
 		bool isValid() const;
 
 		// Use with care! Return the pointer to the Mix_Music data.
-		inline Mix_Music* getMixMusic() const {
+		Mix_Music* getMixMusic() const {
 			return musicBuffer_ ? musicBuffer_->mixMusic_ : nullptr;
 		}
 

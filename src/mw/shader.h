@@ -50,7 +50,7 @@ namespace mw {
 		void useProgram() const;
 
 		// Return if the shader program is linked.
-		inline bool isLinked() const {
+		bool isLinked() const {
 			return shaderData_->programObjectId_ != 0;
 		}
 

@@ -36,27 +36,27 @@ namespace mw {
 			return texture_;
 		}
 
-		inline void bindTexture() const {
+		void bindTexture() const {
 			texture_.bindTexture();
 		}
 
 		// Return the lower left x position of the image drawn.
-		inline float getX() const {
+		float getX() const {
 			return x_;
 		}
 
 		// Return the lower left y position of the image drawn.
-		inline float getY() const {
+		float getY() const {
 			return y_;
 		}
 
 		// Return the width of the image.
-		inline float getWidth() const {
+		float getWidth() const {
 			return dx_;
 		}
 
 		// Return the height of the image.
-		inline float getHeight() const {
+		float getHeight() const {
 			return dy_;
 		}
 

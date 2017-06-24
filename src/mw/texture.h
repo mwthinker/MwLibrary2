@@ -55,7 +55,7 @@ namespace mw {
 		void bindTexture() const;
 
 		// Return the width of the image in pixels.
-		inline int getWidth() const {
+		int getWidth() const {
 			return width_;
 		}
 

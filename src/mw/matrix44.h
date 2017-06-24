@@ -81,15 +81,15 @@ namespace mw {
 			return data_.begin();
 		}
 
-		inline typename std::array<T, 16>::iterator end() {
+		typename std::array<T, 16>::iterator end() {
 			return data_.end();
 		}
 
-		inline typename std::array<T, 16>::const_iterator begin() const {
+		typename std::array<T, 16>::const_iterator begin() const {
 			return data_.cbegin();
 		}
-
-		inline typename std::array<T, 16>::const_iterator end() const {
+		
+		typename std::array<T, 16>::const_iterator end() const {
 			return data_.cend();
 		}
 
