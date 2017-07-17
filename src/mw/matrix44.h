@@ -14,128 +14,47 @@ namespace mw {
 		static const Matrix44<T> I;
 
 		// An empty matrix with undefined values.
-		Matrix44() {
-		}
+		Matrix44() = default;
 
 		// Defines a matrix. The matrix is internally saved as an column-major order.
 		Matrix44(
 			T m00, T m01, T m02, T m03,
 			T m10, T m11, T m12, T m13,
 			T m20, T m21, T m22, T m23,
-			T m30, T m31, T m32, T m33)
-			: data_({
-			m00, m10, m20, m30,
-			m01, m11, m21, m31,
-			m02, m12, m22, m32,
-			m03, m13, m23, m33}) {
-		}
+			T m30, T m31, T m32, T m33);
 
 		// Create a matrix based on an array in column-major order.
-		Matrix44(const std::array<T, 16>& data) : data_(data) {
-		}
+		Matrix44(const std::array<T, 16>& data);
 
-		Matrix44<T> operator*(const Matrix44<T>& m) const {
-			Matrix44<T> matrix;
-			const Matrix44<T>& m2 = *this;
-			for (int i = 0; i < 4; ++i) {
-				for (int j = 0; j < 4; ++j) {
-					matrix(i, j) = m2(i, 0) * m(0, j) + m2(i, 1) * m(1, j) + m2(i, 2) * m(2, j) + m2(i, 3) * m(3, j);
-				}
-			}
-			return matrix;
-		}
+		Matrix44<T> operator*(const Matrix44<T>& m) const;
 
-		Matrix44<T> operator+(const Matrix44<T>& matrix) const {
-			Matrix44<T> m;
-			for (int i = 0; i < 16; ++i) {
-				m[i] = data_[i] + matrix.data_[i];
-			}
-			return m;
-		}
+		Matrix44<T> operator+(const Matrix44<T>& matrix) const;
 
-		T& operator()(int row, int column) {
-			return data_[row + column * 4];
-		}
+		T& operator()(int row, int column);
 
-		T operator()(int row, int column) const {
-			return data_[row + column * 4];
-		}
+		T operator()(int row, int column) const;
 
-		const T* data() const {
-			return data_.data();
-		}
+		const T* data() const;
 
-		T& operator[](int index) {
-			return data_[index];
-		}
+		T& operator[](int index);
 
-		T operator[](int index) const {
-			return data_[index];
-		}
+		T operator[](int index) const;
 
-		size_t size() const {
-			return data_.size();
-		}
+		size_t size() const;
 
-		typename std::array<T, 16>::iterator begin() {
-			return data_.begin();
-		}
+		typename std::array<T, 16>::iterator begin();
 
-		typename std::array<T, 16>::iterator end() {
-			return data_.end();
-		}
+		typename std::array<T, 16>::iterator end();
 
-		typename std::array<T, 16>::const_iterator begin() const {
-			return data_.cbegin();
-		}
+		typename std::array<T, 16>::const_iterator begin() const;
 		
-		typename std::array<T, 16>::const_iterator end() const {
-			return data_.cend();
-		}
+		typename std::array<T, 16>::const_iterator end() const;
 
-		Matrix44<T> transpose() const {
-			Matrix44<T> m;
-			for (int i = 0; i < 4; ++i) {
-				for (int j = 0; j < 4; ++j) {
-					m(i, j) = Matrix44<T>::operator()(j, i);
-				}
-			}
-			return m;
-		}
+		Matrix44<T> transpose() const;
 
-		Matrix44<T> inverse() const {
-			Matrix44<T> tmp;
-			const Matrix44<T>& m = *this;
-			float scale = 1.f / determinant();
-			tmp(0, 0) = scale*(m(1, 2)*m(2, 3)*m(3, 1) - m(1, 3)*m(2, 2)*m(3, 1) + m(1, 3)*m(2, 1)*m(3, 2) - m(1, 1)*m(2, 3)*m(3, 2) - m(1, 2)*m(2, 1)*m(3, 3) + m(1, 1)*m(2, 2)*m(3, 3));
-			tmp(0, 1) = scale*(m(0, 3)*m(2, 2)*m(3, 1) - m(0, 2)*m(2, 3)*m(3, 1) - m(0, 3)*m(2, 1)*m(3, 2) + m(0, 1)*m(2, 3)*m(3, 2) + m(0, 2)*m(2, 1)*m(3, 3) - m(0, 1)*m(2, 2)*m(3, 3));
-			tmp(0, 2) = scale*(m(0, 2)*m(1, 3)*m(3, 1) - m(0, 3)*m(1, 2)*m(3, 1) + m(0, 3)*m(1, 1)*m(3, 2) - m(0, 1)*m(1, 3)*m(3, 2) - m(0, 2)*m(1, 1)*m(3, 3) + m(0, 1)*m(1, 2)*m(3, 3));
-			tmp(0, 3) = scale*(m(0, 3)*m(1, 2)*m(2, 1) - m(0, 2)*m(1, 3)*m(2, 1) - m(0, 3)*m(1, 1)*m(2, 2) + m(0, 1)*m(1, 3)*m(2, 2) + m(0, 2)*m(1, 1)*m(2, 3) - m(0, 1)*m(1, 2)*m(2, 3));
-			tmp(1, 0) = scale*(m(1, 3)*m(2, 2)*m(3, 0) - m(1, 2)*m(2, 3)*m(3, 0) - m(1, 3)*m(2, 0)*m(3, 2) + m(1, 0)*m(2, 3)*m(3, 2) + m(1, 2)*m(2, 0)*m(3, 3) - m(1, 0)*m(2, 2)*m(3, 3));
-			tmp(1, 1) = scale*(m(0, 2)*m(2, 3)*m(3, 0) - m(0, 3)*m(2, 2)*m(3, 0) + m(0, 3)*m(2, 0)*m(3, 2) - m(0, 0)*m(2, 3)*m(3, 2) - m(0, 2)*m(2, 0)*m(3, 3) + m(0, 0)*m(2, 2)*m(3, 3));
-			tmp(1, 2) = scale*(m(0, 3)*m(1, 2)*m(3, 0) - m(0, 2)*m(1, 3)*m(3, 0) - m(0, 3)*m(1, 0)*m(3, 2) + m(0, 0)*m(1, 3)*m(3, 2) + m(0, 2)*m(1, 0)*m(3, 3) - m(0, 0)*m(1, 2)*m(3, 3));
-			tmp(1, 3) = scale*(m(0, 2)*m(1, 3)*m(2, 0) - m(0, 3)*m(1, 2)*m(2, 0) + m(0, 3)*m(1, 0)*m(2, 2) - m(0, 0)*m(1, 3)*m(2, 2) - m(0, 2)*m(1, 0)*m(2, 3) + m(0, 0)*m(1, 2)*m(2, 3));
-			tmp(2, 0) = scale*(m(1, 1)*m(2, 3)*m(3, 0) - m(1, 3)*m(2, 1)*m(3, 0) + m(1, 3)*m(2, 0)*m(3, 1) - m(1, 0)*m(2, 3)*m(3, 1) - m(1, 1)*m(2, 0)*m(3, 3) + m(1, 0)*m(2, 1)*m(3, 3));
-			tmp(2, 1) = scale*(m(0, 3)*m(2, 1)*m(3, 0) - m(0, 1)*m(2, 3)*m(3, 0) - m(0, 3)*m(2, 0)*m(3, 1) + m(0, 0)*m(2, 3)*m(3, 1) + m(0, 1)*m(2, 0)*m(3, 3) - m(0, 0)*m(2, 1)*m(3, 3));
-			tmp(2, 2) = scale*(m(0, 1)*m(1, 3)*m(3, 0) - m(0, 3)*m(1, 1)*m(3, 0) + m(0, 3)*m(1, 0)*m(3, 1) - m(0, 0)*m(1, 3)*m(3, 1) - m(0, 1)*m(1, 0)*m(3, 3) + m(0, 0)*m(1, 1)*m(3, 3));
-			tmp(2, 3) = scale*(m(0, 3)*m(1, 1)*m(2, 0) - m(0, 1)*m(1, 3)*m(2, 0) - m(0, 3)*m(1, 0)*m(2, 1) + m(0, 0)*m(1, 3)*m(2, 1) + m(0, 1)*m(1, 0)*m(2, 3) - m(0, 0)*m(1, 1)*m(2, 3));
-			tmp(3, 0) = scale*(m(1, 2)*m(2, 1)*m(3, 0) - m(1, 1)*m(2, 2)*m(3, 0) - m(1, 2)*m(2, 0)*m(3, 1) + m(1, 0)*m(2, 2)*m(3, 1) + m(1, 1)*m(2, 0)*m(3, 2) - m(1, 0)*m(2, 1)*m(3, 2));
-			tmp(3, 1) = scale*(m(0, 1)*m(2, 2)*m(3, 0) - m(0, 2)*m(2, 1)*m(3, 0) + m(0, 2)*m(2, 0)*m(3, 1) - m(0, 0)*m(2, 2)*m(3, 1) - m(0, 1)*m(2, 0)*m(3, 2) + m(0, 0)*m(2, 1)*m(3, 2));
-			tmp(3, 2) = scale*(m(0, 2)*m(1, 1)*m(3, 0) - m(0, 1)*m(1, 2)*m(3, 0) - m(0, 2)*m(1, 0)*m(3, 1) + m(0, 0)*m(1, 2)*m(3, 1) + m(0, 1)*m(1, 0)*m(3, 2) - m(0, 0)*m(1, 1)*m(3, 2));
-			tmp(3, 3) = scale*(m(0, 1)*m(1, 2)*m(2, 0) - m(0, 2)*m(1, 1)*m(2, 0) + m(0, 2)*m(1, 0)*m(2, 1) - m(0, 0)*m(1, 2)*m(2, 1) - m(0, 1)*m(1, 0)*m(2, 2) + m(0, 0)*m(1, 1)*m(2, 2));
-			return tmp;
-		}
+		Matrix44<T> inverse() const;
 
-		float determinant() const {
-			const Matrix44<T>& m = *this;
-			return
-				m(0, 3)*m(1, 2)*m(2, 1)*m(3, 0) - m(0, 2)*m(1, 3)*m(2, 1)*m(3, 0) - m(0, 3)*m(1, 1)*m(2, 2)*m(3, 0) + m(0, 1)*m(1, 3)*m(2, 2)*m(3, 0) +
-				m(0, 2)*m(1, 1)*m(2, 3)*m(3, 0) - m(0, 1)*m(1, 2)*m(2, 3)*m(3, 0) - m(0, 3)*m(1, 2)*m(2, 0)*m(3, 1) + m(0, 2)*m(1, 3)*m(2, 0)*m(3, 1) +
-				m(0, 3)*m(1, 0)*m(2, 2)*m(3, 1) - m(0, 0)*m(1, 3)*m(2, 2)*m(3, 1) - m(0, 2)*m(1, 0)*m(2, 3)*m(3, 1) + m(0, 0)*m(1, 2)*m(2, 3)*m(3, 1) +
-				m(0, 3)*m(1, 1)*m(2, 0)*m(3, 2) - m(0, 1)*m(1, 3)*m(2, 0)*m(3, 2) - m(0, 3)*m(1, 0)*m(2, 1)*m(3, 2) + m(0, 0)*m(1, 3)*m(2, 1)*m(3, 2) +
-				m(0, 1)*m(1, 0)*m(2, 3)*m(3, 2) - m(0, 0)*m(1, 1)*m(2, 3)*m(3, 2) - m(0, 2)*m(1, 1)*m(2, 0)*m(3, 3) + m(0, 1)*m(1, 2)*m(2, 0)*m(3, 3) +
-				m(0, 2)*m(1, 0)*m(2, 1)*m(3, 3) - m(0, 0)*m(1, 2)*m(2, 1)*m(3, 3) - m(0, 1)*m(1, 0)*m(2, 2)*m(3, 3) + m(0, 0)*m(1, 1)*m(2, 2)*m(3, 3);
-		}
+		T determinant() const;
 
 	private:
 		std::array<T, 16> data_;
@@ -254,6 +173,141 @@ namespace mw {
 		matrix[5] *= sy;
 		matrix[6] *= sy;
 		matrix[7] *= sy;
+	}
+
+	template <typename T>
+	Matrix44<T>::Matrix44(
+		T m00, T m01, T m02, T m03,
+		T m10, T m11, T m12, T m13,
+		T m20, T m21, T m22, T m23,
+		T m30, T m31, T m32, T m33)
+		: data_({
+		m00, m10, m20, m30,
+		m01, m11, m21, m31,
+		m02, m12, m22, m32,
+		m03, m13, m23, m33}) {
+	}
+
+	template <typename T>
+	Matrix44<T>::Matrix44(const std::array<T, 16>& data) : data_(data) {
+	}
+
+	template <typename T>
+	Matrix44<T> Matrix44<T>::operator*(const Matrix44<T>& m) const {
+		Matrix44<T> matrix;
+		const Matrix44<T>& m2 = *this;
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				matrix(i, j) = m2(i, 0) * m(0, j) + m2(i, 1) * m(1, j) + m2(i, 2) * m(2, j) + m2(i, 3) * m(3, j);
+			}
+		}
+		return matrix;
+	}
+
+	template <typename T>
+	Matrix44<T> Matrix44<T>::operator+(const Matrix44<T>& matrix) const {
+		Matrix44<T> m;
+		for (int i = 0; i < 16; ++i) {
+			m[i] = data_[i] + matrix.data_[i];
+		}
+		return m;
+	}
+
+	template <typename T>
+	T& Matrix44<T>::operator()(int row, int column) {
+		return data_[row + column * 4];
+	}
+
+	template <typename T>
+	T Matrix44<T>::operator()(int row, int column) const {
+		return data_[row + column * 4];
+	}
+
+	template <typename T>
+	const T* Matrix44<T>::data() const {
+		return data_.data();
+	}
+
+	template <typename T>
+	T& Matrix44<T>::operator[](int index) {
+		return data_[index];
+	}
+
+	template <typename T>
+	T Matrix44<T>::operator[](int index) const {
+		return data_[index];
+	}
+
+	template <typename T>
+	size_t Matrix44<T>::size() const {
+		return data_.size();
+	}
+
+	template <typename T>
+	typename std::array<T, 16>::iterator Matrix44<T>::begin() {
+		return data_.begin();
+	}
+
+	template <typename T>
+	typename std::array<T, 16>::iterator Matrix44<T>::end() {
+		return data_.end();
+	}
+
+	template <typename T>
+	typename std::array<T, 16>::const_iterator Matrix44<T>::begin() const {
+		return data_.cbegin();
+	}
+
+	template <typename T>
+	typename std::array<T, 16>::const_iterator Matrix44<T>::end() const {
+		return data_.cend();
+	}
+
+	template <typename T>
+	Matrix44<T> Matrix44<T>::transpose() const {
+		Matrix44<T> m;
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				m(i, j) = Matrix44<T>::operator()(j, i);
+			}
+		}
+		return m;
+	}
+
+	template <typename T>
+	Matrix44<T> Matrix44<T>::inverse() const {
+		Matrix44<T> tmp;
+		const Matrix44<T>& m = *this;
+		T scale = 1 / determinant();
+		tmp(0, 0) = scale*(m(1, 2)*m(2, 3)*m(3, 1) - m(1, 3)*m(2, 2)*m(3, 1) + m(1, 3)*m(2, 1)*m(3, 2) - m(1, 1)*m(2, 3)*m(3, 2) - m(1, 2)*m(2, 1)*m(3, 3) + m(1, 1)*m(2, 2)*m(3, 3));
+		tmp(0, 1) = scale*(m(0, 3)*m(2, 2)*m(3, 1) - m(0, 2)*m(2, 3)*m(3, 1) - m(0, 3)*m(2, 1)*m(3, 2) + m(0, 1)*m(2, 3)*m(3, 2) + m(0, 2)*m(2, 1)*m(3, 3) - m(0, 1)*m(2, 2)*m(3, 3));
+		tmp(0, 2) = scale*(m(0, 2)*m(1, 3)*m(3, 1) - m(0, 3)*m(1, 2)*m(3, 1) + m(0, 3)*m(1, 1)*m(3, 2) - m(0, 1)*m(1, 3)*m(3, 2) - m(0, 2)*m(1, 1)*m(3, 3) + m(0, 1)*m(1, 2)*m(3, 3));
+		tmp(0, 3) = scale*(m(0, 3)*m(1, 2)*m(2, 1) - m(0, 2)*m(1, 3)*m(2, 1) - m(0, 3)*m(1, 1)*m(2, 2) + m(0, 1)*m(1, 3)*m(2, 2) + m(0, 2)*m(1, 1)*m(2, 3) - m(0, 1)*m(1, 2)*m(2, 3));
+		tmp(1, 0) = scale*(m(1, 3)*m(2, 2)*m(3, 0) - m(1, 2)*m(2, 3)*m(3, 0) - m(1, 3)*m(2, 0)*m(3, 2) + m(1, 0)*m(2, 3)*m(3, 2) + m(1, 2)*m(2, 0)*m(3, 3) - m(1, 0)*m(2, 2)*m(3, 3));
+		tmp(1, 1) = scale*(m(0, 2)*m(2, 3)*m(3, 0) - m(0, 3)*m(2, 2)*m(3, 0) + m(0, 3)*m(2, 0)*m(3, 2) - m(0, 0)*m(2, 3)*m(3, 2) - m(0, 2)*m(2, 0)*m(3, 3) + m(0, 0)*m(2, 2)*m(3, 3));
+		tmp(1, 2) = scale*(m(0, 3)*m(1, 2)*m(3, 0) - m(0, 2)*m(1, 3)*m(3, 0) - m(0, 3)*m(1, 0)*m(3, 2) + m(0, 0)*m(1, 3)*m(3, 2) + m(0, 2)*m(1, 0)*m(3, 3) - m(0, 0)*m(1, 2)*m(3, 3));
+		tmp(1, 3) = scale*(m(0, 2)*m(1, 3)*m(2, 0) - m(0, 3)*m(1, 2)*m(2, 0) + m(0, 3)*m(1, 0)*m(2, 2) - m(0, 0)*m(1, 3)*m(2, 2) - m(0, 2)*m(1, 0)*m(2, 3) + m(0, 0)*m(1, 2)*m(2, 3));
+		tmp(2, 0) = scale*(m(1, 1)*m(2, 3)*m(3, 0) - m(1, 3)*m(2, 1)*m(3, 0) + m(1, 3)*m(2, 0)*m(3, 1) - m(1, 0)*m(2, 3)*m(3, 1) - m(1, 1)*m(2, 0)*m(3, 3) + m(1, 0)*m(2, 1)*m(3, 3));
+		tmp(2, 1) = scale*(m(0, 3)*m(2, 1)*m(3, 0) - m(0, 1)*m(2, 3)*m(3, 0) - m(0, 3)*m(2, 0)*m(3, 1) + m(0, 0)*m(2, 3)*m(3, 1) + m(0, 1)*m(2, 0)*m(3, 3) - m(0, 0)*m(2, 1)*m(3, 3));
+		tmp(2, 2) = scale*(m(0, 1)*m(1, 3)*m(3, 0) - m(0, 3)*m(1, 1)*m(3, 0) + m(0, 3)*m(1, 0)*m(3, 1) - m(0, 0)*m(1, 3)*m(3, 1) - m(0, 1)*m(1, 0)*m(3, 3) + m(0, 0)*m(1, 1)*m(3, 3));
+		tmp(2, 3) = scale*(m(0, 3)*m(1, 1)*m(2, 0) - m(0, 1)*m(1, 3)*m(2, 0) - m(0, 3)*m(1, 0)*m(2, 1) + m(0, 0)*m(1, 3)*m(2, 1) + m(0, 1)*m(1, 0)*m(2, 3) - m(0, 0)*m(1, 1)*m(2, 3));
+		tmp(3, 0) = scale*(m(1, 2)*m(2, 1)*m(3, 0) - m(1, 1)*m(2, 2)*m(3, 0) - m(1, 2)*m(2, 0)*m(3, 1) + m(1, 0)*m(2, 2)*m(3, 1) + m(1, 1)*m(2, 0)*m(3, 2) - m(1, 0)*m(2, 1)*m(3, 2));
+		tmp(3, 1) = scale*(m(0, 1)*m(2, 2)*m(3, 0) - m(0, 2)*m(2, 1)*m(3, 0) + m(0, 2)*m(2, 0)*m(3, 1) - m(0, 0)*m(2, 2)*m(3, 1) - m(0, 1)*m(2, 0)*m(3, 2) + m(0, 0)*m(2, 1)*m(3, 2));
+		tmp(3, 2) = scale*(m(0, 2)*m(1, 1)*m(3, 0) - m(0, 1)*m(1, 2)*m(3, 0) - m(0, 2)*m(1, 0)*m(3, 1) + m(0, 0)*m(1, 2)*m(3, 1) + m(0, 1)*m(1, 0)*m(3, 2) - m(0, 0)*m(1, 1)*m(3, 2));
+		tmp(3, 3) = scale*(m(0, 1)*m(1, 2)*m(2, 0) - m(0, 2)*m(1, 1)*m(2, 0) + m(0, 2)*m(1, 0)*m(2, 1) - m(0, 0)*m(1, 2)*m(2, 1) - m(0, 1)*m(1, 0)*m(2, 2) + m(0, 0)*m(1, 1)*m(2, 2));
+		return tmp;
+	}
+
+	template <typename T>
+	T Matrix44<T>::determinant() const {
+		const Matrix44<T>& m = *this;
+		return
+			m(0, 3)*m(1, 2)*m(2, 1)*m(3, 0) - m(0, 2)*m(1, 3)*m(2, 1)*m(3, 0) - m(0, 3)*m(1, 1)*m(2, 2)*m(3, 0) + m(0, 1)*m(1, 3)*m(2, 2)*m(3, 0) +
+			m(0, 2)*m(1, 1)*m(2, 3)*m(3, 0) - m(0, 1)*m(1, 2)*m(2, 3)*m(3, 0) - m(0, 3)*m(1, 2)*m(2, 0)*m(3, 1) + m(0, 2)*m(1, 3)*m(2, 0)*m(3, 1) +
+			m(0, 3)*m(1, 0)*m(2, 2)*m(3, 1) - m(0, 0)*m(1, 3)*m(2, 2)*m(3, 1) - m(0, 2)*m(1, 0)*m(2, 3)*m(3, 1) + m(0, 0)*m(1, 2)*m(2, 3)*m(3, 1) +
+			m(0, 3)*m(1, 1)*m(2, 0)*m(3, 2) - m(0, 1)*m(1, 3)*m(2, 0)*m(3, 2) - m(0, 3)*m(1, 0)*m(2, 1)*m(3, 2) + m(0, 0)*m(1, 3)*m(2, 1)*m(3, 2) +
+			m(0, 1)*m(1, 0)*m(2, 3)*m(3, 2) - m(0, 0)*m(1, 1)*m(2, 3)*m(3, 2) - m(0, 2)*m(1, 1)*m(2, 0)*m(3, 3) + m(0, 1)*m(1, 2)*m(2, 0)*m(3, 3) +
+			m(0, 2)*m(1, 0)*m(2, 1)*m(3, 3) - m(0, 0)*m(1, 2)*m(2, 1)*m(3, 3) - m(0, 1)*m(1, 0)*m(2, 2)*m(3, 3) + m(0, 0)*m(1, 1)*m(2, 2)*m(3, 3);
 	}
 
 } // Namespace mw.
