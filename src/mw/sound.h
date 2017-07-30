@@ -52,9 +52,7 @@ namespace mw {
 		float getVolume() const;
 
 		// Use with care! Return the pointer to the Mix_Chunk data.
-		Mix_Chunk* getMixChunk() const {
-			return soundBuffer_ ? soundBuffer_->mixChunk_ : nullptr;
-		}
+		Mix_Chunk* getMixChunk() const;
 
 		// Return true if the sound points to a soundfile in memory.
 		// Else false.
@@ -94,6 +92,10 @@ namespace mw {
 
 		static int lastId_;
 	};
+
+	inline Mix_Chunk* Sound::getMixChunk() const {
+		return soundBuffer_ ? soundBuffer_->mixChunk_ : nullptr;
+	}
 
 } // Namespace mw.
 

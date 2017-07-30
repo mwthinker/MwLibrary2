@@ -62,7 +62,7 @@ void TestShader::setColorU(float red, float green, float blue, float alpha) cons
     glUniform4f(uColorIndex_, red, green, blue, alpha);
 }
 
-void TestShader::setColorU(const Color& color) const {
+void TestShader::setColorU(const mw::Color& color) const {
 	shader_.useProgram();
     glUniform4f(uColorIndex_, color.red_, color.green_, color.blue_, color.alpha_);
 }

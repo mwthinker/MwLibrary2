@@ -107,8 +107,7 @@ bool equal(mw::Vec2<T> a, mw::Vec2<T> b) {
 	return equal(a.x_, b.x_) && equal(a.y_, b.y_);
 }
 
-template <typename T>
-bool equal(mw::Color<T> a, mw::Color<T> b) {
+bool equal(mw::Color a, mw::Color b) {
 	return equal(a.red_, b.red_) && equal(a.blue_, b.blue_) && equal(a.green_, b.green_) && equal(a.alpha_, b.alpha_);
 }
 
@@ -191,7 +190,7 @@ void testVec2() {
 }
 
 void testColor() {
-	using Color = mw::Color<double>;
+	using Color = mw::Color;
 
 	Color c1(1, 1, 1);
 	Color c2(0.5, 0.5, 0.5, 0.5);

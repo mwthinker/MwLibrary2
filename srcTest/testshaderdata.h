@@ -27,7 +27,7 @@ public:
 		testShader_->useProgram();
 	}
 
-	void setColor(const Color& color) const {
+	void setColor(const mw::Color& color) const {
 		testShader_->setColorU(color);
 	}
 
