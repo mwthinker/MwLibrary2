@@ -72,6 +72,7 @@ TestWindow::TestWindow(mw::Sprite sprite) : sprite_(sprite), buffer1_(mw::Buffer
 	mw::Window::setWindowSize(512, 512);
 	mw::Window::setTitle("Test");
 	mw::Window::setIcon("tetris.bmp");
+	mw::Window::setOpenGlVersion(2,1);
 	controllerEvent_ = 0;
 }
 

@@ -11,8 +11,11 @@ namespace mw {
 
 	int Window::nbrCurrentInstance = 0;
 
+	int Window::majorVersionGl = 2;
+	int Window::minorVersionGl = 1;
+
 	Window::Window() : window_(nullptr), x_(-1), y_(-1), icon_(nullptr), width_(800), height_(800),
-		title_(""), resizable_(true), bordered_(true), fullScreen_(false), majorVersionGl_(2), minorVersionGl_(1) {
+		title_(""), resizable_(true), bordered_(true), fullScreen_(false) {
 	}
 
 	void Window::setupOpenGlContext() {
@@ -239,19 +242,22 @@ namespace mw {
 	}
 
 	void Window::setOpenGlVersion(int majorVersion, int minorVersion) {
-		majorVersionGl_ = majorVersion;
-		minorVersionGl_ = minorVersion;
+		if (!window_) {
+			// Can only change opengl version before window creation.
+			majorVersionGl = majorVersion;
+			minorVersionGl = minorVersion;
+		}
 	}
 
 	void Window::initOpenGl() {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersionGl_);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersionGl_);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersionGl);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersionGl);
 
 		if (SDL_GL_LoadLibrary(0) != 0) {
 			std::cerr << "SDL_GL_LoadLibrary failed: " << SDL_GetError() << std::endl;
-			std::cerr << "Failed to OpenGL version" << majorVersionGl_ << "." << minorVersionGl_ << std::endl;
+			std::cerr << "Failed to OpenGL version" << majorVersionGl << "." << minorVersionGl << std::endl;
 			std::exit(1);
 		}
 	}

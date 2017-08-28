@@ -20,11 +20,15 @@ namespace mw {
 		virtual void useProgram() const = 0;
 
 	private:
+		enum class VaoSupported {NOT_SUPPORTED, SUPPORTED, CHECK_SUPPORTED};
+
 		virtual void setVertexAttribPointer() const = 0;
 		virtual void bindBuffer() const = 0;
 
 		static GLuint currentVertexArrayObject;
 
+		// Keeps the external interface const.
+		mutable VaoSupported vaoSupported_;
 		std::shared_ptr<GLuint> vao_;
 	};
 

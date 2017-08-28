@@ -75,6 +75,10 @@ namespace mw {
 
 		void setOpenGlVersion(int majorVersion, int minorVersion);
 
+		static int getOpenGlMajorVersion();
+
+		static int getOpenGlMinorVersion();
+
 	protected:
 		virtual void initOpenGl();
 
@@ -103,10 +107,18 @@ namespace mw {
 		int x_, y_;
 		std::string title_;
 		SDL_Surface* icon_;
-		int majorVersionGl_, minorVersionGl_;
+		static int majorVersionGl, minorVersionGl;
 
 		static int nbrCurrentInstance;
 	};
+
+	inline int Window::getOpenGlMajorVersion() {
+		return majorVersionGl;
+	}
+
+	inline int Window::getOpenGlMinorVersion() {
+		return minorVersionGl;
+	}
 
 } // Namespace mw.
 

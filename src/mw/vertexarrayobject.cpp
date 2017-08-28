@@ -1,11 +1,13 @@
 #include "vertexarrayobject.h"
 #include "vertexbufferobject.h"
 
+#include "window.h"
+
 namespace mw {
 
 	GLuint VertexArrayObject::currentVertexArrayObject = -1;
 
-	VertexArrayObject::VertexArrayObject() : vao_(std::make_shared<GLuint>(0)) {
+	VertexArrayObject::VertexArrayObject() : vaoSupported_(VaoSupported::CHECK_SUPPORTED), vao_(std::make_shared<GLuint>(0)) {
 	}
 
 	VertexArrayObject::~VertexArrayObject() {
@@ -20,18 +22,36 @@ namespace mw {
 
 	void VertexArrayObject::bind() const {
 		useProgram();
-		if (*vao_ == 0) {
-			glGenVertexArrays(1, &*vao_);
-			glBindVertexArray(*vao_);
-			// Remove the block to unneeded calls to buffer changes.
-			VertexBufferObject::setIgnoreCurrentBind(true);
-			bindBuffer();
-			// Restore the block.
-			VertexBufferObject::setIgnoreCurrentBind(false);
-			currentVertexArrayObject = *vao_;
-			setVertexAttribPointer();
-		} else {
-			glBindVertexArray(*vao_);
+		switch (vaoSupported_) {
+			case VaoSupported::CHECK_SUPPORTED:
+				if (mw::Window::getOpenGlMajorVersion() >= 3) {
+					vaoSupported_ = VaoSupported::SUPPORTED;
+					// Fall trough to next case.
+				} else {
+					vaoSupported_ = VaoSupported::NOT_SUPPORTED;
+					bindBuffer();
+					setVertexAttribPointer();
+					break;
+				}
+			case VaoSupported::SUPPORTED:
+				if (*vao_ == 0) {
+					glGenVertexArrays(1, &*vao_);
+					glBindVertexArray(*vao_);
+					// Remove the block to unneeded calls to buffer changes.
+					VertexBufferObject::setIgnoreCurrentBind(true);
+					bindBuffer();
+					// Restore the block.
+					VertexBufferObject::setIgnoreCurrentBind(false);
+					currentVertexArrayObject = *vao_;
+					setVertexAttribPointer();
+				} else {
+					glBindVertexArray(*vao_);
+				}
+				break;
+			case VaoSupported::NOT_SUPPORTED:
+				bindBuffer();
+				setVertexAttribPointer();
+				break;
 		}
 	}
 
