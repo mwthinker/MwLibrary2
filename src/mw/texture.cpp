@@ -153,13 +153,14 @@ namespace mw {
 				texture_ = imageData_->texture_;
 				glBindTexture(GL_TEXTURE_2D, texture_);
 				imageData_->windowInstance_ = Window::getInstanceId();
+				checkGlError();
 			}
 		} else {
 			if (texture_ != 0) {
 				glBindTexture(GL_TEXTURE_2D, texture_);
+				checkGlError();
 			}
 		}
-		checkGlError();
 	}
 	
 	Texture::ImageData::ImageData(std::function<void()> filter) :

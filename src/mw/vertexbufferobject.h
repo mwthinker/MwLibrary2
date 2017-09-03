@@ -18,7 +18,7 @@ namespace mw {
 		// Will only bind for the first call to this function.
 		void bindBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage);
 
-		// Replaces the data in the buffer. First the buffer is binded then unbinded.
+		// Replaces the data in the buffer. The current buffer is binded.
 		// Will replace data if the buffer exists on the graphic card.
 		void bindBufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const;
 

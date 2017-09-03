@@ -20,7 +20,7 @@ namespace mw {
 		if (vbo_.getSize() > 0) {
 			bind();
 			glDrawArrays(mode, offsetInBytes_ / vertexSizeInBytes(), vertexes);
-			mw::checkGlError();
+			checkGlError();
 		}
 		#if _DEBUG
 		else {

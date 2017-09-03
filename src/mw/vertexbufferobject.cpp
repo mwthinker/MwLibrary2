@@ -33,21 +33,25 @@ namespace mw {
 			glGenBuffers(1, &data_->vboId_);
 			glBindBuffer(target, data_->vboId_);
 			glBufferData(target, size, data, usage);
+			checkGlError();
+
 			currentBufferIdBinded = data_->vboId_;
-			
 			data_->windowInstance_ = Window::getInstanceId();
 		}
 	}
 
 	void VertexBufferObject::bindBufferSubData(GLsizeiptr offset, GLsizeiptr size, const GLvoid* data) const {
+		bindBuffer();
 		if (data_->vboId_ != 0) {
 			glBufferSubData(data_->target_, offset, size, data);
+			checkGlError();
 		}
 	}
 
 	void VertexBufferObject::bindBuffer() const {
 		if (data_->vboId_ != 0 && (ignoreCurrentIdBinded || currentBufferIdBinded != data_->vboId_)) {
 			glBindBuffer(data_->target_, data_->vboId_);
+			checkGlError();
 			currentBufferIdBinded = data_->vboId_;
 		}
 	}
@@ -55,6 +59,7 @@ namespace mw {
 	void VertexBufferObject::unbindBuffer() const {
 		currentBufferIdBinded = 0;
 		glBindBuffer(data_->target_, 0);
+		checkGlError();
 	}
 
 	// Return the size in bytes for the current data.
@@ -75,6 +80,7 @@ namespace mw {
 		if (vboId_ != 0 && windowInstance_ == Window::getInstanceId()) {
 			// Is called if the buffer is valid and therefore need to be cleaned up.
 			glDeleteBuffers(1, &vboId_);
+			checkGlError();
 			vboId_ = 0;
 			size_ = 0;
 			target_ = 0;

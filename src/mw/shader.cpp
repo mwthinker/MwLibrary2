@@ -57,6 +57,7 @@ namespace mw {
 		if (programObjectId_ != 0 && windowInstance_ == Window::getInstanceId()) {
 			// Is called if the program is valid and therefore need to be cleaned up.
 			glDeleteProgram(programObjectId_);
+			checkGlError();
 			currentProgramId = 0;
 		}
 	}
@@ -83,6 +84,7 @@ namespace mw {
 				return it->second;
 			} else {
 				int loc = glGetUniformLocation(shaderData_->programObjectId_, uniform.c_str());
+				checkGlError();
 				if (loc != -1) {
 					shaderData_->uniforms_[uniform] = loc;
 				}
@@ -124,6 +126,7 @@ namespace mw {
 	bool Shader::loadAndLink(std::string vShader, std::string gShader, std::string fShader) {
 		if (shaderData_->programObjectId_ == 0) {
 			shaderData_->programObjectId_ = glCreateProgram();
+			checkGlError();
 			shaderData_->windowInstance_ = Window::getInstanceId();
 			
 			if (shaderData_->programObjectId_ == 0) {
@@ -139,6 +142,7 @@ namespace mw {
 			// Bind all attributes.
 			for (auto& pair : shaderData_->attributes_) {
 				glBindAttribLocation(shaderData_->programObjectId_, shaderData_->location_, pair.first.c_str());
+				checkGlError();
 				pair.second = shaderData_->location_++;
 			}
 
@@ -174,6 +178,7 @@ namespace mw {
 	void Shader::useProgram() const {
 		if (shaderData_->programObjectId_ != 0 && currentProgramId != shaderData_->programObjectId_) {
 			glUseProgram(shaderData_->programObjectId_);
+			checkGlError();
 			currentProgramId = shaderData_->programObjectId_;
 		}
 	}

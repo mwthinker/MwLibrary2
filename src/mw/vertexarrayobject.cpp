@@ -16,6 +16,7 @@ namespace mw {
 		}
 		if (*vao_ > 0) {
 			glDeleteVertexArrays(1, &*vao_);
+			checkGlError();
 		}
 		*vao_ = 0;
 	}
@@ -37,6 +38,7 @@ namespace mw {
 				if (*vao_ == 0) {
 					glGenVertexArrays(1, &*vao_);
 					glBindVertexArray(*vao_);
+					checkGlError();
 					// Remove the block to unneeded calls to buffer changes.
 					VertexBufferObject::setIgnoreCurrentBind(true);
 					bindBuffer();
@@ -46,6 +48,7 @@ namespace mw {
 					setVertexAttribPointer();
 				} else {
 					glBindVertexArray(*vao_);
+					checkGlError();
 				}
 				break;
 			case VaoSupported::NOT_SUPPORTED:
