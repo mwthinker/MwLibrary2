@@ -102,47 +102,55 @@ namespace mw {
 	}
 
 	Sprite TextureAtlas::add(std::string filename, int border, std::string uniqueKey) {
-		int size = images_.size();
-		Sprite& sprite = images_[filename + uniqueKey];
-
-		if (size != images_.size()) {
+		std::string key = filename + uniqueKey;
+		auto it = images_.find(key);
+		if (it == images_.end()) {
 			SDL_Surface* image = IMG_Load(filename.c_str());
 			if (image != 0) {
-				sprite = add(image, border, uniqueKey);
+				mw::Sprite sprite = add(image, border, key);
 				SDL_FreeSurface(image);
 				return sprite;
 			} else {
-				images_.erase(filename + uniqueKey);
 				std::cerr << "\nImage " << filename << " failed to load: " << IMG_GetError() << std::endl;
 				return Sprite();
 			}
 		}
-		return sprite;
+		return it->second;
 	}
 
-	Sprite TextureAtlas::add(SDL_Surface* image, int border, std::string uniqueKey) {
-		std::shared_ptr<Node> node;
-		if (texture_.isValid()) {
-			if (root_ == 0) {
-				node = Node::createRoot(root_, width_, height_, image, border);
+	Sprite TextureAtlas::add(SDL_Surface* image, int border, std::string key) {
+		auto it = images_.find(key);
+		if (key.empty() || it == images_.end()) {
+			std::shared_ptr<Node> node = nullptr;
+			if (texture_.isValid()) {
+				if (root_) {
+					node = root_->insert(image, border);
+				} else {
+					node = Node::createRoot(root_, width_, height_, image, border);
+				}
+				if (node) {
+					// Only when atlas is not full.
+					SDL_Rect rect = node->getRect();
+					rect.w -= 2 * border;
+					rect.h -= 2 * border;
+					rect.x += border;
+					rect.y += border;
+					uploadSdlSurfaceToTexture(image, rect, texture_);
+					// If key is empty, then the default sprite is overridden.
+					Sprite& sprite = images_[key];
+					sprite = Sprite(texture_,
+						(float) rect.x, (float) (texture_.getHeight() - rect.y - image->h),
+						(float) image->w, (float) image->h);
+					return sprite;
+				} else {
+					std::cerr << "\nTextureAtlas: Not enough image space to insert image." << std::endl;
+					return mw::Sprite();
+				}
 			} else {
-				node = root_->insert(image, border);
+				return mw::Sprite();
 			}
 		}
-		if (node != 0) {
-			SDL_Rect rect = node->getRect();
-			rect.w -= 2 * border;
-			rect.h -= 2 * border;
-			rect.x += border;
-			rect.y += border;
-			uploadSdlSurfaceToTexture(image, rect, texture_);
-			Sprite& sprite = images_[uniqueKey];
-			sprite = Sprite(texture_, (float) rect.x, (float) (texture_.getHeight() - rect.y - image->h),
-				(float) image->w, (float) image->h);
-
-			return sprite;
-		}
-		return Sprite();
+		return it->second; // Return already loaded sprite.
 	}
 
 	Sprite TextureAtlas::get(std::string key) const {

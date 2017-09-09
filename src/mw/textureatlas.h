@@ -24,11 +24,11 @@ namespace mw {
 
 		bool operator==(const TextureAtlas& textureAtlas) const;
 
-		Sprite add(std::string filename, int border=0, std::string uniqueKey = "");
+		Sprite add(std::string filename, int border = 0, std::string uniqueKey = "");
 
 		// Add the image to the texture atlas. Return true if sucsessfull, 
 		// else it return false.
-		Sprite add(SDL_Surface* image, int border=0, std::string uniqueKey = "");
+		Sprite add(SDL_Surface* image, int border = 0, std::string key = "");
 
 		const Texture& getTexture() const {
 			return texture_;
