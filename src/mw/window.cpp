@@ -15,7 +15,8 @@ namespace mw {
 	int Window::minorVersionGl = 1;
 
 	Window::Window() : window_(nullptr), x_(-1), y_(-1), icon_(nullptr), width_(800), height_(800),
-		title_(""), resizable_(true), bordered_(true), fullScreen_(false) {
+		title_(""), resizable_(true), bordered_(true), fullScreen_(false),
+		glBitfield_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT) {
 	}
 
 	void Window::setupOpenGlContext() {
@@ -119,7 +120,7 @@ namespace mw {
 					eventUpdate(eventSDL);
 				}
 
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+				glClear(glBitfield_);
 
 				auto currentTime = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double> delta = currentTime - time;
@@ -220,6 +221,10 @@ namespace mw {
 		int w, h;
 		getSize(w, h);
 		return h;
+	}
+
+	void Window::setGlClear(GLbitfield glBitfield) {
+		glBitfield_ = glBitfield;
 	}
 
 	void Window::setFullScreen(bool fullScreen) {

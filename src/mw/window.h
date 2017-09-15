@@ -2,6 +2,7 @@
 #define MW_WINDOW_H
 
 #include "initsdl.h"
+#include "opengl.h"
 
 #include <SDL.h>
 
@@ -79,6 +80,8 @@ namespace mw {
 
 		static int getOpenGlMinorVersion();
 
+		void setGlClear(GLbitfield glBitfield);
+
 	protected:
 		virtual void initOpenGl();
 
@@ -104,9 +107,12 @@ namespace mw {
 		bool fullScreen_;
 		bool bordered_;
 		bool resizable_;
+		
+		GLbitfield glBitfield_;
 		int x_, y_;
 		std::string title_;
 		SDL_Surface* icon_;
+
 		static int majorVersionGl, minorVersionGl;
 
 		static int nbrCurrentInstance;
