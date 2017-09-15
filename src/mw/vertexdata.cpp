@@ -2,9 +2,7 @@
 
 #include "vertexbufferobject.h"
 
-#if _DEBUG
 #include <iostream>
-#endif // _DEBUG
 
 namespace mw {
 
@@ -21,12 +19,9 @@ namespace mw {
 			bind();
 			glDrawArrays(mode, offsetInBytes_ / vertexSizeInBytes(), vertexes);
 			checkGlError();
-		}
-		#if _DEBUG
-		else {
+		} else {
 			std::cerr << "VertexData failed to draw, no vbo binded, i.e. Buffer::uploadToGraphicCard never called." << std::endl;
 		}
-		#endif // _DEBUG
 	}
 
 	void VertexData::begin() {

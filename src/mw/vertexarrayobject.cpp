@@ -35,7 +35,7 @@ namespace mw {
 					break;
 				}
 			case VaoSupported::SUPPORTED:
-				if (*vao_ == 0) {
+				if (*vao_ == 0) { // Create the vertex array only the first time.
 					glGenVertexArrays(1, &*vao_);
 					glBindVertexArray(*vao_);
 					checkGlError();
