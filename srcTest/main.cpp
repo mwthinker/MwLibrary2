@@ -222,8 +222,8 @@ int main(int argc, char** argv) {
     testMatrix();
 	testVec2();
 	testColor();
-	//testLoadTextureAtlas();
-	//testLoadTextureAtlas2();
+	testLoadTextureAtlas();
+	testLoadTextureAtlas2();
 	testBatchWindow();
 
 	mw::Sound sound("test.wav");
