@@ -1,4 +1,5 @@
 #include "testwindow.h"
+#include "testwindow2.h"
 
 #include <mw/sprite.h>
 #include <mw/sound.h>
@@ -8,6 +9,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <sstream>
 
 SDL_Surface* createSurface(int w, int h, char r, char g, char b) {
 	SDL_Surface* s = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
@@ -95,6 +97,21 @@ void testLoadTextureAtlas2() {
 	SDL_FreeSurface(d);
 
 	std::cout << "\ntestLoadTextureAtlas2() successfully!\n";
+}
+
+void testBatchWindow() {
+	// Test opengl version 1 to 4
+	for (int i = 1; i <= 4; ++i) {
+		try {
+			TestWindow2 w(i, 1);
+			std::stringstream stream;
+			stream << "OpenGl Version " << i << "." << 1;
+			w.setTitle(stream.str());
+			w.startLoop();
+		} catch (std::runtime_error& runtimeError) {
+			std::cout << runtimeError.what();
+		}
+	}
 }
 
 template <typename T>
@@ -205,8 +222,9 @@ int main(int argc, char** argv) {
     testMatrix();
 	testVec2();
 	testColor();
-	testLoadTextureAtlas();
-	testLoadTextureAtlas2();
+	//testLoadTextureAtlas();
+	//testLoadTextureAtlas2();
+	testBatchWindow();
 
 	mw::Sound sound("test.wav");
 	sound.setVolume(0.5f);

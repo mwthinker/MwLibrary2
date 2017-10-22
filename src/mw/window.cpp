@@ -6,6 +6,8 @@
 
 #include <chrono>
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 
 namespace mw {
 
@@ -22,8 +24,9 @@ namespace mw {
 	void Window::setupOpenGlContext() {
 		glContext_ = SDL_GL_CreateContext(window_);
 		if (SDL_GL_CreateContext == 0) {
-			std::cerr << "SDL_GL_CreateContext failed: " << SDL_GetError() << std::endl;
-			std::exit(1);
+			std::stringstream stream;
+			stream << "SDL_GL_CreateContext failed: " << SDL_GetError();
+			throw std::runtime_error(stream.str());
 		}
 
 		if (SDL_GL_SetSwapInterval(1) < 0) {
@@ -35,15 +38,15 @@ namespace mw {
 			std::cerr << "GL_VERSION: " << version << std::endl;
 			std::cerr << "GL_SHADING_LANGUAGE_VERSION: " << (char*) glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 		} else {
-			std::cerr << "Error: unknown OpenGL version loadad!" << std::endl;
-			std::exit(1);
+			throw std::runtime_error("Error: unknown OpenGL version loadad!");
 		}
 
 		GLenum error = glewInit();
 		if (GLEW_OK != error) {
 			// Problem: glewInit failed, something is seriously wrong.
-			std::cerr << "Error: " << glewGetErrorString(error) << std::endl;
-			std::exit(1);
+			std::stringstream stream;
+			stream << "Error: " << glewGetErrorString(error);
+			throw std::runtime_error(stream.str());
 		}
 
 		glGetError(); // Ignore, silly error which glew may cause.
@@ -96,8 +99,9 @@ namespace mw {
 				flags);
 
 			if (window_ == 0) {
-				std::cerr << "SDL_CreateWindow failed: " << SDL_GetError() << std::endl;
-				std::exit(1);
+				std::stringstream stream;
+				stream << "SDL_CreateWindow failed: " << SDL_GetError() << std::endl;
+				throw std::runtime_error(stream.str());
 			}
 
 			if (icon_) {
@@ -261,9 +265,10 @@ namespace mw {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersionGl);
 
 		if (SDL_GL_LoadLibrary(0) != 0) {
-			std::cerr << "SDL_GL_LoadLibrary failed: " << SDL_GetError() << std::endl;
-			std::cerr << "Failed to OpenGL version" << majorVersionGl << "." << minorVersionGl << std::endl;
-			std::exit(1);
+			std::stringstream stream;
+			stream << "SDL_GL_LoadLibrary failed: " << SDL_GetError() << std::endl;
+			stream << "Failed to OpenGL version" << majorVersionGl << "." << minorVersionGl << std::endl;
+			throw std::runtime_error(stream.str());
 		}
 	}
 

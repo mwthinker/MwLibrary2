@@ -16,19 +16,21 @@ option(MwLibrary2Test "Add MwLibrary2Test project." OFF)
 
 # Source files.
 set(SOURCES
+	src/mw/batch.h
 	src/mw/buffer.cpp
 	src/mw/buffer.h
 	src/mw/color.h
 	src/mw/font.cpp
 	src/mw/font.h
+	src/mw/gamecontroller.cpp
+	src/mw/gamecontroller.h
+	src/mw/initmixer.cpp
+	src/mw/initmixer.h
 	src/mw/initsdl.cpp
 	src/mw/initsdl.h
 	src/mw/initttf.cpp
 	src/mw/initttf.h
-	src/mw/gamecontroller.cpp
-	src/mw/gamecontroller.h
 	src/mw/matrix44.h
-	src/mw/vec2.h
 	src/mw/music.cpp
 	src/mw/music.h
 	src/mw/opengl.cpp
@@ -37,16 +39,15 @@ set(SOURCES
 	src/mw/shader.h
 	src/mw/sound.cpp
 	src/mw/sound.h
-	src/mw/initmixer.cpp
-	src/mw/initmixer.h
 	src/mw/sprite.cpp
 	src/mw/sprite.h
 	src/mw/text.cpp
 	src/mw/text.h
-	src/mw/texture.cpp
-	src/mw/texture.h
 	src/mw/textureatlas.cpp
 	src/mw/textureatlas.h
+	src/mw/texture.cpp
+	src/mw/texture.h
+	src/mw/vec2.h
 	src/mw/vertexarrayobject.cpp
 	src/mw/vertexarrayobject.h
 	src/mw/vertexbufferobject.cpp
@@ -58,12 +59,16 @@ set(SOURCES
 )
 
 set(SOURCES_TEST
+	srcTest/batchtriangles.h
 	srcTest/drawtext.cpp
 	srcTest/drawtext.h
-	srcTest/testshader.cpp
-	srcTest/testshader.h
-	srcTest/testshaderdata.h
 	srcTest/main.cpp
+	srcTest/testshader.cpp
+	srcTest/testshaderdata.h
+	srcTest/testshader.h
+	srcTest/testshader2.h
+	srcTest/testshader2.cpp
+	srcTest/testwindow2.h
 	srcTest/testwindow.cpp
 	srcTest/testwindow.h
 )

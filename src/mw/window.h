@@ -57,8 +57,8 @@ namespace mw {
 		}
 
 		// Return the number, first instance of an active window return 1 next 3, etc.
-		// Each even number represent that the last widow with the odd number was closed.
-		inline static int getInstanceId() {
+		// Each even number represent that the last window with the odd number was closed.
+		static int getInstanceId() {
 			return nbrCurrentInstance;
 		}
 
