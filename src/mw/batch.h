@@ -50,12 +50,8 @@ namespace mw {
 			return data_.size();
 		}
 
-		int getUploadedVertexes() const {
-			return maxVertexes;
-		}
-
 		float getVboSizeInMiB() const {
-			return sizeof(Shader::Vertex) * data_.size() * 1.f / 1024 / 1024;
+			return sizeof(typename Shader::Vertex) * data_.size() * 1.f / 1024 / 1024;
 		}
 
 		void useProgram() const override {
@@ -102,14 +98,14 @@ namespace mw {
 			if (mw::Window::getOpenGlMajorVersion() >= 2) {
 				if (vbo_.getSize() > 0) {
 					if (usage_ != GL_STATIC_DRAW) {
-						vbo_.bindBufferSubData(0, index_ * sizeof(Shader::Vertex), data_.data());
+						vbo_.bindBufferSubData(0, index_ * sizeof(typename Shader::Vertex), data_.data());
 						uploadedIndex_ = index_;
 					}
 				} else {
 					if (usage_ == GL_STATIC_DRAW) {
-						vbo_.bindBufferData(GL_ARRAY_BUFFER, index_ * sizeof(Shader::Vertex), data_.data(), usage_);
+						vbo_.bindBufferData(GL_ARRAY_BUFFER, index_ * sizeof(typename Shader::Vertex), data_.data(), usage_);
 					} else {
-						vbo_.bindBufferData(GL_ARRAY_BUFFER, data_.size() * sizeof(Shader::Vertex), data_.data(), usage_);
+						vbo_.bindBufferData(GL_ARRAY_BUFFER, data_.size() * sizeof(typename Shader::Vertex), data_.data(), usage_);
 					}
 					uploadedIndex_ = index_;
 				}
@@ -129,7 +125,7 @@ namespace mw {
 			}
 		}
 
-		void add(typename const Shader::Vertex& v) {
+		void add(const typename Shader::Vertex& v) {
 			if (usage_ != GL_STATIC_DRAW) {
 				data_[index_++] = v;
 			} else {
