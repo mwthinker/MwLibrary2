@@ -142,19 +142,26 @@ namespace mw {
 			}
 		}
 
-		void add(const std::vector<typename Shader::Vertex>& data) {
+		template<class InputIterator>
+		void add(InputIterator begin, InputIterator end) {
 			if (usage_ != GL_STATIC_DRAW) {
-				std::copy(data.begin(), data.end(), data_.begin() + index_);
-				index_ += data.size();
+				std::copy(begin, end, data_.begin() + index_);
+				index_ += end - begin;
 			} else {
 				if (vbo_.getSize() == 0) {
 					// Only add data before the vbo is created.
-					std::copy(data.begin(), data.end(), data_.begin() + index_);
-					index_ += data.size();
+					std::copy(begin, end, data_.begin() + index_);
+					index_ += end - begin;
 				} else {
 					std::cerr << "VertexData is static, data can't be modified." << std::endl;
 				}
 			}
+
+			data_.insert(data_.end(), begin, begin);
+		}
+
+		void add(const std::vector<typename Shader::Vertex>& data) {
+			add(data.begin(), data.end());
 		}
 
 	private:
