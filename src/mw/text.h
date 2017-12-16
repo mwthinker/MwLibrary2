@@ -27,6 +27,8 @@ namespace mw {
 
 		bool operator==(const Text& text) const;
 
+		bool operator!=(const Text& text) const;
+
 		void setText(std::string text);
 
 		std::string getText() const;
@@ -122,6 +124,14 @@ namespace mw {
     // I.e. the texture is in memory with width and height.
 	inline bool Text::isValid() const {
         return texture_.isValid();
+	}
+
+	inline bool Text::operator==(const Text& text) const {
+		return texture_ == text.texture_;
+	}
+
+	inline bool Text::operator!=(const Text& other) const {
+		return !(*this == other);
 	}
 
 } // Namespace mw.

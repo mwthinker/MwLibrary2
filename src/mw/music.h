@@ -21,6 +21,8 @@ namespace mw {
 
 		bool operator==(const Music& music) const;
 
+		bool operator!=(const Music& other) const;
+
 		// Play the music one time plus the "loops" variable.
 		// Will stop any other music object already playing.
 		// Set the volume defined by this object.
@@ -77,6 +79,15 @@ namespace mw {
 		MusicBufferPtr musicBuffer_;
 		float volume_;
 	};
+
+
+	inline bool Music::operator==(const Music& music) const {
+		return musicBuffer_ != nullptr && musicBuffer_ == music.musicBuffer_;
+	}
+
+	inline bool Music::operator!=(const Music& other) const {
+		return !(*this == other);
+	}
 
 } // Namespace mw.
 

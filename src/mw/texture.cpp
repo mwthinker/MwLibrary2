@@ -138,10 +138,6 @@ namespace mw {
 		}
 	}
 
-	bool Texture::operator==(const Texture& texture) const {
-		return imageData_ == texture.imageData_;
-	}
-
 	void Texture::bindTexture() const {
 		if (firstCallBind_) {
 			firstCallBind_ = false;

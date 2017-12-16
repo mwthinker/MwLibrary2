@@ -16,6 +16,8 @@ namespace mw {
 
 		bool operator==(const Shader& shader) const;
 
+		bool operator!=(const Shader& other) const;
+
 		// Bind the attribute to the shader.
 		// Must be called before linking the shader in order for the attribute to
 		// be available. I.e. before calling loadAndLinkShadersFromFile(...).
@@ -71,6 +73,14 @@ namespace mw {
 
 		std::shared_ptr<ShaderData> shaderData_;
 	};
+
+	inline bool Shader::operator==(const Shader& shader) const {
+		return shaderData_ == shader.shaderData_;
+	}
+
+	inline bool Shader::operator!=(const Shader& other) const {
+		return !(*this == other);
+	}
 
 } // Namespace mw.
 

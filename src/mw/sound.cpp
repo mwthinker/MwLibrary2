@@ -17,10 +17,6 @@ namespace mw {
 		stopPlaying();
 	}
 
-	bool Sound::operator==(const Sound& sound) const {
-		return soundBuffer_ != nullptr && soundBuffer_ == sound.soundBuffer_;
-	}
-
 	Sound::Sound(std::string filename) {
 		soundBuffer_ = std::make_shared<SoundBuffer>(filename);
 		channel_ = -1;

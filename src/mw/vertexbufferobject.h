@@ -14,6 +14,8 @@ namespace mw {
 		
 		bool operator==(const VertexBufferObject& shader) const;
 
+		bool operator!=(const VertexBufferObject& shader) const;
+
 		// Generates an id and bind the buffer data to the graphic card. The buffer is then unbind.
 		// Will only bind for the first call to this function.
 		void bindBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage);
@@ -54,6 +56,14 @@ namespace mw {
 
 		std::shared_ptr<Data> data_;
 	};
+
+	inline bool VertexBufferObject::operator==(const VertexBufferObject& vbo) const {
+		return data_ == vbo.data_;
+	}
+
+	inline bool VertexBufferObject::operator!=(const VertexBufferObject& other) const {
+		return !(*this == other);
+	}
 
 } // Namespace mw.
 

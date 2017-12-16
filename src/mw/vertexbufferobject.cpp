@@ -21,10 +21,6 @@ namespace mw {
 		data_->target_ = 0;
 	}
 
-	bool VertexBufferObject::operator==(const VertexBufferObject& vbo) const {
-		return data_ == vbo.data_;
-	}
-
 	void VertexBufferObject::bindBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage) {
 		if (data_->vboId_ == 0) {
 			data_->target_ = target;

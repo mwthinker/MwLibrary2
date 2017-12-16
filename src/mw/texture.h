@@ -50,6 +50,8 @@ namespace mw {
 
 		bool operator==(const Texture& texture) const;
 
+		bool operator!=(const Texture& texture) const;
+
 		// Binds the texture to the target. First call, copies 
 		// the image data to graphic memory.
 		void bindTexture() const;
@@ -102,6 +104,14 @@ namespace mw {
 		bool valid_;
 		std::shared_ptr<ImageData> imageData_;
 	};
+
+	inline bool Texture::operator==(const Texture& texture) const {
+		return imageData_ == texture.imageData_;
+	}
+
+	inline bool Texture::operator!=(const Texture& other) const {
+		return !(*this == other);
+	}
 
 } // Namespace mw.
 

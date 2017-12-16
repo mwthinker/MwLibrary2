@@ -19,6 +19,8 @@ namespace mw {
 
 		bool operator==(const Sound& sound) const;
 
+		bool operator!=(const Sound& sound) const;
+
 		// Loads a soundfile and creates a sound.
 		Sound(std::string filename);
 
@@ -95,6 +97,14 @@ namespace mw {
 
 	inline Mix_Chunk* Sound::getMixChunk() const {
 		return soundBuffer_ ? soundBuffer_->mixChunk_ : nullptr;
+	}
+
+	inline bool Sound::operator==(const Sound& sound) const {
+		return soundBuffer_ != nullptr && soundBuffer_ == sound.soundBuffer_;
+	}
+
+	inline bool Sound::operator!=(const Sound& other) const {
+		return !(*this == other);
 	}
 
 } // Namespace mw.

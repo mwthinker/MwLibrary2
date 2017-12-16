@@ -15,7 +15,9 @@ namespace mw {
 		// Creates an empty font.
 		Font();
 
-		bool operator==(const Font& Font) const;
+		bool operator==(const Font& font) const;
+
+		bool operator!=(const Font& font) const;
 
 		// Load the font located in the file named (filename).
 		// Higher character size demands higher memory usage.
@@ -48,6 +50,14 @@ namespace mw {
 		std::shared_ptr<FontData> fontData_;
 		int characterSize_;
 	};
+
+	inline bool Font::operator==(const Font& font) const {
+		return fontData_ == font.fontData_;
+	}
+
+	inline bool Font::operator!=(const Font& other) const {
+		return !(*this == other);
+	}
 
 } // Namespace mw.
 

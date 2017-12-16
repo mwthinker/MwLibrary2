@@ -41,10 +41,6 @@ namespace mw {
 	Shader::Shader() : shaderData_(std::make_shared<ShaderData>()) {
 	}
 
-	bool Shader::operator==(const Shader& shader) const {
-		return shaderData_ == shader.shaderData_;
-	}
-
 	Shader::ShaderData::ShaderData() :
 		location_(0),
 		programObjectId_(0),
