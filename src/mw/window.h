@@ -20,6 +20,9 @@ namespace mw {
 
 		virtual ~Window();
 
+		Window(const Window&) = delete;
+		Window& operator=(const Window&) = delete;
+
 		// Start the loop which handle all inputs and graphics in the windows. It will not
 		// return until the loop is ended. Is closed when the windows is closed, i.e. a
 		// call to the function quit().
@@ -82,6 +85,14 @@ namespace mw {
 
 		void setGlClear(GLbitfield glBitfield);
 
+		// Add a delay in the loop, add a sleeping time before frame swapping. Less than 10 ms may 
+		// not effect anything, is plattform dependent.
+		void setLoopSleepingTime(int sleepingTime);
+		
+		int getLoopSleepingTime() const {
+			return sleepingTime_;
+		}
+
 	protected:
 		virtual void initOpenGl();
 
@@ -90,7 +101,7 @@ namespace mw {
 
 	private:
 		// Is called by the loop. The frequency in which this function is called is fixed
-		// by the vertical frequency of the monitor (VSYNC).
+		// by the vertical frequency of the monitor (VSYNC) or the sleeping time of the loop.
 		virtual void update(double deltaTime) {
 		}
 
@@ -112,9 +123,9 @@ namespace mw {
 		int x_, y_;
 		std::string title_;
 		SDL_Surface* icon_;
+		int sleepingTime_;
 
 		static int majorVersionGl, minorVersionGl;
-
 		static int nbrCurrentInstance;
 	};
 

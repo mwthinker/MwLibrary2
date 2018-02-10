@@ -17,7 +17,7 @@ namespace mw {
 	int Window::minorVersionGl = 1;
 
 	Window::Window() : window_(nullptr), x_(-1), y_(-1), icon_(nullptr), width_(800), height_(800),
-		title_(""), resizable_(true), bordered_(true), fullScreen_(false),
+		title_(""), resizable_(true), bordered_(true), fullScreen_(false), sleepingTime_(-1),
 		glBitfield_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT) {
 	}
 
@@ -32,7 +32,6 @@ namespace mw {
 		if (SDL_GL_SetSwapInterval(1) < 0) {
 			std::cerr << "Warning: Unable to set VSync! SDL Error: " << SDL_GetError() << std::endl;
 		}
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 		if (char* version = (char*) glGetString(GL_VERSION)) {
 			std::cerr << "GL_VERSION: " << version << std::endl;
@@ -92,11 +91,10 @@ namespace mw {
 
 			window_ = SDL_CreateWindow(
 				title_.c_str(),
-				x_,
-				y_,
-				width_,
-				height_,
-				flags);
+				x_,	y_,
+				width_,	height_,
+				flags
+			);
 
 			if (window_ == 0) {
 				std::stringstream stream;
@@ -116,21 +114,24 @@ namespace mw {
 			++nbrCurrentInstance;
 
 			initPreLoop();
-
+			
 			auto time = std::chrono::high_resolution_clock::now();
 			while (!quit_) {
+				glClear(glBitfield_);
+				
 				SDL_Event eventSDL;
 				while (SDL_PollEvent(&eventSDL)) {
 					eventUpdate(eventSDL);
 				}
 
-				glClear(glBitfield_);
-
 				auto currentTime = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double> delta = currentTime - time;
-				update(delta.count());
 				time = currentTime;
+				update(delta.count());
 
+				if (sleepingTime_ >= 0) {
+					SDL_Delay(sleepingTime_);
+				}
 				SDL_GL_SwapWindow(window_);
 			}
 		}
@@ -231,6 +232,10 @@ namespace mw {
 		glBitfield_ = glBitfield;
 	}
 
+	void Window::setLoopSleepingTime(int sleepingTime) {
+		sleepingTime_ = sleepingTime;
+	}
+
 	void Window::setFullScreen(bool fullScreen) {
 		if (window_) {
 			if (fullScreen != isFullScreen()) {
@@ -260,9 +265,9 @@ namespace mw {
 
 	void Window::initOpenGl() {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersionGl);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersionGl);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 		if (SDL_GL_LoadLibrary(0) != 0) {
 			std::stringstream stream;

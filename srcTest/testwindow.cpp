@@ -214,6 +214,8 @@ void TestWindow::resize(int w, int h) {
 }
 
 void TestWindow::initPreLoop() {
+	setLoopSleepingTime(10);
+
 	focus_ = true;
 	shader_ = std::make_shared<TestShader>("testShader2_1.ver.glsl", "testShader2_1.fra.glsl");
 	mw::Font font("Ubuntu-B.ttf", 60);
