@@ -85,6 +85,8 @@ namespace mw {
 
 		void setGlClear(GLbitfield glBitfield);
 
+		GLbitfield getGlClear() const;
+
 		// Add a delay in the loop, add a sleeping time before frame swapping. Less than 10 ms may 
 		// not effect anything, is plattform dependent.
 		void setLoopSleepingTime(int sleepingTime);
@@ -135,6 +137,18 @@ namespace mw {
 
 	inline int Window::getOpenGlMinorVersion() {
 		return minorVersionGl;
+	}
+
+	inline void Window::setGlClear(GLbitfield glBitfield) {
+		glBitfield_ = glBitfield;
+	}
+
+	inline GLbitfield Window::getGlClear() const {
+		return glBitfield_;
+	}
+
+	inline void Window::setLoopSleepingTime(int sleepingTime) {
+		sleepingTime_ = sleepingTime;
 	}
 
 } // Namespace mw.

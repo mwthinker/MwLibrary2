@@ -228,14 +228,6 @@ namespace mw {
 		return h;
 	}
 
-	void Window::setGlClear(GLbitfield glBitfield) {
-		glBitfield_ = glBitfield;
-	}
-
-	void Window::setLoopSleepingTime(int sleepingTime) {
-		sleepingTime_ = sleepingTime;
-	}
-
 	void Window::setFullScreen(bool fullScreen) {
 		if (window_) {
 			if (fullScreen != isFullScreen()) {

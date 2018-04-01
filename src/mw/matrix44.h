@@ -1,6 +1,8 @@
 #ifndef MW_MATRIX44_H
 #define MW_MATRIX44_H
 
+#include "opengl.h"
+
 #include <cmath>
 #include <array>
 
@@ -9,7 +11,7 @@ namespace mw {
 	// A 4x4 matrix saved internally saved as an column-major order.
 	template <typename T>
 	class Matrix44 {
-	public:		
+	public:
 		static const Matrix44<T> ZERO;
 		static const Matrix44<T> I;
 
@@ -59,6 +61,8 @@ namespace mw {
 	private:
 		std::array<T, 16> data_;
 	};
+
+	using Matrix44f = Matrix44<GLfloat>;
 
 	template <typename T>
 	const Matrix44<T> Matrix44<T>::I(

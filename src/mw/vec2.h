@@ -1,6 +1,8 @@
 #ifndef MW_VEC2_H
 #define MW_VEC2_H
 
+#include "opengl.h"
+
 #include <cmath>
 
 namespace mw {	
@@ -10,8 +12,7 @@ namespace mw {
 	public:
 		T x_, y_;
 
-		Vec2() {
-		}
+		Vec2() = default;
 		
 		Vec2(T x, T y) : x_(x), y_(y) {
 		}
@@ -107,11 +108,13 @@ namespace mw {
 		}
 	};
 
+	using Vec2f = Vec2<GLfloat>;
+
 	template <typename T>
 	Vec2<T> operator*(T scale, Vec2<T> v) {
 		return v * scale;
 	}
 
 } // mw.
-	
+
 #endif // MW_VEC2_H

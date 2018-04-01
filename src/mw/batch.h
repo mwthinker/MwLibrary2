@@ -21,11 +21,7 @@ namespace mw {
 
 		Batch(GLenum mode, GLenum usage, const std::shared_ptr<Shader>& shader, unsigned int maxVertexes) :
 			mode_(mode), usage_(usage), index_(0),
-			uploadedIndex_(0), shader_(shader), data_(maxVertexes) {
-
-			if (usage == GL_STATIC_DRAW) {
-				data_.clear();
-			}
+			uploadedIndex_(0), shader_(shader), data_(usage == GL_STATIC_DRAW ? 0 : maxVertexes) {
 		}
 
 		Batch(GLenum mode, const std::shared_ptr<Shader>& shader) :
@@ -146,14 +142,12 @@ namespace mw {
 			} else {
 				if (vbo_.getSize() == 0) {
 					// Only add data before the vbo is created.
-					std::copy(begin, end, data_.begin() + index_);
+					data_.insert(data_.end(), begin, end);
 					index_ += end - begin;
 				} else {
 					std::cerr << "VertexData is static, data can't be modified." << std::endl;
 				}
 			}
-
-			data_.insert(data_.end(), begin, begin);
 		}
 
 		void add(const std::vector<typename Shader::Vertex>& data) {
