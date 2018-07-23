@@ -11,10 +11,11 @@ namespace mw {
 	class Vec2 {
 	public:
 		T x_, y_;
+		static const Vec2<T> ZERO;
 
 		Vec2() = default;
 		
-		Vec2(T x, T y) : x_(x), y_(y) {
+		constexpr Vec2(T x, T y) : x_(x), y_(y) {
 		}
 
 		Vec2 operator*(T scale) const {
@@ -109,6 +110,9 @@ namespace mw {
 	};
 
 	using Vec2f = Vec2<GLfloat>;
+
+	template <typename T>
+	const Vec2<T> Vec2<T>::ZERO(0, 0);
 
 	template <typename T>
 	Vec2<T> operator*(T scale, Vec2<T> v) {

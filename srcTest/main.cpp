@@ -11,6 +11,8 @@
 #include <cassert>
 #include <sstream>
 
+using Vec2 = mw::Vec2<GLfloat>;
+
 SDL_Surface* createSurface(int w, int h, char r, char g, char b) {
 	SDL_Surface* s = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
 	SDL_FillRect(s, 0, SDL_MapRGB(s->format, r, g, b));
@@ -146,6 +148,10 @@ bool equalZERO(const Mat44& m) {
 	return true;
 }
 
+bool equalZERO(const Vec2& v) {
+	return equal(v.x_, 0.f) && equal(v.y_, 0.f);
+}
+
 void print(const Mat44& m) {
     std::cout << "\nMatrix\n";
     for (int i = 0; i < 4; ++i) {
@@ -195,8 +201,6 @@ void testMatrix() {
 }
 
 void testVec2() {
-	using Vec2 = mw::Vec2<double>;
-
 	Vec2 v(1, 3);
 	Vec2 v2(7, 2);
 
@@ -204,6 +208,8 @@ void testVec2() {
 
 	assert(!equal(-v, v));
 	assert(equal(v - v, Vec2(0, 0)));
+
+	assert(equalZERO(Vec2::ZERO));
 }
 
 void testColor() {

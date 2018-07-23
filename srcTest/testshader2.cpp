@@ -43,7 +43,7 @@ void TestShader2::useProgram() const {
 
 void TestShader2::setVertexAttribPointer() const {
 	if (mw::Window::getOpenGlMajorVersion() >= 2) {
-		int size = 0;
+		size_t size = 0;
 
 		glEnableVertexAttribArray(aPosIndex_);
 		glVertexAttribPointer(aPosIndex_, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) size);

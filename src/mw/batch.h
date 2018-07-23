@@ -70,7 +70,7 @@ namespace mw {
 			}
 		}
 
-		void getSize() const {
+		unsigned int getSize() const {
 			return index_;
 		}
 

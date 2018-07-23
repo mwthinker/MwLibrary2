@@ -19,14 +19,14 @@ namespace mw {
 		Matrix44() = default;
 
 		// Defines a matrix. The matrix is internally saved as an column-major order.
-		Matrix44(
+		constexpr Matrix44(
 			T m00, T m01, T m02, T m03,
 			T m10, T m11, T m12, T m13,
 			T m20, T m21, T m22, T m23,
 			T m30, T m31, T m32, T m33);
 
 		// Create a matrix based on an array in column-major order.
-		Matrix44(const std::array<T, 16>& data);
+		constexpr Matrix44(const std::array<T, 16>& data);
 
 		Matrix44<T> operator*(const Matrix44<T>& m) const;
 
@@ -180,7 +180,7 @@ namespace mw {
 	}
 
 	template <typename T>
-	Matrix44<T>::Matrix44(
+	constexpr Matrix44<T>::Matrix44(
 		T m00, T m01, T m02, T m03,
 		T m10, T m11, T m12, T m13,
 		T m20, T m21, T m22, T m23,
@@ -193,7 +193,7 @@ namespace mw {
 	}
 
 	template <typename T>
-	Matrix44<T>::Matrix44(const std::array<T, 16>& data) : data_(data) {
+	constexpr Matrix44<T>::Matrix44(const std::array<T, 16>& data) : data_(data) {
 	}
 
 	template <typename T>
