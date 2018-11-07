@@ -1,18 +1,9 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 project(MwLibrary2)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
-if (NOT MSVC)
-	set(CMAKE_CXX_FLAGS "-std=c++1y")
-	option(Debug "Set projects to debug mode.")
-	if (Debug)
-		set(CMAKE_BUILD_TYPE "Debug" CACHE INTERNAL "Build type.")
-		add_definitions(-D_DEBUG)
-	else ()
-		set(CMAKE_BUILD_TYPE "Release" CACHE INTERNAL "Build type.")
-	endif ()
-endif ()
 
-option(MwLibrary2Test "Add MwLibrary2Test project." OFF)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Source files.
 set(SOURCES
@@ -58,22 +49,7 @@ set(SOURCES
 	src/mw/window.h
 )
 
-set(SOURCES_TEST
-	srcTest/batchtriangles.h
-	srcTest/drawtext.cpp
-	srcTest/drawtext.h
-	srcTest/main.cpp
-	srcTest/testshader.cpp
-	srcTest/testshaderdata.h
-	srcTest/testshader.h
-	srcTest/testshader2.h
-	srcTest/testshader2.cpp
-	srcTest/testwindow2.h
-	srcTest/testwindow.cpp
-	srcTest/testwindow.h
-)
-
-# End of source files.
+add_library(MwLibrary2 ${SOURCES})
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
@@ -82,32 +58,51 @@ find_package(SDL2_ttf REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 
-include_directories(
-	${SDL2_INCLUDE_DIR}
-	${SDL2_IMAGE_INCLUDE_DIR}
-	${SDL2_TTF_INCLUDE_DIR}
-	${SDL2_MIXER_INCLUDE_DIR}
-	${GLEW_INCLUDE_DIRS})
+target_include_directories(MwLibrary2
+	PUBLIC
+		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"
+		${SDL2_INCLUDE_DIR}
+		${SDL2_IMAGE_INCLUDE_DIR}
+		${SDL2_TTF_INCLUDE_DIR}
+		${SDL2_MIXER_INCLUDE_DIR}
+		${GLEW_INCLUDE_DIRS}
+)
 
-add_library(MwLibrary2 ${SOURCES})
-
-set(ALL_MW_LIBRARIES
+target_link_libraries(MwLibrary2
 	${GLEW_LIBRARIES}
 	${OPENGL_LIBRARIES}
 	${SDL2_LIBRARIES}
 	${SDL2_TTF_LIBRARIES}
 	${SDL2_MIXER_LIBRARIES}
-	${SDL2_IMAGE_LIBRARIES})
+	${SDL2_IMAGE_LIBRARIES}
+)
+	
+option(MwLibrary2Test "Add MwLibrary2Test project." OFF)
 
 if (MwLibrary2Test)
-	include_directories(src)
+	set(SOURCES_TEST
+		srcTest/batchtriangles.h
+		srcTest/drawtext.cpp
+		srcTest/drawtext.h
+		srcTest/main.cpp
+		srcTest/testshader.cpp
+		srcTest/testshaderdata.h
+		srcTest/testshader.h
+		srcTest/testshader2.h
+		srcTest/testshader2.cpp
+		srcTest/testwindow2.h
+		srcTest/testwindow.cpp
+		srcTest/testwindow.h
+	)
+	
 	add_executable(MwLibrary2Test ${SOURCES_TEST})
+	
+	target_include_directories(MwLibrary2Test
+		PUBLIC
+			${CMAKE_CURRENT_SOURCE_DIR}/srcTest
+	)
 
-	if (MSVC)
-		set_target_properties(MwLibrary2Test PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:msvcrt")
-	endif ()
-
-	target_link_libraries(MwLibrary2Test MwLibrary2 ${ALL_MW_LIBRARIES})
-
+	target_link_libraries(MwLibrary2Test MwLibrary2)	
+	
 	file(COPY dataTest/. DESTINATION ${CMAKE_CURRENT_BINARY_DIR}) # Copy data to build folder.
 endif ()
