@@ -1,6 +1,14 @@
-cmake_minimum_required(VERSION 3.0)
-project(MwLibrary2)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
+cmake_minimum_required(VERSION 3.1...3.12)
+project(MwLibrary2
+	DESCRIPTION
+		"A C++ wrapper of SDL2 and OpenGl"
+	LANGUAGES
+		CXX
+)
+set(CMAKE_MODULE_PATH
+	${CMAKE_MODULE_PATH}
+	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/"
+)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -69,12 +77,13 @@ target_include_directories(MwLibrary2
 )
 
 target_link_libraries(MwLibrary2
-	${GLEW_LIBRARIES}
-	${OPENGL_LIBRARIES}
-	${SDL2_LIBRARIES}
-	${SDL2_TTF_LIBRARIES}
-	${SDL2_MIXER_LIBRARIES}
-	${SDL2_IMAGE_LIBRARIES}
+	PUBLIC
+		${GLEW_LIBRARIES}
+		${OPENGL_LIBRARIES}
+		${SDL2_LIBRARIES}
+		${SDL2_TTF_LIBRARIES}
+		${SDL2_MIXER_LIBRARIES}
+		${SDL2_IMAGE_LIBRARIES}
 )
 	
 option(MwLibrary2Test "Add MwLibrary2Test project." OFF)
